@@ -9,7 +9,7 @@ class PubmedQuery(Action):
   def __init__(self, precondition_entities, effect_entities):
     super().__init__(precondition_entities, effect_entities)
     self.url_prefix = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
-    self.mesh_terms = pd.read_table('../../data/reasoning_tool_application/MeSH_hierarchy.txt')
+    self.mesh_terms = pd.read_table('../../data/MeSH_hierarchy.txt')
     
   def get_request(self, url):
     with urllib.request.urlopen(url) as response:
