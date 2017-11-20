@@ -1,12 +1,12 @@
 import numpy
 import mdptoolbox
 from collections import OrderedDict
-from .actions.Action import Action
+from .actions.action import Action
 
 class Noop(Action):
     def __init__(self):
         super().__init__([], [])
-        
+
 class Success(Action):
     def __init__(self, goal_state):
         super().__init__(goal_state, [])
@@ -32,7 +32,7 @@ class ActionPlanner:
       'p_success':0,
       'reward':5
     })
-    
+
     for action in self.actions:
         action['action'].precondition = [self.get_canonical_state_variable(x) for x in action['action'].precondition]
         action['action'].effect_terms = [self.get_canonical_state_variable(x) for x in action['action'].effect_terms]
@@ -43,12 +43,12 @@ class ActionPlanner:
                 tmp_constraint.append(self.get_canonical_state_variable(term))
             tmp_constraint_list.append(tuple(tmp_constraint))
         action['action'].effect_constraints = tmp_constraint_list
-    
+
     self.action_names = [type(x['action']).__name__ for x in self.actions]
     self.default_reward = default_reward
     self.plan = None
     self.__set_pr()
-    
+
   def canonicalize_state_variable(self, variable):
     if 'connected(' in variable:
         sorted_list = sorted(variable[10:-1].split(', '))
@@ -83,14 +83,14 @@ class ActionPlanner:
       tmp_a = bitlist.copy()
       tmp_a[index] = False
       a = self.__all_matches(tmp_a, index + 1)
-      
+
       tmp_b = bitlist.copy()
       tmp_b[index] = True
       b = self.__all_matches(tmp_b, index + 1)
       l = a + b
     else:
       l = self.__all_matches(bitlist, index + 1)
-      
+
     return(l)
 
   def __get_matching_states(self, var_list):
@@ -141,7 +141,7 @@ class ActionPlanner:
     from_state_bitlists = self.__all_matches(precon_pattern)
     state_dict = dict()
     for x in from_state_bitlists:
-      from_state = self.__bit2idx(x)  
+      from_state = self.__bit2idx(x)
       effect_bitlists = self.__get_effect_states(x, action.effect_terms)
       filtered_effect_bitlists = self.__filter_effect_states(effect_bitlists, action.effect_constraints)
       effect_states = {self.__bit2idx(s) for s in filtered_effect_bitlists}
@@ -152,14 +152,14 @@ class ActionPlanner:
     n_var = len(self.state_variables)
     n_actions = len(self.actions)
     n_states = pow(2, n_var) - 1
-    
+
     P = numpy.zeros([n_actions, n_states, n_states])
     R = numpy.full([n_states, n_actions], self.default_reward)
-    
+
     for i in range(n_actions):
         for j in range(n_states):
           P[i,j,j] = 1
-    
+
     counter = 0
     for action in self.actions:
       state_dict = self.__get_action_from_to_states(action['action'])

@@ -1,7 +1,7 @@
 import json
 from urllib.request import urlopen
 from urllib.parse import quote
-from reasoner.actions.Action import Action
+from .action import Action
 
 
 class JsonApiAction(Action):

@@ -1,4 +1,4 @@
-from reasoner.actions.Action import Action
+from .action import Action
 
 import xml.etree.ElementTree as etree
 from urllib.request import urlopen

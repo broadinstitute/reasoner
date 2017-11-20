@@ -1,9 +1,9 @@
-from .Action import Action
+from .action import Action
 
 class Noop(Action):
     def __init__(self):
         super().__init__([], [])
-        
+
 class Success(Action):
     def __init__(self):
         super().__init__(['bound(Drug)', 'bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Phenotype)', 'bound(Disease)',
@@ -16,15 +16,15 @@ class AddDrugTarget(Action):
 class AddTargetPathway(Action):
     def __init__(self):
         super().__init__(['bound(Target)'], ['bound(Pathway) and connected(Target, Pathway)'])
-        
+
 class AddDiseasePhenotype(Action):
     def __init__(self):
         super().__init__(['bound(Disease)'], ['bound(Phenotype) and connected(Phenotype, Disease)'])
-        
+
 class AddPhenotypeCell(Action):
     def __init__(self):
         super().__init__(['bound(Phenotype)'], ['bound(Cell) and connected(Cell, Phenotype)'])
-        
+
 class PubmedDrugDisease(Action):
     def __init__(self):
         super().__init__(['bound(Drug)', 'bound(Disease)'],

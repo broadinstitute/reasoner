@@ -1,4 +1,4 @@
-from reasoner.actions.Action import Action
+from .action import Action
 import pandas as pd
 
 
@@ -102,9 +102,9 @@ class CashedFileSourcedAction(FileSourcedAction):
         return map['list']
 
 
-class DrugBankDT(CashedFileSourcedAction):
+class DrugBankDrugToTarget(CashedFileSourcedAction):
 
-    def __init__(self, filename='/chembio/datasets/csdev/VD/data/explore/translator/knowledgeSources/drugbank/drugbank_KS.txt'):
+    def __init__(self, filename='./data/drugbank.txt'):
         column_map = { 'Target': {
             'Name': {'precondition':'Drug'},
             'Action': {'edge':'action'},
@@ -116,9 +116,9 @@ class DrugBankDT(CashedFileSourcedAction):
         super().__init__(['bound(Drug)'],['bound(Target) and connected(Drug, Target)'], filename, column_map)
 
 
-class GoFunctionTP(CashedFileSourcedAction):
+class GoFunctionTargetToPathway(CashedFileSourcedAction):
 
-    def __init__(self, filename='/chembio/datasets/csdev/VD/data/explore/translator/knowledgeSources/GO/function_KS.txt'):
+    def __init__(self, filename='./data/GO_function.txt'):
         column_map = { 'Pathway': {
             'Symbol': {'precondition':'Target'},
             'GOID': {'node':'id'},
@@ -129,8 +129,8 @@ class GoFunctionTP(CashedFileSourcedAction):
         super().__init__(['bound(Target)'],['bound(Pathway) and connected(Target, Pathway)'], filename, column_map)
 
 
-class MeshScopeNote(CashedFileSourcedAction):
-    def __init__(self, filename='/chembio/datasets/csdev/VD/DB/MeSH/scopeNoteMap.txt'):
+class MeshScopeNoteDiseaseToPhenotype(CashedFileSourcedAction):
+    def __init__(self, filename='./data/MeshScopeNote.txt'):
         column_map = { 'Phenotype': {
             'MeSH_term': {'precondition':'Disease'},
             'scopeNote_term': {'node':'scopeNote'},
@@ -138,9 +138,10 @@ class MeshScopeNote(CashedFileSourcedAction):
         }}
         super().__init__(['bound(Disease)'],['bound(Phenotype) and connected(Disease, Phenotype)'], filename, column_map)
 
-class CellTargetToGo(CashedFileSourcedAction):
 
-    def __init__(self, filename='/chembio/datasets/csdev/VD/data/explore/translator/knowledgeSources/cellOntology/cl2GO.txt'):
+class CellOntologyTargetToPathway(CashedFileSourcedAction):
+
+    def __init__(self, filename='./data/cellOntology2GO.txt'):
         column_map = {'Pathway':{
             'Symbol': {'precondition': 'Target'},
             'name': {'precondition': 'Cell'},
@@ -151,54 +152,4 @@ class CellTargetToGo(CashedFileSourcedAction):
         }}
         super().__init__(['bound(Target)','bound(Cell)'],['bound(Pathway) and connected(Pathway, Target) and connected(Pathway, Cell)'], filename, column_map)
 
-class MockFileAction(CashedFileSourcedAction):
 
-    def __init__(self, filename='/chembio/datasets/csdev/VD/data/explore/translator/knowledgeSources/mock.txt'):
-        column_map = {'X':{
-            'A': {'precondition': 'Alpha'},
-            'B': {'precondition': 'Beta'},
-            'C': {'edge': 'Gamma'},
-            'D': {'node': 'Delta'}
-        }}
-        super().__init__(['bound(Alpha)','bound(Beta)'],['bound(X) and connected(Alpha, X)'], filename, column_map)
-
-
-from pprint import pprint
-
-def test():
-    filename = 'U:/csdev/VD/data/explore/translator/knowledgeSources/drugbank/drugbank_KS.txt'
-    action = DrugBankDT(filename)
-    pprint(action.execute({'Drug':'imatinib'}))
-    pprint(action.execute({'Drug':'ibuprofen'}))
-
-
-def testGo():
-    filename = 'U:/csdev/VD/data/explore/translator/knowledgeSources/GO/function_KS.txt'
-    action = GoFunctionTP(filename)
-    pprint(action.execute({'Target':'TP53'}))
-    pprint(action.execute({'Target':'KRAS'}))
-
-def testMesh():
-    filename = 'U:/csdev/VD/DB/MeSH/scopeNoteMap.txt'
-    action = MeshScopeNote(filename)
-    pprint(action.execute({'Disease':'Asthma'}))
-    pprint(action.execute({'Disease':'Alzheimer Disease'}))
-
-def testCL2GO():
-    filename = 'U:/csdev/VD/data/explore/translator/knowledgeSources/cellOntology/cl2GO.txt'
-    action = CellTargetToGo(filename)
-    pprint(action.execute({'Target':'IRGM','Cell':'macrophage'}))
-    #pprint(action.execute({'Disease':'Alzheimer Disease'}))
-
-def testMock():
-    filename = 'U:/csdev/VD/data/explore/translator/knowledgeSources/mock.txt'
-    action = MockFileAction(filename)
-    pprint(action.execute({'Alpha':'a','Beta':'x'}))
-    pprint(action.execute({'Alpha':'b','Beta':'x'}))
-
-if __name__ == '__main__':
-    #test()
-    #testGo()
-    #testMesh()
-    testCL2GO()
-    #testMock()
