@@ -136,6 +136,19 @@ class GoFunctionTargetToPathway(CashedFileSourcedAction):
         super().__init__(['bound(Target)'],['bound(Pathway) and connected(Target, Pathway)'], filename, column_map)
 
 
+class GoProcessTargetToPathway(CashedFileSourcedAction):
+
+    def __init__(self, filename='./data/GO_process.txt'):
+        column_map = { 'Pathway': {
+            'Symbol': {'precondition':'Target'},
+            'GOID': {'node':'id'},
+            'GOTerm': {'node':'name'},
+            'GOEvidenceCode': {'edge':'GOEvidenceCode'},
+            '+1': {'node_value': {'authority':'GO'}}
+        }}
+        super().__init__(['bound(Target)'],['bound(Pathway) and connected(Target, Pathway)'], filename, column_map)
+
+
 class MeshScopeNoteDiseaseToPhenotype(CashedFileSourcedAction):
     def __init__(self, filename='./data/MeshScopeNote.txt'):
         column_map = { 'Phenotype': {
