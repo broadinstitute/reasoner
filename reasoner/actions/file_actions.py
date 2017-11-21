@@ -1,29 +1,24 @@
 from .action import Action
 import pandas as pd
-
+import os.path
+import pickle
 
 class FileSourcedAction(Action):
 
-    def __init__(self, precondition_entities, effect_entities, source_file, column_map):
+    def __init__(self, precondition, effect, source_file, column_map):
         assert len(column_map) == 1, 'FileSourcedAction only supports single effect'
-        super().__init__(precondition_entities,effect_entities)
-        self.precondition_entity_list = [self.parse_input_entity(entity) for entity in precondition_entities]
+        super().__init__(precondition, effect)
         self.source_file = source_file
         self.column_map = column_map
-        self.precondition_columns = self.precondition_column_map(self.precondition_entity_list)
-        print(self.precondition_columns)
-        assert len(self.precondition_columns) == len(self.precondition_entity_list), \
-          'precondition_entities '+str(self.precondition_entity_list)+' not found among column_map values '+str(column_map)
+        self.precondition_columns = self.precondition_column_map(self.precondition_entities)
+        #print(self.precondition_columns)
+        assert len(self.precondition_columns) == len(self.precondition_entities), \
+          'precondition_entities '+str(self.precondition_entities)+' not found among column_map values '+str(column_map)
 
-    def parse_input_entity(self, precondition_entity):
-        assert precondition_entity[0:6]=='bound(' and precondition_entity[-1]==')', \
-          'Wrong input entity spec: '+ precondition_entity
-        return precondition_entity[6:-1]
 
     def precondition_column_map(self, precondition_entities):
         map = {}
         for spec in self.column_map:
-            print(spec)
             for column in self.column_map[spec]:
                 if self.column_map[spec][column].get('precondition') in precondition_entities:
                     map[self.column_map[spec][column].get('precondition')] = column
@@ -73,16 +68,28 @@ class FileSourcedAction(Action):
 
 class CashedFileSourcedAction(FileSourcedAction):
 
-    def __init__(self, precondition_entities, effect_entities, source_file, column_map):
-        super().__init__(precondition_entities,effect_entities, source_file, column_map)
-        self.input = self.parse_input_file(self.read_file())
+    def __init__(self, precondition, effect, source_file, column_map):
+        super().__init__(precondition, effect, source_file, column_map)
+        self.load_file(source_file)
 
+
+    def load_file(self, filename):
+        pickle_file = filename + '.pickle'
+        if os.path.isfile(pickle_file):
+            with open(pickle_file, 'rb') as f:
+                self.input = pickle.load(f)
+                print('Loaded from '+pickle_file)
+        else:
+            self.input = self.parse_input_file(self.read_file())
+            with open(pickle_file, 'wb') as f:
+                pickle.dump(self.input, f)
+                print('Saved to '+pickle_file)
 
     def parse_input_file(self, input):
         input_map = {}
         for index, row in input.iterrows():
             map = input_map
-            for entity in self.precondition_entity_list:
+            for entity in sorted(self.precondition_entities):
                 key = row[self.precondition_columns[entity]].lower()
                 if key not in map:
                     map[key]={}
@@ -95,7 +102,7 @@ class CashedFileSourcedAction(FileSourcedAction):
 
     def execute(self, input):
         map = self.input
-        for entity in self.precondition_entity_list:
+        for entity in sorted(self.precondition_entities):
             if input[entity].lower() not in map:
                 return []
             map=map[input[entity].lower()]
