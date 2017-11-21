@@ -4,46 +4,64 @@ class Blackboard(networkx.Graph):
   def __init__(self):
     super().__init__()
     self.placeholders = list()
-  
-  def add_connected_node(self, neighbor, node, entity, node_attributes, edge_attributes):
-    self.add_node(node, entity = entity)
-    networkx.set_node_attributes(self, {node:node_attributes})
-    self.add_edge(neighbor, node, entities = (self.nodes[neighbor]['entity'], entity))
-    networkx.set_edge_attributes(self, {(neighbor, node):edge_attributes})
 
-  def add_knowledge(self, query_node, query_result):
-    for item in query_result:
-      for entity,instance_list in item.items():
-        for attributes in instance_list:
-            self.add_connected_node(query_node, attributes['node']['name'], entity, attributes['node'], attributes['edge'])
-
-  def add_path(self, start, end, query_result, entity_order):
-    assert entity_order[0]==self.nodes[start]['entity']
-    assert entity_order[-1]==self.nodes[end]['entity']
+  def add_node_from_attributes(self, attributes, entity):
+    self.add_node(attributes['name'], entity = entity)
+    networkx.set_node_attributes(self, {attributes['name']:attributes})
+    return(attributes['name'])
     
-    for path in query_result:
-      parents = [start]
-      for i in range(1, len(entity_order)-1):
-        current_layer = list()       
-        if entity_order[i] in path.keys():
-          for node_attributes in path[entity_order[i]]:
-            self.add_node(node_attributes['name'], entity = entity_order[i])
-            networkx.set_node_attributes(self, {node_attributes['name']:node_attributes})
-            current_layer.append(node_attributes['name'])
-            for parent in parents:
-              self.add_edge(parent, node_attributes['name'], entities = (self.nodes[parent]['entity'], entity_order[i]))
-        else:
-          self.placeholders.append('empty_' + entity_order[i] + '_' + str(len(self.placeholders)))
-          self.add_node(self.placeholders[-1], entity=entity_order[i], unbound=True)
-          current_layer.append(self.placeholders[-1])
-          for parent in parents:
-            self.add_edge(parent, self.placeholders[-1], entities = (self.nodes[parent]['entity'], entity_order[i]))
-        
-        parents = current_layer
-            
-        if i == (len(entity_order)-2):
-          for parent in parents:
-            self.add_edge(parent, end, entities = (self.nodes[parent]['entity'], self.nodes[end]['entity']))
+  def add_placeholder(self, entity):
+    self.placeholders.append('empty_' + entity + '_' + str(len(self.placeholders)))
+    self.add_node(self.placeholders[-1], entity=entity, unbound=True)
+    return(self.placeholders[-1])
+    
+  def add_knowledge(self, query, query_result, action):
+    if len(action.effect_entities) == 2:
+        for item in query_result:
+          for entity,instance_list in item.items():
+            for attributes in instance_list:
+                n0 = list(query.values())[0]
+                n1 = self.add_node_from_attributes(attributes['node'], entity = entity)
+                self.add_edge(n0, n1, entities = (next(iter(query)), entity))
+                networkx.set_edge_attributes(self, {(n0, n1):attributes['edge']})
+    else:
+        for path in query_result:
+            for edge in action.effect_connections:
+                if edge[0] in path:
+                    n0 = [self.add_node_from_attributes(attributes['node'], entity = edge[0]) for attributes in path[edge[0]]]
+                    if edge[1] in path:
+                        n1 = [self.add_node_from_attributes(attributes['node'], entity = edge[1]) for attributes in path[edge[1]]]
+                    elif edge[1] in query:
+                        n1 = [query[edge[1]]]
+                    else:
+                        n1 = [self.add_placeholder(edge[1])]
+                        path[edge[1]] = [{'node':{'name':node},'edge':{}} for node in n1]
+                    
+                elif edge[1] in path:
+                    n1 = [self.add_node_from_attributes(attributes['node'], entity = edge[1]) for attributes in path[edge[1]]]
+                    if edge[0] in path:
+                        n0 = [self.add_node_from_attributes(attributes['node'], entity = edge[0]) for attributes in path[edge[0]]]
+                    elif edge[0] in query:
+                        n0 = [query[edge[0]]]
+                    else:
+                        n0 = [self.add_placeholder(edge[0])]
+                        path[edge[0]] = [{'node':{'name':node},'edge':{}} for node in n0]
+                elif edge[0] in query:
+                    n0 = [query[edge[0]]]
+                    n1 = [self.add_placeholder(edge[1])]
+                    path[edge[1]] = [{'node':{'name':node},'edge':{}} for node in n1]
+                elif edge[1] in query:
+                    n0 = [self.add_placeholder(edge[0])]
+                    path[edge[0]] = [{'node':{'name':node},'edge':{}} for node in n0]
+                    n1 = [query[edge[1]]]
+                else:
+                    n0 = [self.add_placeholder(edge[0])]
+                    n1 = [self.add_placeholder(edge[1])]
+                    path[edge[0]] = [{'node':{'name':node},'edge':{}} for node in n0]
+                    path[edge[1]] = [{'node':{'name':node},'edge':{}} for node in n1]
+                for start in n0:
+                    for end in n1:
+                        self.add_edge(start, end, entities = (edge[0], edge[1]))
   
   def prune(self):
     self.remove_nodes_from(self.placeholders)
@@ -54,6 +72,16 @@ class Blackboard(networkx.Graph):
           self.remove_node(key)
       degrees = dict(self.degree())
   
+  def get_entity_nodes(self,entities):
+        node_dict = dict()
+        for entity in entities:
+            node_dict[entity] = list()
+        
+        for n,d in self.nodes(data=True):
+            if d['entity'] in entities:
+                node_dict[d['entity']].append(n)
+        return(node_dict)
+    
   def get_state(self, graph):
     entities = set(d['entity'] for n,d in graph.nodes(data=True) if not 'unbound' in d)
     bound_nodes = set('bound(' + e + ')' for e in entities)
@@ -74,4 +102,24 @@ class Blackboard(networkx.Graph):
             sg = self.subgraph(path)
             path_states.append(self.get_state(sg))
         return(path_states)
-            
+
+    
+    
+class QueryBuilder():
+    
+    def __init__(self):
+        self.query_list = list()
+
+    def get_all_queries(self, index, n, query):
+        if index == n:
+            self.query_list.append(query)
+        else:
+            for instance in self.instances[self.keys[index]]:
+                q = {**query, **{self.keys[index]:instance}}
+                self.get_all_queries(index+1, n, q)
+    
+    def get_queries(self, instances):
+        self.instances = instances
+        self.keys = list(self.instances.keys())
+        self.get_all_queries(0, len(self.keys), dict())
+        return(self.query_list)

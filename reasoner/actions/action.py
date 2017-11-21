@@ -4,8 +4,8 @@ class Action:
         self.precondition = precondition
         self.effect = effect
         (self.effect_terms, self.effect_constraints) = self.__parse_effect(effect)
-        self.precondition_entities = self.__extract_entities(self.precondition)
-        self.effect_entities = self.__extract_entities(self.effect_terms)
+        (self.precondition_entities, self.precondition_bindings, self.precondition_connections) = self.__extract_entities(self.precondition)
+        (self.effect_entities, self.effect_bindings, self.effect_connections) = self.__extract_entities(self.effect_terms) 
 
     def __parse_effect(self, effect):
         parsed_effect = list()
@@ -21,12 +21,18 @@ class Action:
     
     def __extract_entities(self, term_list):
         entity_set = set()
+        entity_bound = set()
+        connections = list()
         for term in term_list:
             if 'connected(' in term:
-                entity_set.update(term[10:-1].split(', '))
+                entities = term[10:-1].split(', ')
+                entity_set.update(entities)
+                connections.append(tuple(entities))
             elif 'bound(' in term:
-                entity_set.add(term[6:-1])
-        return(list(entity_set))
+                entity = term[6:-1]
+                entity_set.add(entity)
+                entity_bound.add(entity)
+        return(list(entity_set), list(entity_bound), connections)
     
     def execute(self, input):
         assert len(input) == len(self.precondition_entities)

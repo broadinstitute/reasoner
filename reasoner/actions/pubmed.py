@@ -6,8 +6,8 @@ import pandas as pd
 import dateutil.parser
 
 class PubmedQuery(Action):
-  def __init__(self, precondition_entities, effect_entities, mesh_path = './data/MeSH_hierarchy.txt'):
-    super().__init__(precondition_entities, effect_entities)
+  def __init__(self, precondition, effect, mesh_path = './data/MeSH_hierarchy.txt'):
+    super().__init__(precondition, effect)
     self.url_prefix = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
     self.mesh_terms = pd.read_table(mesh_path)
 

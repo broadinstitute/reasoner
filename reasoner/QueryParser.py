@@ -1,5 +1,6 @@
 from lango.parser import StanfordServerParser
 from lango.matcher import match_rules
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 class QueryParser:
@@ -98,8 +99,46 @@ class QueryParser:
     def process_matches(self, relation, from_object=None, to_object=None, compound_object=None):
         if compound_object is not None:
             (to_object, from_object) = compound_object.split(' and ')
-        return({'from':from_object, 'to':to_object, 'relation':relation})
+        return({'from':{'term':from_object}, 'to':{'term':to_object}, 'relation':{'term':relation}})
         
     def parse(self, query):
         tree = self.parser.parse(query)
-        return(match_rules(tree, self.rules, self.process_matches))
+        terms = match_rules(tree, self.rules, self.process_matches)
+        tm = NCITTermMapper()
+        terms['from']['entity'] = tm.get_entity(terms['from']['term'])
+        terms['to']['entity'] = tm.get_entity(terms['to']['term'])
+        return(terms)
+
+
+class NCITTermMapper():
+
+    def __init__(self):
+        super().__init__()
+        self.sparql = SPARQLWrapper("http://sparql.hegroup.org/sparql/")
+        self.entity_map = {'Disease or Disorder':'Disease', 'Genetic Disorder':'Genetic Condition', 'Pharmacologic Substance':'Drug'}
+
+    def send_query(self, query):
+        query = """
+                PREFIX obo-term: <http://purl.obolibrary.org/obo/>
+                SELECT DISTINCT ?y ?x ?label
+                from <http://purl.obolibrary.org/obo/merged/NCIT>
+                WHERE
+                {
+                VALUES ?x { obo-term:NCIT_C2991 obo-term:NCIT_C1909 obo-term:NCIT_C3101}
+                ?y rdfs:subClassOf* ?x.
+                ?x rdfs:label ?label.
+                ?y rdfs:label  ?query.
+                FILTER(lcase(str(?query))="%s")
+                }
+                """ % query.lower()
+
+        self.sparql.setQuery(query)
+        self.sparql.setReturnFormat(JSON)
+        return(self.sparql.query().convert())
+    
+    def get_entity(self, term):
+        results = self.send_query(term)
+        term_entities = [self.entity_map[result['label']['value']] for result in results["results"]["bindings"]]
+        if "Disease" in term_entities and "Genetic Condition" in term_entities:
+            term_entities = ["Genetic Condition"]
+        return(term_entities[0])
