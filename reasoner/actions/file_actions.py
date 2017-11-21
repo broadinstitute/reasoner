@@ -74,7 +74,7 @@ class CashedFileSourcedAction(FileSourcedAction):
 
 
     def load_file(self, filename):
-        pickle_file = filename + '.pickle'
+        pickle_file = os.path.dirname(filename) + '/' + self.__class__.__name__ + '.pickle'
         if os.path.isfile(pickle_file):
             with open(pickle_file, 'rb') as f:
                 self.input = pickle.load(f)
@@ -159,7 +159,7 @@ class MeshScopeNoteDiseaseToPhenotype(CashedFileSourcedAction):
         super().__init__(['bound(Disease)'],['bound(Phenotype) and connected(Disease, Phenotype)'], filename, column_map)
 
 
-class CellOntologyTargetToPathway(CashedFileSourcedAction):
+class CellOntologyTargetAndCellToPathway(CashedFileSourcedAction):
 
     def __init__(self, filename='./data/cellOntology2GO.txt'):
         column_map = {'Pathway':{
@@ -171,5 +171,19 @@ class CellOntologyTargetToPathway(CashedFileSourcedAction):
             '+1': {'node_value': {'authority':'GO'}}
         }}
         super().__init__(['bound(Target)','bound(Cell)'],['bound(Pathway) and connected(Pathway, Target) and connected(Pathway, Cell)'], filename, column_map)
+
+
+class CellOntologyTargetAndPathwayToCell(CashedFileSourcedAction):
+
+    def __init__(self, filename='./data/cellOntology2GO.txt'):
+        column_map = {'Cell':{
+            'Symbol': {'precondition': 'Target'},
+            'GOTerm': {'precondition': 'Pathway'},
+            'qualifier': {'edge': 'qualifier'},
+            'CLID': {'node':'id'},
+            'name': {'node':'name'},
+            '+1': {'node_value': {'authority':'CellOntology'}}
+        }}
+        super().__init__(['bound(Target)','bound(Pathway)'],['bound(Cell) and connected(Pathway, Target) and connected(Pathway, Cell)'], filename, column_map)
 
 
