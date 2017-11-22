@@ -66,7 +66,7 @@ class FileSourcedAction(Action):
         return df
 
 
-class CashedFileSourcedAction(FileSourcedAction):
+class CachedFileSourcedAction(FileSourcedAction):
 
     def __init__(self, precondition, effect, source_file, column_map):
         super().__init__(precondition, effect, source_file, column_map)
@@ -109,7 +109,7 @@ class CashedFileSourcedAction(FileSourcedAction):
         return map['list']
 
 
-class DrugBankDrugToTarget(CashedFileSourcedAction):
+class DrugBankDrugToTarget(CachedFileSourcedAction):
 
     def __init__(self, filename='./data/drugbank.txt'):
         column_map = { 'Target': {
@@ -123,7 +123,7 @@ class DrugBankDrugToTarget(CashedFileSourcedAction):
         super().__init__(['bound(Drug)'],['bound(Target) and connected(Drug, Target)'], filename, column_map)
 
 
-class GoFunctionTargetToPathway(CashedFileSourcedAction):
+class GoFunctionTargetToPathway(CachedFileSourcedAction):
 
     def __init__(self, filename='./data/GO_function.txt'):
         column_map = { 'Pathway': {
@@ -136,7 +136,7 @@ class GoFunctionTargetToPathway(CashedFileSourcedAction):
         super().__init__(['bound(Target)'],['bound(Pathway) and connected(Target, Pathway)'], filename, column_map)
 
 
-class GoProcessTargetToPathway(CashedFileSourcedAction):
+class GoProcessTargetToPathway(CachedFileSourcedAction):
 
     def __init__(self, filename='./data/GO_process.txt'):
         column_map = { 'Pathway': {
@@ -149,7 +149,7 @@ class GoProcessTargetToPathway(CashedFileSourcedAction):
         super().__init__(['bound(Target)'],['bound(Pathway) and connected(Target, Pathway)'], filename, column_map)
 
 
-class MeshScopeNoteDiseaseToPhenotype(CashedFileSourcedAction):
+class MeshScopeNoteDiseaseToPhenotype(CachedFileSourcedAction):
     def __init__(self, filename='./data/MeshScopeNote.txt'):
         column_map = { 'Phenotype': {
             'MeSH_term': {'precondition':'Disease'},
@@ -159,7 +159,7 @@ class MeshScopeNoteDiseaseToPhenotype(CashedFileSourcedAction):
         super().__init__(['bound(Disease)'],['bound(Phenotype) and connected(Disease, Phenotype)'], filename, column_map)
 
 
-class CellOntologyTargetAndCellToPathway(CashedFileSourcedAction):
+class CellOntologyTargetAndCellToPathway(CachedFileSourcedAction):
 
     def __init__(self, filename='./data/cellOntology2GO.txt'):
         column_map = {'Pathway':{
@@ -173,7 +173,7 @@ class CellOntologyTargetAndCellToPathway(CashedFileSourcedAction):
         super().__init__(['bound(Target)','bound(Cell)'],['bound(Pathway) and connected(Pathway, Target) and connected(Pathway, Cell)'], filename, column_map)
 
 
-class CellOntologyTargetAndPathwayToCell(CashedFileSourcedAction):
+class CellOntologyTargetAndPathwayToCell(CachedFileSourcedAction):
 
     def __init__(self, filename='./data/cellOntology2GO.txt'):
         column_map = {'Cell':{
@@ -187,3 +187,13 @@ class CellOntologyTargetAndPathwayToCell(CashedFileSourcedAction):
         super().__init__(['bound(Target)','bound(Pathway)'],['bound(Cell) and connected(Pathway, Target) and connected(Pathway, Cell)'], filename, column_map)
 
 
+class DskdDiseaseToSymptom(CachedFileSourcedAction):
+
+    def __init__(self, filename='./data/DiseaseSymptomKnowledgeDatabase.txt'):
+        column_map = { 'Phenotype': {
+            'disease_name': {'precondition':'Disease'},
+            'symptom_id': {'node':'id'},
+            'symptom_name': {'node':'name'},
+            '+1': {'node_value': {'authority':'UMLS'}}
+        }}
+        super().__init__(['bound(Disease)'],['bound(Phenotype) and connected(Disease, Phenotype)'], filename, column_map)
