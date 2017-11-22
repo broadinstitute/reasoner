@@ -19,21 +19,21 @@ class Agent:
         self.parser = QueryParser()
         self.blackboard = Blackboard()
         query = self.parser.parse(question)
-        
+
         if state_action_tuple is not None:
           (action_list, state_vars, goal_state) = state_action_tuple
         else:
           (action_list, state_vars, goal_state) = self.get_lists()
         self.planner = ActionPlanner(KnowledgeMap(state_vars, action_list), goal_state)
         self.planner.make_plan(discount)
-        
+
         self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'])
         self.blackboard.add_node(query['to']['term'], entity = query['to']['entity'])
 
     def show_blackboard(self, width=2, height=2):
         plt.figure(figsize=(width, height))
         networkx.draw(self.blackboard, with_labels=True)
-        
+
     def acquire_knowledge(self):
         current_state = self.blackboard.observe_state()
         next_action = self.planner.get_action(current_state['state'])
@@ -55,12 +55,12 @@ class Agent:
             if isinstance(next_action, Noop):
                 print("No connections found.")
                 break
-                
+
     def set_edge_stats(self):
         stats = PubmedEdgeStats()
         attributes = {(u,v):stats.get_edge_stats(u,v) for (u, v) in self.blackboard.edges()}
         networkx.set_edge_attributes(self.blackboard, attributes)
-    
+
     def calculate_edge_probabilities(self):
         pgm = ConnectionPGM()
         variables = ['is_connection']
@@ -76,12 +76,12 @@ class Agent:
             attributes[(u,v)] = {'p':sample_mean,'1-p':1-sample_mean}
             #print(u + ' ' + v + ' ' + str(pgm.get_mean(samples, 'is_connection')))
         networkx.set_edge_attributes(self.blackboard, attributes)
-    
+
     def analyze(self, source, target):
         self.set_edge_stats()
         self.calculate_edge_probabilities()
         return(networkx.shortest_path(self.blackboard, source, target, '1-p'))
-    
+
     def get_lists(self):
         action_list =[
             {
@@ -115,7 +115,7 @@ class Agent:
             },
 
             {
-                'action':PubmedDiseaseToPhenotype(),
+                'action':PubmedDiseaseToSymptom(),
                 'p_success':0.9,
                 'reward':0.5
             },
@@ -124,14 +124,14 @@ class Agent:
                 'action':PubmedDrugDiseasePath(),
                 'p_success':0.99,
                 'reward':2
-            }   
+            }
         ]
 
-        state_vars =  ['bound(Drug)', 'bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Phenotype)', 'bound(Disease)',
-                      'connected(Drug, Target)', 'connected(Target, Pathway)', 'connected(Pathway, Cell)', 'connected(Cell, Phenotype)', 'connected(Phenotype, Disease)']
+        state_vars =  ['bound(Drug)', 'bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'bound(Disease)',
+                      'connected(Drug, Target)', 'connected(Target, Pathway)', 'connected(Pathway, Cell)', 'connected(Cell, Symptom)', 'connected(Symptom, Disease)']
 
 
-        goal_state = ['bound(Drug)', 'bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Phenotype)', 'bound(Disease)',
-                                 'connected(Drug, Target)', 'connected(Target, Pathway)', 'connected(Pathway, Cell)', 'connected(Cell, Phenotype)', 'connected(Phenotype, Disease)']
+        goal_state = ['bound(Drug)', 'bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'bound(Disease)',
+                                 'connected(Drug, Target)', 'connected(Target, Pathway)', 'connected(Pathway, Cell)', 'connected(Cell, Symptom)', 'connected(Symptom, Disease)']
 
         return((action_list, state_vars, goal_state))

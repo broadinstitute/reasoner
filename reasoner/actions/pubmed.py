@@ -74,7 +74,7 @@ class PubmedQuery(Action):
     elif any(node.startswith('A11') for node in node_list):
       return('Cell')
     elif any(node.startswith('C23') for node in node_list):
-      return('Phenotype')
+      return('Symptom')
     elif any(node.startswith('C') for node in node_list) and not any(node.startswith('C23') for node in node_list):
       return('Disease')
     else:
@@ -121,7 +121,7 @@ class PubmedQuery(Action):
 class PubmedEdgeStats(PubmedQuery):
     def __init__(self):
         super().__init__([], [])
-        
+
     def get_uid_subset(self, term, start = 0, n = None):
         if n is None:
           query = 'esearch.fcgi?db=pubmed&term=' + term + '&sort=most+recent&retmode=json&retstart=' + str(start)
@@ -134,7 +134,7 @@ class PubmedEdgeStats(PubmedQuery):
         query = 'esummary.fcgi?db=pubmed&id=' + entry_id + '&retmode=json'
         res = self.parse_request(self.url_prefix + query)
         return(res)
-    
+
     def get_oldest_article_date(self, term, count = None):
         if count is None:
             count = self.get_article_count(term)
@@ -142,12 +142,12 @@ class PubmedEdgeStats(PubmedQuery):
         summary = self.get_summary(uid)
         #return(dateutil.parser.parse(summary['result'][uid]['pubdate']))
         return(int(summary['result'][uid]['pubdate'][0:4]))
-    
+
     def get_article_count(self, term):
         query = 'esearch.fcgi?db=pubmed&term=' + term + '&rettype=count&retmode=json'
         res = self.parse_request(self.url_prefix + query)
         return(int(res['esearchresult']['count']))
-    
+
     def get_edge_stats(self, start, end):
         query = self.generate_query_string((start, end))
         stats = dict()
@@ -158,18 +158,18 @@ class PubmedEdgeStats(PubmedQuery):
 
 class PubmedDrugDiseasePath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Drug)', 'bound(Disease)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Phenotype)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Phenotype) and connected(Phenotype, Disease)'])
+        super().__init__(['bound(Drug)', 'bound(Disease)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Drug'], query['Disease'], {'Target', 'Pathway', 'Cell', 'Phenotype'}))
+        return(self.execute_path_query(query['Drug'], query['Disease'], {'Target', 'Pathway', 'Cell', 'Symptom'}))
 
 
-class PubmedDrugPhenotypePath(PubmedQuery):
+class PubmedDrugSymptomPath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Drug)', 'bound(Phenotype)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Phenotype)'])
+        super().__init__(['bound(Drug)', 'bound(Symptom)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Drug'], query['Phenotype'], {'Target', 'Pathway', 'Cell'}))
+        return(self.execute_path_query(query['Drug'], query['Symptom'], {'Target', 'Pathway', 'Cell'}))
 
 
 class PubmedDrugCellPath(PubmedQuery):
@@ -191,18 +191,18 @@ class PubmedDrugPathwayPath(PubmedQuery):
 
 class PubmedTargetDiseasePath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Target)', 'bound(Disease)'], ['bound(Pathway)', 'bound(Cell)', 'bound(Phenotype)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Phenotype) and connected(Phenotype, Disease)'])
+        super().__init__(['bound(Target)', 'bound(Disease)'], ['bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Target'], query['Disease'], {'Pathway', 'Cell', 'Phenotype'}))
+        return(self.execute_path_query(query['Target'], query['Disease'], {'Pathway', 'Cell', 'Symptom'}))
 
 
-class PubmedTargetPhenotypePath(PubmedQuery):
+class PubmedTargetSymptomPath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Target)', 'bound(Phenotype)'], ['bound(Pathway)', 'bound(Cell)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Phenotype)'])
+        super().__init__(['bound(Target)', 'bound(Symptom)'], ['bound(Pathway)', 'bound(Cell)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Target'], query['Phenotype'], {'Pathway', 'Cell'}))
+        return(self.execute_path_query(query['Target'], query['Symptom'], {'Pathway', 'Cell'}))
 
 
 class PubmedTargetCellPath(PubmedQuery):
@@ -215,26 +215,26 @@ class PubmedTargetCellPath(PubmedQuery):
 
 class PubmedPathwayDiseasePath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Pathway)', 'bound(Disease)'], ['bound(Cell)', 'bound(Phenotype)', 'connected(Pathway, Cell) and connected(Cell, Phenotype) and connected(Phenotype, Disease)'])
+        super().__init__(['bound(Pathway)', 'bound(Disease)'], ['bound(Cell)', 'bound(Symptom)', 'connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Pathway'], query['Disease'], {'Cell', 'Phenotype'}))
+        return(self.execute_path_query(query['Pathway'], query['Disease'], {'Cell', 'Symptom'}))
 
 
-class PubmedPathwayPhenotypePath(PubmedQuery):
+class PubmedPathwaySymptomPath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Pathway)', 'bound(Phenotype)'], ['bound(Cell)', 'connected(Pathway, Cell) and connected(Cell, Phenotype)'])
+        super().__init__(['bound(Pathway)', 'bound(Symptom)'], ['bound(Cell)', 'connected(Pathway, Cell) and connected(Cell, Symptom)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Pathway'], query['Phenotype'], {'Cell'}))
+        return(self.execute_path_query(query['Pathway'], query['Symptom'], {'Cell'}))
 
 
 class PubmedCellDiseasePath(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Cell)', 'bound(Disease)'], ['bound(Phenotype)', 'connected(Cell, Phenotype) and connected(Phenotype, Disease)'])
+        super().__init__(['bound(Cell)', 'bound(Disease)'], ['bound(Symptom)', 'connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
     def execute(self, query):
-        return(self.execute_path_query(query['Cell'], query['Disease'], {'Phenotype'}))
+        return(self.execute_path_query(query['Cell'], query['Disease'], {'Symptom'}))
 
 
 ## simple node actions
@@ -260,16 +260,16 @@ class PubmedPathwayToCell(PubmedQuery):
     def execute(self, query):
         return(self.execute_entity_query(query['Pathway'], {'Cell'}))
 
-class PubmedDiseaseToPhenotype(PubmedQuery):
+class PubmedDiseaseToSymptom(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Disease)'], ['bound(Phenotype) and connected(Phenotype, Disease)'])
+        super().__init__(['bound(Disease)'], ['bound(Symptom) and connected(Symptom, Disease)'])
 
     def execute(self, query):
-        return(self.execute_entity_query(query['Disease'], {'Phenotype'}))
+        return(self.execute_entity_query(query['Disease'], {'Symptom'}))
 
-class PubmedPhenotypeToCell(PubmedQuery):
+class PubmedSymptomToCell(PubmedQuery):
     def __init__(self):
-        super().__init__(['bound(Phenotype)'], ['bound(Cell) and connected(Cell, Phenotype)'])
+        super().__init__(['bound(Symptom)'], ['bound(Cell) and connected(Cell, Symptom)'])
 
     def execute(self, query):
-        return(self.execute_entity_query(query['Phenotype'], {'Cell'}))
+        return(self.execute_entity_query(query['Symptom'], {'Cell'}))
