@@ -26,30 +26,6 @@ class PubmedQuery(Action):
     res = self.parse_request(self.url_prefix + query)
     return(res)
 
-  def get_article_count(self, term):
-    query = 'esearch.fcgi?db=pubmed&term=' + term + '&rettype=count&retmode=json'
-    res = self.parse_request(self.url_prefix + query)
-    return(int(res['esearchresult']['count']))
-
-  def get_uid_subset(self, term, start = 0, n = None):
-    if n is None:
-      query = 'esearch.fcgi?db=pubmed&term=' + term + '&sort=most+recent&retmode=json&retstart=' + str(start)
-    else:
-      query = 'esearch.fcgi?db=pubmed&term=' + term + '&sort=most+recent&retmode=json&retstart=' + str(start) + '&retmax=' + str(n)
-    res = self.parse_request(self.url_prefix + query)
-    return(res['esearchresult']['idlist'])
-
-  def get_summary(self, entry_id):
-    query = 'esummary.fcgi?db=pubmed&id=' + entry_id + '&retmode=json'
-    res = self.parse_request(self.url_prefix + query)
-    return(res)
-
-  def get_oldest_article_date(self, term):
-    count = self.get_article_count(term)
-    uid = self.get_uid_subset(term, count-1)[-1]
-    summary = self.get_summary(uid)
-    return(dateutil.parser.parse(summary['result'][uid]['pubdate']))
-
   def get_article_list(self, term):
     result = self.search_pubmed(term)
     return(result['esearchresult']['idlist'])
@@ -78,11 +54,6 @@ class PubmedQuery(Action):
         return [mh['DescriptorName']['#text'] for mh in doc['PubmedArticleSet']['PubmedArticle']['MedlineCitation']['MeshHeadingList']['MeshHeading']]
     else:
         return([])
-
-  def search_mesh(self, term):
-    query = 'esearch.fcgi?db=mesh&term=' + urllib.parse.quote_plus(term) + '&retmode=json'
-    res = self.parse_request(self.url_prefix + query)
-    return(res)
 
   def generate_query_string(self, terms, mesh = True):
     if mesh:
@@ -145,6 +116,44 @@ class PubmedQuery(Action):
   def execute(self, query):
     pass
 
+
+
+class PubmedEdgeStats(PubmedQuery):
+    def __init__(self):
+        super().__init__([], [])
+        
+    def get_uid_subset(self, term, start = 0, n = None):
+        if n is None:
+          query = 'esearch.fcgi?db=pubmed&term=' + term + '&sort=most+recent&retmode=json&retstart=' + str(start)
+        else:
+          query = 'esearch.fcgi?db=pubmed&term=' + term + '&sort=most+recent&retmode=json&retstart=' + str(start) + '&retmax=' + str(n)
+        res = self.parse_request(self.url_prefix + query)
+        return(res['esearchresult']['idlist'])
+
+    def get_summary(self, entry_id):
+        query = 'esummary.fcgi?db=pubmed&id=' + entry_id + '&retmode=json'
+        res = self.parse_request(self.url_prefix + query)
+        return(res)
+    
+    def get_oldest_article_date(self, term, count = None):
+        if count is None:
+            count = self.get_article_count(term)
+        uid = self.get_uid_subset(term, count-1)[-1]
+        summary = self.get_summary(uid)
+        #return(dateutil.parser.parse(summary['result'][uid]['pubdate']))
+        return(int(summary['result'][uid]['pubdate'][0:4]))
+    
+    def get_article_count(self, term):
+        query = 'esearch.fcgi?db=pubmed&term=' + term + '&rettype=count&retmode=json'
+        res = self.parse_request(self.url_prefix + query)
+        return(int(res['esearchresult']['count']))
+    
+    def get_edge_stats(self, start, end):
+        query = self.generate_query_string((start, end))
+        stats = dict()
+        stats['article_count'] = self.get_article_count(query)
+        stats['year_first_article'] = self.get_oldest_article_date(query, stats['article_count'])
+        return(stats)
 
 
 class PubmedDrugDiseasePath(PubmedQuery):

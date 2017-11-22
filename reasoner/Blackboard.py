@@ -63,14 +63,21 @@ class Blackboard(networkx.Graph):
                     for end in n1:
                         self.add_edge(start, end, entities = (edge[0], edge[1]))
   
-  def prune(self):
+  def prune(self, trim_leaves=True, sources=None, targets=None):
     self.remove_nodes_from(self.placeholders)
-    degrees = dict(self.degree())
-    while 1 in degrees.values():
-      for key,value in degrees.items():
-        if(value == 1):
-          self.remove_node(key)
-      degrees = dict(self.degree())
+    
+    if sources is not None and targets is not None:
+        bc = networkx.betweenness_centrality_subset(self, sources = sources, targets = targets)
+        remove_bc = [key for key,value in bc.items() if value == 0 and not key in sources and not key in targets]
+        self.remove_nodes_from(remove_bc)
+    
+    if trim_leaves:
+        degrees = dict(self.degree())
+        while 1 in degrees.values():
+          for key,value in degrees.items():
+            if(value == 1):
+              self.remove_node(key)
+          degrees = dict(self.degree())
   
   def get_entity_nodes(self,entities):
         node_dict = dict()

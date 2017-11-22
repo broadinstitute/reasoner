@@ -15,7 +15,6 @@ class Success(Action):
 class ActionPlanner:
   ## TODO
   #check for bugs
-  # implement symmetry for "connected" operator
 
   def __init__(self, knowledge_map, goal_state, default_reward = -2):
     self.knowledge_map = knowledge_map
@@ -32,7 +31,7 @@ class ActionPlanner:
       'p_success':0,
       'reward':5
     })
-
+    
     for action in self.actions:
         action['action'].precondition = [self.get_canonical_state_variable(x) for x in action['action'].precondition]
         action['action'].effect_terms = [self.get_canonical_state_variable(x) for x in action['action'].effect_terms]
@@ -45,13 +44,16 @@ class ActionPlanner:
         action['action'].effect_constraints = tmp_constraint_list
 
     self.action_names = [type(x['action']).__name__ for x in self.actions]
+    self.action_repository = tuple(self.actions)
+    self.actions_used = list()
+    
     self.default_reward = default_reward
     self.plan = None
     self.__set_pr()
 
   def canonicalize_state_variable(self, variable):
     if 'connected(' in variable:
-        sorted_list = sorted(variable[10:-1].split(', '))
+        sorted_list = sorted([x.strip() for x in variable[10:-1].split(',')])
         canonical = 'connected(' + ', '.join(sorted_list) + ')'
         return(canonical)
     else:
@@ -178,12 +180,17 @@ class ActionPlanner:
     vi.run()
     self.plan = vi
 
+  def replan(self, discount):
+    self.actions = [a for a in self.actions if not a in self.actions_used]
+    self.__set_pr()
+    vi = mdptoolbox.mdp.ValueIteration(self.P, self.R, discount)
+    vi.run()
+    self.plan = vi
+    
   def get_action(self, state):
     canonical_state = [self.get_canonical_state_variable(x) for x in state]
     assert (all(variable in self.state_variables for variable in canonical_state)),'State variables not valid:' + str(canonical_state)
-    return(self.actions[self.plan.policy[self.__get_state_index(canonical_state)]]['action'])
-
-  def get_action_name(self, state):
-    canonical_state = [self.get_canonical_state_variable(x) for x in state]
-    assert (all(variable in self.state_variables for variable in canonical_state)),'State variables not valid:' + str(canonical_state)
-    return(self.action_names[self.plan.policy[self.__get_state_index(canonical_state)]])
+    action = self.actions[self.plan.policy[self.__get_state_index(canonical_state)]]
+    self.actions_used.append(action)
+    return(action['action'])
+  

@@ -25,7 +25,7 @@ class Action:
         connections = list()
         for term in term_list:
             if 'connected(' in term:
-                entities = term[10:-1].split(', ')
+                entities = [x.strip() for x in term[10:-1].split(',')]
                 entity_set.update(entities)
                 connections.append(tuple(entities))
             elif 'bound(' in term:

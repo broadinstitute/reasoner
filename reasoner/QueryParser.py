@@ -83,6 +83,15 @@ class QueryParser:
                 '( PP ( IN=from ) ( NP:to_object-o ) )': {}
             }
           },
+            
+          '( SBARQ ( WHNP ( WDT ) ( NP:np ) ) ( SQ ( VP ( VBZ:relation-o ) ( PP:pp ) ) ) )': {
+            'np': {
+                '( NP:from_object-o )': {}
+            },
+            'pp': {
+                '( PP ( IN=from ) ( NP:to_object-o ) )': {}
+            }
+          },
 
           '( FRAG ( SBAR ( WHNP ( WDT ) ) ( S ( NP:np ) ( VP ( VBP:relation-o ) ( PP:pp ) ) ) ) )': {
             'np': {
@@ -115,10 +124,11 @@ class NCITTermMapper():
     def __init__(self):
         super().__init__()
         self.sparql = SPARQLWrapper("http://sparql.hegroup.org/sparql/")
-        self.entity_map = {'Disease or Disorder':'Disease', 'Genetic Disorder':'Genetic Condition', 'Pharmacologic Substance':'Drug'}
+        self.entity_map = {'Disease or Disorder':'Disease', 'Genetic Disorder':'GeneticCondition', 'Pharmacologic Substance':'Drug'}
 
     def send_query(self, query):
         query = """
+                PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
                 PREFIX obo-term: <http://purl.obolibrary.org/obo/>
                 SELECT DISTINCT ?y ?x ?label
                 from <http://purl.obolibrary.org/obo/merged/NCIT>
@@ -127,7 +137,7 @@ class NCITTermMapper():
                 VALUES ?x { obo-term:NCIT_C2991 obo-term:NCIT_C1909 obo-term:NCIT_C3101}
                 ?y rdfs:subClassOf* ?x.
                 ?x rdfs:label ?label.
-                ?y rdfs:label  ?query.
+                ?y oboInOwl:hasExactSynonym ?query.
                 FILTER(lcase(str(?query))="%s")
                 }
                 """ % query.lower()
@@ -139,6 +149,9 @@ class NCITTermMapper():
     def get_entity(self, term):
         results = self.send_query(term)
         term_entities = [self.entity_map[result['label']['value']] for result in results["results"]["bindings"]]
-        if "Disease" in term_entities and "Genetic Condition" in term_entities:
-            term_entities = ["Genetic Condition"]
-        return(term_entities[0])
+        if "Disease" in term_entities and "GeneticCondition" in term_entities:
+            term_entities = ["GeneticCondition"]
+        if len(term_entities) > 0:
+            return(term_entities[0])
+        else:
+            return(None)
