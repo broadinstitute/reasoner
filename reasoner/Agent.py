@@ -80,7 +80,7 @@ class Agent:
     def analyze(self, source, target):
         self.set_edge_stats()
         self.calculate_edge_probabilities()
-        return(networkx.shortest_path(agent.blackboard, source, target, '1-p'))
+        return(networkx.shortest_path(self.blackboard, source, target, '1-p'))
     
     def get_lists(self):
         action_list =[
