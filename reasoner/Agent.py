@@ -43,8 +43,9 @@ class Agent:
         next_action = self.planner.get_action(current_state['state'])
 
         while not isinstance(next_action, Success):
-            print(current_state['state'])
-            print(type(next_action).__name__)
+            print('current state: ' + str(current_state['state']))
+            print('next action: ' + type(next_action).__name__)
+            
             
             if isinstance(next_action, Noop):
                 print("No connections found.")
@@ -54,13 +55,18 @@ class Agent:
             for query in queries:
                 result = next_action.execute(query)
                 self.blackboard.add_knowledge(query, result, next_action)
-
+            self.planner.set_action_used(next_action)
+            
             current_state = self.blackboard.observe_state()
             if not any([x in current_state['entities'] for x in (set(next_action.effect_entities) - set(next_action.precondition_entities))]):
                 print('action failed ... replanning')
                 self.planner.replan(self.discount)
 
             next_action = self.planner.get_action(current_state['state'])
+            if self.planner.was_action_used(next_action) == True:
+                print('action failed ... replanning')
+                self.planner.replan(self.discount)
+                next_action = self.planner.get_action(current_state['state'])
 
     def set_edge_stats(self):
         stats = PubmedEdgeStats()

@@ -191,6 +191,11 @@ class ActionPlanner:
     canonical_state = [self.get_canonical_state_variable(x) for x in state]
     assert (all(variable in self.state_variables for variable in canonical_state)),'State variables not valid:' + str(canonical_state)
     action = self.actions[self.plan.policy[self.__get_state_index(canonical_state)]]
-    self.actions_used.append(action)
     return(action['action'])
+
+  def set_action_used(self, action):
+        self.actions_used.extend([x for x in self.actions if x['action'] == action])
+        
+  def was_action_used(self, action):
+        return any([action == x['action'] for x in self.actions_used])
   
