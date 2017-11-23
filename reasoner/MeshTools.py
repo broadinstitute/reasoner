@@ -99,16 +99,20 @@ class MeshTools(Eutilities):
     
     def get_best_term(self, query):
         terms = self.get_terms(query)
-        return(next(iter(terms), None))
+        return(next(iter(terms), []))
     
     def get_term_entities(self, query):
         entities = self.get_terms(query)
+        if len(entities) == 0:
+            return []
         for entity in entities:
             (entity['entity'], entity['bound']) = self.treenums2entity(entity['treenums'])
         return(entities)                   
     
     def get_best_term_entity(self, query):
         entity = self.get_best_term(query)
+        if len(entity) ==0:
+            return {'entity':None, 'bound':None}
         (entity['entity'], entity['bound']) = self.treenums2entity(entity['treenums'])
         return(entity)
     
