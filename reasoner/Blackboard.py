@@ -14,8 +14,18 @@ class Blackboard(networkx.Graph):
     self.placeholders.append('empty_' + entity + '_' + str(len(self.placeholders)))
     self.add_node(self.placeholders[-1], entity=entity, unbound=True)
     return(self.placeholders[-1])
+  
+  def align_edge_entities(self, node):
+    remove_edges = list()
+    for u,v,d in self.edges(node, data=True):
+        d['entities'] = (self.nodes[u]['entity'], self.nodes[v]['entity'])
+        if u == v:
+            remove_edges.append((u,v))
+    self.remove_edges_from(remove_edges)
     
   def add_knowledge(self, query, query_result, action):
+    
+    
     if len(action.effect_entities) == 2:
         for item in query_result:
           for entity,instance_list in item.items():
@@ -24,6 +34,13 @@ class Blackboard(networkx.Graph):
                 n1 = self.add_node_from_attributes(attributes['node'], entity = entity)
                 self.add_edge(n0, n1, entities = (next(iter(query)), entity))
                 networkx.set_edge_attributes(self, {(n0, n1):attributes['edge']})
+                self.align_edge_entities(n1)
+    elif len(action.effect_entities) == 1:
+        for item in query_result:
+          for entity,instance_list in item.items():
+            for attributes in instance_list:
+                n0 = self.add_node_from_attributes(attributes['node'], entity = entity)
+                self.align_edge_entities(n0)
     else:
         for path in query_result:
             for edge in action.effect_connections:
