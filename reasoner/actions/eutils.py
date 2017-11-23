@@ -179,7 +179,8 @@ class MedGenConditionToGeneticCondition(EutilitiesAction):
         genetic_conditions = list()
         for uid in summary['result']['uids']:
             entry = summary['result'][uid]
-            genetic_conditions.append({'GeneticCondition':[{'node':{'name':entry['title'], 'uid':uid, 'medgen_cid':entry['conceptid']}, 'edge':{}}]})
+            if entry['title'] == query['Condition']:
+                genetic_conditions.append({'GeneticCondition':[{'node':{'name':entry['title'], 'uid':uid, 'medgen_cid':entry['conceptid']}, 'edge':{}}]})
         
         return(genetic_conditions)
     
