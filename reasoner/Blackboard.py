@@ -64,10 +64,7 @@ class Blackboard(networkx.Graph):
                 for start,start_eattr in n0.items():
                     for end,end_eattr in n1.items():
                         self.add_edge(start, end, entities = (edge[0], edge[1]))
-                        if edge[0] in action.terminal_effect_entities:
-                            edge_attributes[(start,end)] = start_eattr
-                        elif edge[1] in action.terminal_effect_entities:
-                            edge_attributes[(start,end)] = end_eattr
+                        edge_attributes[(start,end)] = end_eattr
                 
                 networkx.set_edge_attributes(self, edge_attributes)
   
