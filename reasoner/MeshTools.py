@@ -5,7 +5,6 @@ import json
 class MeSH:
     
     def __init__(self):
-        super().__init__()
         self.sparql = SPARQLWrapper("http://id.nlm.nih.gov/mesh/sparql")
         self.url_prefix = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
         
@@ -18,12 +17,13 @@ class MeSH:
         PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
         PREFIX mesh: <http://id.nlm.nih.gov/mesh/>
         
-        SELECT DISTINCT ?x ?pref_label ?alt_label
+        SELECT DISTINCT ?x ?pref_label ?rdfs_label
         FROM <http://id.nlm.nih.gov/mesh>
         WHERE {
-          ?x meshv:altLabel ?alt_label.
+          ?x meshv:altLabel|meshv:prefLabel|rdfs:label ?query.
           ?x meshv:prefLabel ?pref_label.
-          FILTER(str(?alt_label)="%s")
+          ?x rdfs:label ?rdfs_label.
+          FILTER(lcase(str(?query))="%s")
         }  
         """ % query
         
@@ -35,6 +35,11 @@ class MeSH:
         with urllib.request.urlopen(url) as response:
             res = response.read().decode()
         return json.loads(res)
+    
+    def esummary(self, entry_id):
+        query = 'esummary.fcgi?db=mesh&id=' + entry_id + '&retmode=json'
+        res = self.parse_request(self.url_prefix + query)
+        return(res)
     
     def esearch(self, term):
         query = 'esearch.fcgi?db=mesh&term=' + urllib.parse.quote_plus(term) + '&retmode=json'
