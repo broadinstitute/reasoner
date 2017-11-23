@@ -18,6 +18,7 @@ class Agent:
     def __init__(self, question, discount = 0.4, state_action_tuple=None):
         self.parser = QueryParser()
         self.blackboard = Blackboard()
+        self.discount = discount
         query = self.parser.parse(question)
 
         if state_action_tuple is not None:
@@ -25,7 +26,7 @@ class Agent:
         else:
           (action_list, state_vars, goal_state) = self.get_lists()
         self.planner = ActionPlanner(KnowledgeMap(state_vars, action_list), goal_state)
-        self.planner.make_plan(discount)
+        self.planner.make_plan(self.discount)
         
         if query['from']['bound'] == True:
             self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'])
@@ -44,6 +45,11 @@ class Agent:
         while not isinstance(next_action, Success):
             print(current_state['state'])
             print(type(next_action).__name__)
+            
+            if isinstance(next_action, Noop):
+                print("No connections found.")
+                break
+            
             queries = QueryBuilder().get_queries(self.blackboard.get_entity_nodes(next_action.precondition_entities))
             for query in queries:
                 result = next_action.execute(query)
@@ -52,12 +58,9 @@ class Agent:
             current_state = self.blackboard.observe_state()
             if not any([x in current_state['entities'] for x in (set(next_action.effect_entities) - set(next_action.precondition_entities))]):
                 print('action failed ... replanning')
-                self.planner.replan()
+                self.planner.replan(self.discount)
 
             next_action = self.planner.get_action(current_state['state'])
-            if isinstance(next_action, Noop):
-                print("No connections found.")
-                break
 
     def set_edge_stats(self):
         stats = PubmedEdgeStats()
