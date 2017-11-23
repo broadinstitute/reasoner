@@ -72,7 +72,7 @@ class ActionPlanner:
     return(self.__bit2idx(bitlist))
 
   def __bit2idx(self, bitlist):
-    return(sum(1<<i for i, b in enumerate(bitlist) if b) - 1)
+    return(sum(1<<i for i, b in enumerate(bitlist) if b))
 
   def __all_matches(self, bitlist, index = 0):
     """Given a bit pattern (list of True, False, or None for each bit),
@@ -153,7 +153,7 @@ class ActionPlanner:
   def __set_pr(self):
     n_var = len(self.state_variables)
     n_actions = len(self.actions)
-    n_states = pow(2, n_var) - 1
+    n_states = pow(2, n_var)
 
     P = numpy.zeros([n_actions, n_states, n_states])
     R = numpy.full([n_states, n_actions], self.default_reward)
