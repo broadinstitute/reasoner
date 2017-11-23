@@ -1,6 +1,7 @@
 from lango.parser import StanfordServerParser
 from lango.matcher import match_rules
 from SPARQLWrapper import SPARQLWrapper, JSON
+from .MeshTools import MeshTools
 
 
 class QueryParser:
@@ -113,9 +114,12 @@ class QueryParser:
     def parse(self, query):
         tree = self.parser.parse(query)
         terms = match_rules(tree, self.rules, self.process_matches)
-        tm = NCITTermMapper()
-        terms['from']['entity'] = tm.get_entity(terms['from']['term'])
-        terms['to']['entity'] = tm.get_entity(terms['to']['term'])
+        #tm = NCITTermMapper()
+        #terms['from']['entity'] = tm.get_entity(terms['from']['term'])
+        #terms['to']['entity'] = tm.get_entity(terms['to']['term'])
+        mesh = MeshTools()
+        terms['from'].update({k:v for k,v in mesh.get_best_term_entity(terms['from']['term']).items() if k in ('entity', 'bound')})
+        terms['to'].update({k:v for k,v in mesh.get_best_term_entity(terms['to']['term']).items() if k in ('entity', 'bound')})
         return(terms)
 
 

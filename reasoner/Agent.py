@@ -26,9 +26,12 @@ class Agent:
           (action_list, state_vars, goal_state) = self.get_lists()
         self.planner = ActionPlanner(KnowledgeMap(state_vars, action_list), goal_state)
         self.planner.make_plan(discount)
-
-        self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'])
-        self.blackboard.add_node(query['to']['term'], entity = query['to']['entity'])
+        
+        if query['from']['bound'] == True:
+            self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'])
+            
+        if query['to']['bound'] == True:
+            self.blackboard.add_node(query['to']['term'], entity = query['to']['entity'])
 
     def show_blackboard(self, width=2, height=2):
         plt.figure(figsize=(width, height))
