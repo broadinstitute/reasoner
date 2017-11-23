@@ -28,41 +28,50 @@ class Blackboard(networkx.Graph):
         for path in query_result:
             for edge in action.effect_connections:
                 if edge[0] in path:
-                    n0 = [self.add_node_from_attributes(attributes['node'], entity = edge[0]) for attributes in path[edge[0]]]
+                    n0 = {self.add_node_from_attributes(attributes['node'], edge[0]):attributes['edge'] for attributes in path[edge[0]]}
                     if edge[1] in path:
-                        n1 = [self.add_node_from_attributes(attributes['node'], entity = edge[1]) for attributes in path[edge[1]]]
+                        n1 = {self.add_node_from_attributes(attributes['node'], edge[1]):attributes['edge'] for attributes in path[edge[1]]}
                     elif edge[1] in query:
-                        n1 = [query[edge[1]]]
+                        n1 = {query[edge[1]]:{}}
                     else:
-                        n1 = [self.add_placeholder(edge[1])]
+                        n1 = {self.add_placeholder(edge[1]):{}}
                         path[edge[1]] = [{'node':{'name':node},'edge':{}} for node in n1]
                     
                 elif edge[1] in path:
-                    n1 = [self.add_node_from_attributes(attributes['node'], entity = edge[1]) for attributes in path[edge[1]]]
+                    n1 = {self.add_node_from_attributes(attributes['node'], edge[1]):attributes['edge'] for attributes in path[edge[1]]}
                     if edge[0] in path:
-                        n0 = [self.add_node_from_attributes(attributes['node'], entity = edge[0]) for attributes in path[edge[0]]]
+                        n0 = {self.add_node_from_attributes(attributes['node'], edge[0]):attributes['edge'] for attributes in path[edge[0]]}
                     elif edge[0] in query:
-                        n0 = [query[edge[0]]]
+                        n0 = {query[edge[0]]:{}}
                     else:
-                        n0 = [self.add_placeholder(edge[0])]
+                        n0 = {self.add_placeholder(edge[0]):{}}
                         path[edge[0]] = [{'node':{'name':node},'edge':{}} for node in n0]
                 elif edge[0] in query:
-                    n0 = [query[edge[0]]]
-                    n1 = [self.add_placeholder(edge[1])]
+                    n0 = {query[edge[0]]:{}}
+                    n1 = {self.add_placeholder(edge[1]):{}}
                     path[edge[1]] = [{'node':{'name':node},'edge':{}} for node in n1]
                 elif edge[1] in query:
-                    n0 = [self.add_placeholder(edge[0])]
+                    n0 = {self.add_placeholder(edge[0]):{}}
                     path[edge[0]] = [{'node':{'name':node},'edge':{}} for node in n0]
-                    n1 = [query[edge[1]]]
+                    n1 = {query[edge[1]]:{}}
                 else:
-                    n0 = [self.add_placeholder(edge[0])]
-                    n1 = [self.add_placeholder(edge[1])]
+                    n0 = {self.add_placeholder(edge[0]):{}}
+                    n1 = {self.add_placeholder(edge[1]):{}}
                     path[edge[0]] = [{'node':{'name':node},'edge':{}} for node in n0]
                     path[edge[1]] = [{'node':{'name':node},'edge':{}} for node in n1]
-                for start in n0:
-                    for end in n1:
+                
+                edge_attributes = dict()
+                for start,start_eattr in n0.items():
+                    for end,end_eattr in n1.items():
                         self.add_edge(start, end, entities = (edge[0], edge[1]))
+                        if edge[0] in action.terminal_effect_entities:
+                            edge_attributes[(start,end)] = start_eattr
+                        elif edge[1] in action.terminal_effect_entities:
+                            edge_attributes[(start,end)] = end_eattr
+                
+                networkx.set_edge_attributes(self, edge_attributes)
   
+
   def prune(self, trim_leaves=True, sources=None, targets=None):
     self.remove_nodes_from(self.placeholders)
     
