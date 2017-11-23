@@ -10,7 +10,7 @@ from .QueryParser import QueryParser
 from .ConnectionPGM import ConnectionPGM
 
 from .actions.pubmed import *
-from .actions.sparql_actions import *
+from .actions.sparql import *
 from .actions.pharos import PharosDrugToTarget
 from .actions.file_actions import *
 
