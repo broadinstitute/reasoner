@@ -1,7 +1,7 @@
 import urllib.request, urllib.parse
 import json
 import xmltodict
-from reasoner.actions.action import Action
+from .action import Action
 import xml.etree.ElementTree as etree
 
 class EutilitiesAction(Action):
@@ -80,6 +80,8 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
     
     def find_disease(self, variants, query_term):
         for variant in variants:
+            if 'Condition' not in variant.keys():
+                continue
             remove_idx = list()
             for i in range(len(variant['Condition'])):
                 if query_term in variant['Condition'][i]['node']['name'].lower():
@@ -157,7 +159,7 @@ class MeshConditionToGeneticCondition(EutilitiesAction):
             term = entry['ds_meshterms'][0]
             mesh_id = entry['ds_meshui']
             if any([x.startswith('C16.320') for x in treenums]):
-                genetic_conditions.append({'GeneticCondition':[{'node':{'name':query, 'mesh_term':term, 'uid':uid, 'mesh_id':mesh_id}, 'edge':{}}]})
+                genetic_conditions.append({'GeneticCondition':[{'node':{'name':query['Condition'], 'mesh_term':term, 'uid':uid, 'mesh_id':mesh_id}, 'edge':{}}]})
 
         return(genetic_conditions)
     
@@ -180,3 +182,4 @@ class MedGenConditionToGeneticCondition(EutilitiesAction):
             genetic_conditions.append({'GeneticCondition':[{'node':{'name':entry['title'], 'uid':uid, 'medgen_cid':entry['conceptid']}, 'edge':{}}]})
         
         return(genetic_conditions)
+    
