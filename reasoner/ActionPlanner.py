@@ -13,8 +13,6 @@ class Success(Action):
 
 
 class ActionPlanner:
-  ## TODO
-  #check for bugs
 
   def __init__(self, knowledge_map, goal_state, default_reward = -2):
     self.knowledge_map = knowledge_map
