@@ -43,6 +43,7 @@ class ActionPlanner:
             tmp_constraint_list.append(tuple(tmp_constraint))
         action['action'].effect_constraints = tmp_constraint_list
 
+    self.goal_state = [self.get_canonical_state_variable(x) for x in goal_state]
     self.action_names = [type(x['action']).__name__ for x in self.actions]
     self.action_repository = tuple(self.actions)
     self.actions_used = list()
