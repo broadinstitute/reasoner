@@ -3,6 +3,7 @@ import urllib.request, urllib.parse
 import json
 import xmltodict
 import xml.etree.ElementTree as etree
+import sqlite3
 
 class Eutilities():
     def __init__(self):
@@ -53,6 +54,8 @@ class MeshTools(Eutilities):
     def __init__(self):
         super().__init__()
         self.sparql = SPARQLWrapper("http://id.nlm.nih.gov/mesh/sparql")
+        self.db = './data/reasoner_data.sqlite'
+        self.db_conn = sqlite3.connect(self.db)
         
     def sparql_synonym_query(self, query):
         query = """
@@ -76,6 +79,42 @@ class MeshTools(Eutilities):
         self.sparql.setQuery(query)
         self.sparql.setReturnFormat(JSON)
         return(self.sparql.query().convert())
+    
+    def id2treenums(self, mesh_id):
+        query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+        PREFIX mesh: <http://id.nlm.nih.gov/mesh/>
+        
+        SELECT DISTINCT ?treenum
+        FROM <http://id.nlm.nih.gov/mesh>
+        WHERE {
+          mesh:%s meshv:treeNumber ?treenum.
+        }  
+        """ % mesh_id
+        self.sparql.setQuery(query)
+        self.sparql.setReturnFormat(JSON)
+        
+        result = self.sparql.query().convert()
+        
+        treenums = list()
+        for entry in result['results']['bindings']:
+            treenums.append(entry['treenum']['value'][27:])     
+        return treenums
+    
+    def id2entity_sparql(self, mesh_id):
+        treenums = self.id2treenums(mesh_id)
+        return self.treenums2entity(treenums)
+    
+    def id2entity(self, mesh_id):
+        c = self.db_conn.cursor()
+        result = next(iter(c.execute('SELECT entity, bound FROM mesh WHERE mesh_ui = "%s"' % mesh_id).fetchall()), [])
+        if len(result) == 0:
+            return (None, False)
+        return result
     
     def get_terms(self, query):
         search_results = self.esearch(query + '[MeSH Term]', 'mesh')
@@ -102,19 +141,19 @@ class MeshTools(Eutilities):
         return(next(iter(terms), []))
     
     def get_term_entities(self, query):
-        entities = self.get_terms(query)
-        if len(entities) == 0:
+        terms = self.get_terms(query)
+        if len(terms) == 0:
             return []
-        for entity in entities:
-            (entity['entity'], entity['bound']) = self.treenums2entity(entity['treenums'])
-        return(entities)                   
+        for term in terms:
+            (term['entity'], term['bound']) = self.treenums2entity(term['treenums'])
+        return(terms)                   
     
     def get_best_term_entity(self, query):
-        entity = self.get_best_term(query)
-        if len(entity) ==0:
-            return {'entity':None, 'bound':None}
-        (entity['entity'], entity['bound']) = self.treenums2entity(entity['treenums'])
-        return(entity)
+        term = self.get_best_term(query)
+        if len(term) ==0:
+            return {'entity':None, 'bound':False}
+        (term['entity'], term['bound']) = self.treenums2entity(term['treenums'])
+        return(term)
     
     def treenums2entity(self, treenums):
         bound = True
@@ -155,5 +194,5 @@ class MeshTools(Eutilities):
             return ('Disease', bound)
         
         else:
-            return (None, None)
+            return (None, False)
         
