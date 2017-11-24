@@ -9,7 +9,7 @@ from .Blackboard import Blackboard, QueryBuilder
 from .QueryParser import QueryParser
 from .ConnectionPGM import ConnectionPGM
 
-from .actions.pubmed import *
+from .actions.eutils import *
 from .actions.sparql import *
 from .actions.pharos import PharosDrugToTarget
 from .actions.file_actions import *
@@ -60,13 +60,17 @@ class Agent:
             return(path_states)
     
     def acquire_knowledge(self):
+        # guard agains external changes to blackboard
+        if len(self.planner.actions_used) > 0:
+            print("Blackboard may have changed since last knowledge acquisition ... replanning")
+            self.planner.replan(self.discount)
+        
         current_state = self.observe_state()
         next_action = self.planner.get_action(current_state['state'])
 
         while not isinstance(next_action, Success):
             print('current state: ' + str(current_state['state']))
             print('next action: ' + type(next_action).__name__)
-            
             
             if isinstance(next_action, Noop):
                 print("No connections found.")
@@ -78,8 +82,12 @@ class Agent:
                 self.blackboard.add_knowledge(query, result, next_action)
             self.planner.set_action_used(next_action)
             
+            previous_state = current_state
             current_state = self.observe_state()
-            if not any([x in current_state['entities'] for x in (set(next_action.effect_entities) - set(next_action.precondition_entities))]):
+            #observed_changes = current_state - previous_state
+            #expected_changes = set(next_action.effect_terms) - set(next_action.precondition)
+            #if not any([x in current_state['entities'] for x in expected_changes]):
+            if current_state['state'] == previous_state['state']:
                 print('action failed ... replanning')
                 self.planner.replan(self.discount)
 
@@ -91,24 +99,32 @@ class Agent:
         return True
 
     def set_edge_stats(self):
-        stats = PubmedEdgeStats()
-        attributes = {(u,v):stats.get_edge_stats(u,v) for (u, v) in self.blackboard.edges()}
+        pubmed = PubmedEdgeStats()
+        stats = dict()
+        ph = set(self.blackboard.placeholders)
+        for (u, v) in self.blackboard.edges():
+            if len({u,v} & ph) == 0:
+                stats[(u,v)] = pubmed.get_edge_stats(u,v)                
         networkx.set_edge_attributes(self.blackboard, attributes)
 
-    def calculate_edge_probabilities(self):
+    def calculate_edge_probabilities(self, default_probability = 1/1000):
         pgm = ConnectionPGM()
         variables = ['is_connection']
 
         current_year = int(datetime.datetime.now().year)
         attributes = dict()
         for (u, v, d) in self.blackboard.edges(data=True):
-            y = current_year - d['year_first_article']
-            samples = pgm.evaluate('pubmed',
-                                  {'num_articles':d['article_count'],
-                                   'years_since_first_article':y}, variables)
-            sample_mean = pgm.get_mean(samples, 'is_connection')
-            attributes[(u,v)] = {'p':sample_mean,'1-p':1-sample_mean}
-            #print(u + ' ' + v + ' ' + str(pgm.get_mean(samples, 'is_connection')))
+            if 'article_count' not in d or d['article_count'] == 0:
+                attributes[(u,v)] = {'p':default_probability,'1-p':1-default_probability}
+            else:
+                evidence = {'num_articles':d['article_count']}
+                if 'year_first_article' in d:
+                    y = current_year - d['year_first_article']
+                    evidence['years_since_first_article'] = y
+                samples = pgm.evaluate('pubmed', evidence, variables)
+                sample_mean = pgm.get_mean(samples, 'is_connection')
+                attributes[(u,v)] = {'p':sample_mean,'1-p':1-sample_mean}
+                #print(u + ' ' + v + ' ' + str(pgm.get_mean(samples, 'is_connection')))
         networkx.set_edge_attributes(self.blackboard, attributes)
 
     def in_goal_state(self):
@@ -116,10 +132,13 @@ class Agent:
         diff = set(self.planner.goal_state) - set(current_state)
         return(len(diff) == 0)
     
-    def analyze(self, source, target):
+    def analyze(self, sources, targets):
+        # create a subgraph that consists of all nodes on a path between source and target
+        #path_graph = self.blackboard.get_path_subgraph()
+        
         self.set_edge_stats()
         self.calculate_edge_probabilities()
-        return(networkx.shortest_path(self.blackboard, source, target, '1-p'))
+        return(networkx.shortest_path(self.blackboard, sources, targets, '1-p'))
 
     def get_lists(self):
         action_list =[
