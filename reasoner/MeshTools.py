@@ -54,6 +54,7 @@ class MeshTools(Eutilities):
     def __init__(self):
         super().__init__()
         self.sparql = SPARQLWrapper("http://id.nlm.nih.gov/mesh/sparql")
+        self.source_file = '../reasoner/data/MeSH_hierarchy.txt'
         self.db = './data/reasoner_data.sqlite'
         self.db_conn = sqlite3.connect(self.db)
         
@@ -145,54 +146,89 @@ class MeshTools(Eutilities):
         if len(terms) == 0:
             return []
         for term in terms:
-            (term['entity'], term['bound']) = self.treenums2entity(term['treenums'])
+            (term['entity'], term['bound']) = self.id2entity(term['mesh_id'])
         return(terms)                   
     
     def get_best_term_entity(self, query):
         term = self.get_best_term(query)
         if len(term) ==0:
             return {'entity':None, 'bound':False}
-        (term['entity'], term['bound']) = self.treenums2entity(term['treenums'])
+        (term['entity'], term['bound']) = self.id2entity(term['mesh_id'])
         return(term)
     
-    def treenums2entity(self, treenums):
-        bound = True
-        
-        if any([treenum.startswith('D02') for treenum in treenums]):
-            if any([treenum in ['D02'] for treenum in treenums]):
-                bound = False
-            return ('Drug', bound)
-        
-        elif any([treenum.startswith('D12.776') for treenum in treenums]) or any([treenum.startswith('D08.811') for treenum in treenums]):
-            if any([treenum in ['D12.776', 'D08.811'] for treenum in treenums]):
-                bound = False
-            return ('Target', bound)
-        
-        elif any([treenum.startswith('G03.493') for treenum in treenums]) or any([treenum.startswith('G04.835') for treenum in treenums]):
-            if any([treenum in ['G03.493', 'G04.835'] for treenum in treenums]):
-                bound = False
-            return ('Pathway', bound)
-        
-        elif any([treenum.startswith('A11') for treenum in treenums]):
-            if any([treenum in ['A11'] for treenum in treenums]):
-                bound = False
-            return ('Cell', bound)
-        
-        elif any([treenum.startswith('C23') for treenum in treenums]):
-            if any([treenum in ['C23'] for treenum in treenums]):
-                bound = False
-            return ('Symptom', bound)
-        
-        elif any([treenum.startswith('C16.320') for treenum in treenums]):
-            if any([treenum in ['C16.320'] for treenum in treenums]):
-                bound = False
-            return ('GeneticCondition', bound)
-        
-        elif any([treenum.startswith('C') for treenum in treenums]) and not any([treenum.startswith('C23') for treenum in treenums]):
-            if any([treenum in ['C'] for treenum in treenums]):
-                bound = False
-            return ('Disease', bound)
-        
-        else:
-            return (None, False)
-        
+    def treenums2entity(treenums):
+            bound = True
+
+            if any([treenum.startswith('D02') for treenum in treenums]):
+                if any([treenum in ['D02'] for treenum in treenums]):
+                    bound = False
+                return ('Drug', bound)
+
+            elif any([treenum.startswith('D12.776') for treenum in treenums]) or any([treenum.startswith('D08.811') for treenum in treenums]):
+                if any([treenum in ['D12.776', 'D08.811'] for treenum in treenums]):
+                    bound = False
+                return ('Target', bound)
+
+            elif any([treenum.startswith('G03.493') for treenum in treenums]) or any([treenum.startswith('G04.835') for treenum in treenums]):
+                if any([treenum in ['G03.493', 'G04.835'] for treenum in treenums]):
+                    bound = False
+                return ('Pathway', bound)
+
+            elif any([treenum.startswith('A11') for treenum in treenums]):
+                if any([treenum in ['A11', 'A11.251', 'A11.251.210'] for treenum in treenums]):
+                    bound = False
+                return ('Cell', bound)
+
+            elif any([treenum.startswith('C23') for treenum in treenums]):
+                if any([treenum in ['C23'] for treenum in treenums]):
+                    bound = False
+                return ('Symptom', bound)
+
+            elif any([treenum.startswith('C16.320') for treenum in treenums]):
+                if any([treenum in ['C16.320'] for treenum in treenums]):
+                    bound = False
+                return ('GeneticCondition', bound)
+
+            elif any([treenum.startswith('C') for treenum in treenums]) and not any([treenum.startswith('C23') for treenum in treenums]):
+                if any([treenum in ['C'] for treenum in treenums]):
+                    bound = False
+                return ('Disease', bound)
+
+            else:
+                return (None, False)
+            
+            
+    def __create_database(self):
+        mesh = pd.read_table(self.source_file)
+
+        term_dict = dict()
+        for index, row in mesh.iterrows():
+            if row['id'] in term_dict:
+                term_dict[row['id']]['treenums'].append(row['node'])
+            else:
+                term_dict[row['id']] = {'term':row['MeSH_term'], 'treenums':[row['node']]}
+                
+        # connect to database
+        conn = sqlite3.connect(self.db)
+        c = conn.cursor()
+
+        # create mesh table
+        try:
+            c.execute('DROP TABLE IF EXISTS mesh')
+            c.execute("""CREATE TABLE mesh (
+                            mesh_ui VARCHAR(7) PRIMARY KEY,
+                            term VARCHAR(255),
+                            entity VARCHAR(20),
+                            bound INTEGER)
+                      """)
+
+
+            for k,v in term_dict.items():
+                (entity, bound) = self.treenums2entity(v['treenums'])
+                query = 'INSERT INTO mesh (mesh_ui, term, entity, bound) VALUES (?, ?, ?, ?)'
+                c.execute(query, (k, v['term'], entity, int(bound)))
+        except Exception as inst:
+            print(inst)
+
+        conn.commit()
+        conn.close()
