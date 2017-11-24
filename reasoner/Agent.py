@@ -37,9 +37,30 @@ class Agent:
     def show_blackboard(self, width=2, height=2):
         plt.figure(figsize=(width, height))
         networkx.draw(self.blackboard, with_labels=True)
-
+    
+    def get_state(self, graph):
+        entities = set(d['entity'] for n,d in graph.nodes(data=True) if not 'unbound' in d)
+        bound_nodes = set('bound(' + e + ')' for e in entities)
+        connections = set(self.planner.get_canonical_state_variable('connected(' + ', '.join(d['entities']) + ')') for u,v,d in graph.edges(data=True))
+        return({'state':bound_nodes|connections, 'entities':entities})
+    
+    def observe_state(self):
+        return(self.get_state(self.blackboard))
+  
+    def observe_path_state(self, start, end):
+        if not networkx.has_path(self.blackboard, start, end):
+            # perform "union" check
+            return(self.get_state(self.blackboard))
+        else:
+            # check each path individually
+            path_states = list()
+            for path in networkx.all_shortest_paths(self.blackboard, source=start, target=end):
+                sg = self.blackboard.subgraph(path)
+                path_states.append(self.get_state(sg))
+            return(path_states)
+    
     def acquire_knowledge(self):
-        current_state = self.blackboard.observe_state()
+        current_state = self.observe_state()
         next_action = self.planner.get_action(current_state['state'])
 
         while not isinstance(next_action, Success):
@@ -49,7 +70,7 @@ class Agent:
             
             if isinstance(next_action, Noop):
                 print("No connections found.")
-                break
+                return False
             
             queries = QueryBuilder().get_queries(self.blackboard.get_entity_nodes(next_action.precondition_entities))
             for query in queries:
@@ -57,7 +78,7 @@ class Agent:
                 self.blackboard.add_knowledge(query, result, next_action)
             self.planner.set_action_used(next_action)
             
-            current_state = self.blackboard.observe_state()
+            current_state = self.observe_state()
             if not any([x in current_state['entities'] for x in (set(next_action.effect_entities) - set(next_action.precondition_entities))]):
                 print('action failed ... replanning')
                 self.planner.replan(self.discount)
@@ -67,6 +88,7 @@ class Agent:
                 print('action failed ... replanning')
                 self.planner.replan(self.discount)
                 next_action = self.planner.get_action(current_state['state'])
+        return True
 
     def set_edge_stats(self):
         stats = PubmedEdgeStats()
@@ -89,6 +111,11 @@ class Agent:
             #print(u + ' ' + v + ' ' + str(pgm.get_mean(samples, 'is_connection')))
         networkx.set_edge_attributes(self.blackboard, attributes)
 
+    def in_goal_state(self):
+        current_state = self.observe_state()['state']
+        diff = set(self.planner.goal_state) - set(current_state)
+        return(len(diff) == 0)
+    
     def analyze(self, source, target):
         self.set_edge_stats()
         self.calculate_edge_probabilities()
@@ -100,6 +127,12 @@ class Agent:
                 'action':DrugBankDrugToTarget(),
                 'p_success':0.5,
                 'reward':2
+            },
+            
+            {
+                'action':PharosDrugToTarget(),
+                'p_success':0.5,
+                'reward':1
             },
 
             {
@@ -135,7 +168,7 @@ class Agent:
             {
                 'action':PubmedDrugDiseasePath(),
                 'p_success':0.99,
-                'reward':2
+                'reward':0.5
             }
         ]
 

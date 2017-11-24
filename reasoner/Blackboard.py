@@ -86,7 +86,7 @@ class Blackboard(networkx.Graph):
                 networkx.set_edge_attributes(self, edge_attributes)
   
 
-  def prune(self, trim_leaves=True, sources=None, targets=None):
+  def prune(self, trim_leaves=True, remove_singletons = True, sources=None, targets=None):
     self.remove_nodes_from(self.placeholders)
     
     if sources is not None and targets is not None:
@@ -101,6 +101,13 @@ class Blackboard(networkx.Graph):
             if(value == 1):
               self.remove_node(key)
           degrees = dict(self.degree())
+    
+    if remove_singletons:
+        degrees = dict(self.degree())
+        for key,value in degrees.items():
+            if(value == 0):
+                self.remove_node(key)
+    
   
   def get_entity_nodes(self,entities):
         node_dict = dict()
@@ -111,27 +118,6 @@ class Blackboard(networkx.Graph):
             if d['entity'] in entities:
                 node_dict[d['entity']].append(n)
         return(node_dict)
-    
-  def get_state(self, graph):
-    entities = set(d['entity'] for n,d in graph.nodes(data=True) if not 'unbound' in d)
-    bound_nodes = set('bound(' + e + ')' for e in entities)
-    connections = set('connected(' + ', '.join(d['entities']) + ')' for u,v,d in graph.edges(data=True))
-    return({'state':bound_nodes|connections, 'entities':entities})
-    
-  def observe_state(self):
-    return(self.get_state(self))
-  
-  def observe_path_state(self, start, end):
-    if not networkx.has_path(self, start, end):
-        # perform "union" check
-        return(self.get_state(self))
-    else:
-        # check each path individually
-        path_states = list()
-        for path in networkx.all_shortest_paths(self, source=start, target=end):
-            sg = self.subgraph(path)
-            path_states.append(self.get_state(sg))
-        return(path_states)
 
     
     
