@@ -1,8 +1,10 @@
+from .action import Action
+from ..MeshTools import MeshTools
 import urllib.request, urllib.parse
 import json
 import xmltodict
-from .action import Action
 import xml.etree.ElementTree as etree
+import dateutil.parser
 
 class EutilitiesAction(Action):
     def __init__(self, precondition, effect):
@@ -24,12 +26,18 @@ class EutilitiesAction(Action):
         return json.loads(obj)
     
     def parse_xml(self, obj):
-        return xmltodict.parse(obj)
+        return etree.fromstring(obj)
     
-    def esearch(self, term, db, retmax = 20, retmode = "json", quote = True):
+    def esearch(self, term, db, retstart = 0, retmax = 20, retmode = "json", quote = True, sort = None, count = False):
         if quote == True:
             term = urllib.parse.quote_plus(term)
-        query = 'esearch.fcgi?db=' + db +'&term=' + term + '&retmode=' + retmode +'&retmax=' + str(retmax)
+        query = 'esearch.fcgi?db=' + db +'&term=' + term + '&retmode=' + retmode + '&retstart=' + str(retstart) + '&retmax=' + str(retmax)
+        
+        if sort is not None:
+            query = query + '&sort=' + sort
+        if count == True:
+            query = query + '&rettype=count'
+        
         res = self.get_json_request(self.url_prefix + query)
         return res
     
@@ -66,17 +74,13 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
     def execute(self, query):
         search_results = self.esearch(self.add_quotation_marks(query['Disease'])+' [dis]', 'clinvar')
         if len(search_results['esearchresult']['idlist']) == 0:
-          return {}
+            return {}
         
         uid = ','.join(search_results['esearchresult']['idlist'])
-        fetch_result = self.parse_request(self.efetch(uid, 'clinvar', rettype='variation'))
+        fetch_result = self.parse_xml(self.efetch(uid, 'clinvar', rettype='variation'))
         variants = self.load_variants(fetch_result)
         result = self.find_disease(variants, query['Disease'])
-        return(result)
-
-    def parse_request(self, obj):
-        root = etree.fromstring(obj)
-        return root
+        return result
     
     def find_disease(self, variants, query_term):
         for variant in variants:
@@ -184,3 +188,234 @@ class MedGenConditionToGeneticCondition(EutilitiesAction):
         
         return(genetic_conditions)
     
+
+
+class PubmedQuery(EutilitiesAction):
+    def __init__(self, precondition, effect):
+        super().__init__(precondition, effect)
+        self.mesh_tools = MeshTools()
+    
+    def parse_mesh_heading(self, mh):
+        desc = mh.find('DescriptorName')
+        entity = self.mesh_tools.id2entity(desc.attrib['UI'])
+        
+        if entity[1] == False:
+            term_dict = {}
+        else:
+            qual = mh.find('QualifierName')
+            major = desc.attrib['MajorTopicYN'] == 'Y'
+            if qual is not None:
+                 major = major or qual.attrib['MajorTopicYN'] == 'Y'
+                
+            term_dict = {'node':{'name':desc.text,
+                                 'mesh:ui':desc.attrib['UI'],
+                                 'major_topic':major},
+                         'edge':{}
+                        }
+        return (entity[0], term_dict)
+
+        
+    def extract_mesh_terms(self, article):
+        mesh_headings = dict()
+        for mh in article.findall('./MedlineCitation/MeshHeadingList/MeshHeading'):
+            (entity, term) = self.parse_mesh_heading(mh)
+            
+            if entity is None:
+                continue
+            
+            if entity in mesh_headings:
+                mesh_headings[entity].append(term)
+            else:
+                mesh_headings[entity] = [term]
+        return mesh_headings      
+    
+    def generate_query_string(self, terms, mesh = True):
+        if mesh:
+            query_list = [term + ' [MeSH Term]' for term in terms]
+        else:
+            query_list = terms
+        query = ' '.join(query_list).replace(' ', '+')
+        return(query)
+
+    def run_query(self, query_tuple, mesh = True):
+        query_string = self.generate_query_string(query_tuple, mesh)
+        search_results = self.esearch(query_string, 'pubmed', sort='relevance')
+        if len(search_results['esearchresult']['idlist']) == 0:
+            return {}
+        
+        uid = ','.join(search_results['esearchresult']['idlist'])
+        
+        article_xml = self.efetch(uid, 'pubmed', retmode="xml")
+        root = self.parse_xml(article_xml)
+        return [self.extract_mesh_terms(article) for article in root.findall('./PubmedArticle')]
+
+    def filter_results(self, article_list, keep_variables):
+        for article in article_list:
+            remove_keys = set(article.keys()) - keep_variables
+            for k in remove_keys:
+                del article[k]
+        return([article for article in article_list if article])
+
+    def execute_path_query(self, start, end, keep_variables):
+        article_list = self.run_query((start, end))
+        return(self.filter_results(article_list, keep_variables))
+
+    def execute_entity_query(self, entity, keep_variables, mesh = True):
+        article_list = self.run_query((entity,), mesh)
+        return(self.filter_results(article_list, keep_variables))
+
+    def execute(self, query):
+        pass
+
+
+
+class PubmedEdgeStats(PubmedQuery):
+    def __init__(self):
+        super().__init__([], [])
+
+    def get_oldest_article_date(self, query, count = None):
+        if count is None:
+            count = self.get_article_count(query)
+        search_results = self.esearch(query, 'pubmed', sort = 'most+recent', retstart = count-1)
+        if len(search_results['esearchresult']['idlist']) == 0:
+            return -1
+        
+        uid = search_results['esearchresult']['idlist'][-1]
+        summary = self.esummary(uid, 'pubmed')
+        #return(dateutil.parser.parse(summary['result'][uid]['pubdate']))
+        return(int(summary['result'][uid]['pubdate'][0:4]))
+
+    def get_article_count(self, query):
+        search_results = self.esearch(query, 'pubmed', count = True)
+        return(int(search_results['esearchresult']['count']))
+
+    def get_edge_stats(self, start, end):
+        query = self.generate_query_string((start, end))
+        stats = dict()
+        stats['article_count'] = self.get_article_count(query)
+        
+        if stats['article_count'] > 0:
+            year_first_article = self.get_oldest_article_date(query, stats['article_count'])
+            if not year_first_article == -1:
+                stats['year_first_article'] = year_first_article
+        return(stats)
+
+
+
+class PubmedDrugDiseasePath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Drug)', 'bound(Disease)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Drug'], query['Disease'], {'Target', 'Pathway', 'Cell', 'Symptom'}))
+
+
+class PubmedDrugSymptomPath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Drug)', 'bound(Symptom)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Drug'], query['Symptom'], {'Target', 'Pathway', 'Cell'}))
+
+
+class PubmedDrugCellPath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Drug)', 'bound(Cell)'], ['bound(Target)', 'bound(Pathway)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Drug'], query['Cell'], {'Target', 'Pathway'}))
+
+
+class PubmedDrugPathwayPath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Drug)', 'bound(Pathway)'], ['bound(Target)', 'connected(Drug, Target) and connected(Target, Pathway)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Drug'], query['Pathway'], {'Target'}))
+
+
+
+class PubmedTargetDiseasePath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Target)', 'bound(Disease)'], ['bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Target'], query['Disease'], {'Pathway', 'Cell', 'Symptom'}))
+
+
+class PubmedTargetSymptomPath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Target)', 'bound(Symptom)'], ['bound(Pathway)', 'bound(Cell)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Target'], query['Symptom'], {'Pathway', 'Cell'}))
+
+
+class PubmedTargetCellPath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Target)', 'bound(Cell)'], ['bound(Pathway)', 'connected(Target, Pathway) and connected(Pathway, Cell)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Target'], query['Cell'], {'Pathway'}))
+
+
+class PubmedPathwayDiseasePath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Pathway)', 'bound(Disease)'], ['bound(Cell)', 'bound(Symptom)', 'connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Pathway'], query['Disease'], {'Cell', 'Symptom'}))
+
+
+class PubmedPathwaySymptomPath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Pathway)', 'bound(Symptom)'], ['bound(Cell)', 'connected(Pathway, Cell) and connected(Cell, Symptom)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Pathway'], query['Symptom'], {'Cell'}))
+
+
+class PubmedCellDiseasePath(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Cell)', 'bound(Disease)'], ['bound(Symptom)', 'connected(Cell, Symptom) and connected(Symptom, Disease)'])
+
+    def execute(self, query):
+        return(self.execute_path_query(query['Cell'], query['Disease'], {'Symptom'}))
+
+
+## simple node actions
+class PubmedDrugToTarget(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Drug)'], ['bound(Target) and connected(Drug, Target)'])
+
+    def execute(self, query):
+        return(self.execute_entity_query(query['Drug'], {'Target'}))
+
+
+class PubmedTargetToPathway(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Target)'], ['bound(Pathway) and connected(Target, Pathway)'])
+
+    def execute(self, query):
+        return(self.execute_entity_query(query['Target'], {'Pathway'}, mesh = False))
+
+class PubmedPathwayToCell(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Pathway)'], ['bound(Cell) and connected(Pathway, Cell)'])
+
+    def execute(self, query):
+        return(self.execute_entity_query(query['Pathway'], {'Cell'}))
+
+class PubmedDiseaseToSymptom(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Disease)'], ['bound(Symptom) and connected(Symptom, Disease)'])
+
+    def execute(self, query):
+        return(self.execute_entity_query(query['Disease'], {'Symptom'}))
+
+class PubmedSymptomToCell(PubmedQuery):
+    def __init__(self):
+        super().__init__(['bound(Symptom)'], ['bound(Cell) and connected(Cell, Symptom)'])
+
+    def execute(self, query):
+        return(self.execute_entity_query(query['Symptom'], {'Cell'}))
