@@ -101,7 +101,7 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
             if germline_elem.find('ReviewStatus') != None:
                 condition['edge']['review_status'] = germline_elem.find('ReviewStatus').text
             if germline_elem.find('./ClinicalSignificance/Description')  != None:
-                condition['edge']['clinical_significace'] = germline_elem.find('./ClinicalSignificance/Description').text
+                condition['edge']['clinical_significance'] = germline_elem.find('./ClinicalSignificance/Description').text
                 if germline_elem.find('./ClinicalSignificance/Citation/ID') != None:
                     condition['edge']['pmid'] = germline_elem.find('./ClinicalSignificance/Citation/ID').text
             if condition['node']['name'] != 'not specified' and condition['node']['name'] != 'not provided' :
