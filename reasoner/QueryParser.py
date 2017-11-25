@@ -114,12 +114,39 @@ class QueryParser:
     def parse(self, query):
         tree = self.parser.parse(query)
         terms = match_rules(tree, self.rules, self.process_matches)
-        #tm = NCITTermMapper()
-        #terms['from']['entity'] = tm.get_entity(terms['from']['term'])
-        #terms['to']['entity'] = tm.get_entity(terms['to']['term'])
+        if terms is None:
+            return {}
+        
+
+        
         mesh = MeshTools()
         terms['from'].update({k:v for k,v in mesh.get_best_term_entity(terms['from']['term']).items() if k in ('entity', 'bound')})
         terms['to'].update({k:v for k,v in mesh.get_best_term_entity(terms['to']['term']).items() if k in ('entity', 'bound')})
+        
+        if terms['from']['entity'] is None:
+            tm = NCITTermMapper()
+            terms['from']['entity'] = tm.get_entity(terms['from']['term'])
+            terms['from']['bound'] = True
+        
+        if terms['to']['entity'] is None:
+            tm = NCITTermMapper()
+            terms['to']['entity'] = tm.get_entity(terms['to']['term'])
+            terms['to']['bound'] = True
+
+        if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
+            terms['to']['entity'] = 'Disease'
+
+         ## TESTING ONLY - REMOVE!!!
+#        if terms['relation'] == 'clinical outcome pathway':
+#            terms['from']['entity'] = 'Drug'
+#            terms['from']['bound'] = True
+#            terms['to']['entity'] = 'Disease'
+#            terms['to']['bound'] = True
+#        elif terms['relation'] == 'protects':
+#            terms['from']['entity'] = 'GeneticCondition'
+#            terms['from']['bound'] = False
+#            terms['to']['entity'] = 'Disease'
+#            terms['to']['bound'] = True
         return(terms)
 
 
