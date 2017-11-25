@@ -83,7 +83,7 @@ class Blackboard(networkx.Graph):
 
                     networkx.set_edge_attributes(self, edge_attributes)
   
-    def get_path_subgraph(self):
+    def get_path_subgraph(self, sources, targets):
         bc = networkx.betweenness_centrality_subset(self, sources = sources, targets = targets)
         path_nodes = [key for key,value in bc.items() if value > 0 or key in sources or key in targets]
         return(self.subgraph(path_nodes))
