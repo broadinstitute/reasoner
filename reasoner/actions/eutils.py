@@ -200,7 +200,7 @@ class PubmedQuery(EutilitiesAction):
         entity = self.mesh_tools.id2entity(desc.attrib['UI'])
         
         if entity[1] == False:
-            term_dict = {}
+            return (None, {})
         else:
             qual = mh.find('QualifierName')
             major = desc.attrib['MajorTopicYN'] == 'Y'
