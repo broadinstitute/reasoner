@@ -4,6 +4,7 @@ import json
 import xmltodict
 import xml.etree.ElementTree as etree
 import sqlite3
+import pandas as pd
 
 class Eutilities():
     def __init__(self):
@@ -156,7 +157,7 @@ class MeshTools(Eutilities):
         (term['entity'], term['bound']) = self.id2entity(term['mesh_id'])
         return(term)
     
-    def treenums2entity(treenums):
+    def treenums2entity(self, treenums):
             bound = True
 
             if any([treenum.startswith('D02') for treenum in treenums]):
@@ -174,7 +175,7 @@ class MeshTools(Eutilities):
                     bound = False
                 return ('Pathway', bound)
 
-            elif any([treenum.startswith('A11') for treenum in treenums]):
+            elif any([treenum.startswith('A11') for treenum in treenums]) and not any([treenum.startswith('A11.284') for treenum in treenums]):
                 if any([treenum in ['A11', 'A11.251', 'A11.251.210'] for treenum in treenums]):
                     bound = False
                 return ('Cell', bound)
@@ -198,7 +199,7 @@ class MeshTools(Eutilities):
                 return (None, False)
             
             
-    def __create_database(self):
+    def create_database(self):
         mesh = pd.read_table(self.source_file)
 
         term_dict = dict()
