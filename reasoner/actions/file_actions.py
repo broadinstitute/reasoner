@@ -123,6 +123,19 @@ class DrugBankDrugToTarget(CachedFileSourcedAction):
         super().__init__(['bound(Drug)'],['bound(Target) and connected(Drug, Target)'], filename, column_map)
 
 
+class DrugBankDrugToUniProtTarget(CachedFileSourcedAction):
+
+    def __init__(self, filename='./data/drugbankUniProt.txt'):
+        column_map = { 'Target': {
+            'Name': {'precondition':'Drug'},
+            'Action': {'edge':'action'},
+            'UniProt': {'node':'id'},
+            'Target': {'node':'name'},
+            '+1': {'node_value': {'authority':'UniProt'}}
+        }}
+        super().__init__(['bound(Drug)'],['bound(Target) and connected(Drug, Target)'], filename, column_map)
+
+
 class GoFunctionTargetToPathway(CachedFileSourcedAction):
 
     def __init__(self, filename='./data/GO_function.txt'):
