@@ -40,7 +40,7 @@ class Agent:
     
     def get_state(self, graph):
         entities = set(d['entity'] for n,d in graph.nodes(data=True) if not 'unbound' in d)
-        bound_nodes = set('bound(' + e + ')' for e in entities)
+        bound_nodes = set('bound(' + e + ')' for e in entities if e is not None)
         connections = set(self.planner.get_canonical_state_variable('connected(' + ', '.join(d['entities']) + ')') for u,v,d in graph.edges(data=True))
         return({'state':bound_nodes|connections, 'entities':entities})
     
@@ -98,16 +98,17 @@ class Agent:
                 next_action = self.planner.get_action(current_state['state'])
         return True
 
-    def set_edge_stats(self):
+    def set_edge_stats(self, path_graph):
         pubmed = PubmedEdgeStats()
         stats = dict()
         ph = set(self.blackboard.placeholders)
-        for (u, v) in self.blackboard.edges():
+        for (u, v) in path_graph.edges():
             if len({u,v} & ph) == 0:
-                stats[(u,v)] = pubmed.get_edge_stats(u,v)                
-        networkx.set_edge_attributes(self.blackboard, attributes)
+                stats[(u,v)] = pubmed.get_edge_stats(u,v)  
+        # use path graph to iterate but apply updates to blackboard
+        networkx.set_edge_attributes(self.blackboard, stats)
 
-    def calculate_edge_probabilities(self, default_probability = 1/1000):
+    def calculate_edge_probabilities(self, default_probability = 0):
         pgm = ConnectionPGM()
         variables = ['is_connection']
 
@@ -132,13 +133,17 @@ class Agent:
         diff = set(self.planner.goal_state) - set(current_state)
         return(len(diff) == 0)
     
-    def analyze(self, sources, targets):
+    def analyze(self, source, target):
         # create a subgraph that consists of all nodes on a path between source and target
-        #path_graph = self.blackboard.get_path_subgraph()
-        
-        self.set_edge_stats()
+        path_graph = self.blackboard.get_path_subgraph([source], [target])
+        self.set_edge_stats(path_graph)
         self.calculate_edge_probabilities()
-        return(networkx.shortest_path(self.blackboard, sources, targets, '1-p'))
+        try:
+            path = networkx.shortest_path(self.blackboard, source, target, '1-p')
+            return(path)
+        except networkx.NetworkXNoPath:
+            print("no path exists.")
+            return []
 
     def get_lists(self):
         action_list =[
