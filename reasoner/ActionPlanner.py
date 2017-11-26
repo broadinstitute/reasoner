@@ -154,24 +154,24 @@ class ActionPlanner:
         n_actions = len(self.actions)
         n_states = pow(2, n_var)
 
-        P = numpy.zeros([n_actions, n_states, n_states])
+        P = [scipy.sparse.lil_matrix((n_states, n_states)) for i in range(n_actions)]
         R = numpy.full([n_states, n_actions], self.default_reward)
 
         for i in range(n_actions):
             for j in range(n_states):
-                P[i,j,j] = 1
+                P[i][j,j] = 1
 
         counter = 0
         for action in self.actions:
             state_dict = self.__get_action_from_to_states(action['action'])
             for from_state,to_states in state_dict.items():
                 if len(to_states) > 0 or isinstance(action['action'], Success):
-                    P[counter, from_state, from_state] = 1 - action['p_success']
+                    P[counter][from_state, from_state] = 1 - action['p_success']
                     R[from_state, counter] = action['reward']
                     for to_state in to_states:
-                        P[counter, from_state, to_state] = action['p_success']/len(to_states)
+                        P[counter][from_state, to_state] = action['p_success']/len(to_states)
             counter = counter + 1
-        self.P = P
+        self.P = [m.tocsr() for m in P]
         self.R = R
 
     def make_plan(self, discount):
