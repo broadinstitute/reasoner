@@ -1,10 +1,16 @@
-from .action import Action
-from ..MeshTools import MeshTools
-import urllib.request, urllib.parse
+"""Actions to access NCBI E-Utilities.
+
+"""
+
 import json
 import xmltodict
 import xml.etree.ElementTree as etree
 import dateutil.parser
+import urllib.request, urllib.parse
+
+from .action import Action
+from ..MeshTools import MeshTools
+
 
 class EutilitiesAction(Action):
     def __init__(self, precondition, effect):
@@ -173,6 +179,23 @@ class MedGenConditionToGeneticCondition(EutilitiesAction):
         super().__init__(['bound(Condition)', 'bound(Variant)', 'connected(Variant, Condition)'],['bound(GeneticCondition)', 'connected(Variant, GeneticCondition)'])
     
     def execute(self, query):
+        """Uses MedGen to identify whether a given condition is genetic.
+        
+        Parameters
+        ----------
+        query : str
+            name of condition
+        
+        Returns
+        -------
+        genetic_conditions : list
+            A list of dicts, one for each identified genetic condition.
+            Keys are returned entities ('GeneticCondition'), values are
+            a 'node' and 'edge' dict, each of which contains attributes
+            for the respective structure.
+        
+        """
+        
         search_results = self.esearch(self.add_quotation_marks(query['Condition']) + '[ExactTitle]', 'medgen')
         if len(search_results['esearchresult']['idlist']) == 0:
             return {}

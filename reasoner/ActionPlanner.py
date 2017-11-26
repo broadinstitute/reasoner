@@ -5,16 +5,45 @@ from collections import OrderedDict
 from .actions.action import Action
 
 class Noop(Action):
+    # A default action to indicate all goal-oriented actions have been tried.
     def __init__(self):
         super().__init__([], [])
 
 class Success(Action):
+    # Action associated with the goal state.
+    #
+    # The `Success` action is used to orient the agent towards the goal state.
+    # It will be associated with a high reward upon initialization and can
+    # only be executed in a goal state.
     def __init__(self, goal_state):
         super().__init__(goal_state, [])
 
 
 class ActionPlanner:
+    """
+    Find a plan for reaching a goal state from the current state.
+    
+    Given a set of actions (a ``KnowledgeMap``) and a goal state, the ``ActionPlanner``
+    class uses a Markov decision process (MDP) to plan a strategy for knowledge acquisition.
+    It calculates the MDP policy using a value iteration algorithm and provides an interface
+    to getting the best action for a specific state, marking actions as used, and replanning
+    if the original plan failed.
+    
 
+    Parameters
+    ----------
+    
+    knowledge_map : ~reasoner.KnowledgeMap.KnowledgeMap
+       The ``KnowledgeMap`` used for planning.
+       
+    goal_state : dict
+       A dictionary of state variables that represent a goal state.
+       
+    default_reward : numeric
+        A default reward; assigned to all states that do not satisfy
+        an action's preconditions.
+
+    """
     def __init__(self, knowledge_map, goal_state, default_reward = -2):
         self.knowledge_map = knowledge_map
         self.state_variable_map = dict()
@@ -175,11 +204,27 @@ class ActionPlanner:
         self.R = R
 
     def make_plan(self, discount):
+        """Develop an initial plan.
+        
+        Parameters
+        ----------
+        discount : float
+            A discount used in the MDP value iteration algorithm. Must be in range [0,1].
+        
+        """
         vi = mdptoolbox.mdp.ValueIteration(self.P, self.R, discount)
         vi.run()
         self.plan = vi
 
     def replan(self, discount):
+        """Modify an existing plan.
+        
+        Parameters
+        ----------
+        discount : float
+            A discount used in the MDP value iteration algorithm. Must be in range [0,1].
+        
+        """
         self.actions = [a for a in self.actions if not a in self.actions_used]
         self.__set_pr()
         vi = mdptoolbox.mdp.ValueIteration(self.P, self.R, discount)
@@ -187,14 +232,49 @@ class ActionPlanner:
         self.plan = vi
     
     def get_action(self, state):
+        """Return the best action to execute in a given state.
+        
+        Parameters
+        ----------
+        state : list
+            A list of state variables.
+        
+        Returns
+        -------
+        Action  
+            An object of type ``Action`` that represents the best action
+            for the input state.
+        
+        """
         canonical_state = [self.get_canonical_state_variable(x) for x in state]
         assert (all(variable in self.state_variables for variable in canonical_state)),'State variables not valid:' + str(canonical_state)
         action = self.actions[self.plan.policy[self.__get_state_index(canonical_state)]]
         return(action['action'])
 
     def set_action_used(self, action):
+        """Mark an action as used.
+        
+        Parameters
+        ----------
+        action : Action
+            The action that should be marked used.
+        
+        """
         self.actions_used.extend([x for x in self.actions if x['action'] == action])
         
     def was_action_used(self, action):
+        """Check if an action was used.
+        
+        Parameters
+        ----------
+        action : Action
+            The action in question.
+        
+        Returns
+        -------
+        bool
+            `True` if the action has been used, `False` otherwise.
+        
+        """
         return any([action == x['action'] for x in self.actions_used])
   

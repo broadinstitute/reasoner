@@ -2,6 +2,14 @@ import networkx
 import numpy
 
 class Blackboard(networkx.Graph):
+    """
+    A graph that holds the agent's current knowledge.
+    
+    The ``Blackboard`` class allows the agent to store, access, and manipulate knowledge.
+    It is implemented as a graph (building on top of the networkx package).
+
+    """
+    
     def __init__(self):
         super().__init__()
         self.placeholders = list()
@@ -25,6 +33,21 @@ class Blackboard(networkx.Graph):
         self.remove_edges_from(remove_edges)
     
     def add_knowledge(self, query, query_result, action):
+        """Add knowledge to the Blackboard.
+        
+        Parameters
+        ----------
+        query : dict
+            A dictionary that contains the query nodes, with entity names as keys
+            and node names as values.
+            
+        query : dict
+            A dictionary returned as result from an ``Action`` object.
+            
+        action : Action
+            The action used to get ``query_results``.
+        
+        """
         if len(action.effect_entities) == 2:
             for item in query_result:
                 for entity,instance_list in item.items():
@@ -85,11 +108,46 @@ class Blackboard(networkx.Graph):
                     networkx.set_edge_attributes(self, edge_attributes)
   
     def get_path_subgraph(self, sources, targets):
+        """Return an induced subgraph of all paths connecting two sets of nodes.
+        
+        Parameters
+        ----------
+        sources : list
+            A list of node names to be used as path sources.
+            
+        targets : list
+            A list of node names to be used as path targets.
+        
+        Returns
+        -------
+        networkx.Graph
+            An induced subgraph that contains all nodes and edges between ``sources`` and ``targets``.
+        
+        """
         bc = networkx.betweenness_centrality_subset(self, sources = sources, targets = targets)
         path_nodes = [key for key,value in bc.items() if value > 0 or key in sources or key in targets]
         return(self.subgraph(path_nodes))
 
     def prune(self, remove_singletons=True, trim_leaves=False, remove_placeholders=False, sources=None, targets=None):
+        """Remove specific parts of the graph.
+        
+        Parameters
+        ----------
+        remove_singletons : bool, optional
+            Should singletons be removed? [default: True]
+            
+        trim_leaves : bool, optional
+            Iteratively remove all nodes with degree one, effectively
+            keeping only nodes that are in cycles? [default: False]
+        
+        remove_placeholders : bool, optional
+            Should placeholder nodes be removed? [default: False]
+        
+        sources, targets : list, optional
+            Lists of node names. If provided, nodes that are not on any path
+            between ``sources`` and ``targets`` will be removed. [default: None]
+        
+        """
         if remove_placeholders == True:
             self.remove_nodes_from(self.placeholders)
 
@@ -115,6 +173,22 @@ class Blackboard(networkx.Graph):
     
   
     def get_entity_nodes(self,entities, include_unbound = False):
+        """Get all nodes that are instances of specific entities.
+        
+        Parameters
+        ----------
+        entities : list
+            A list of entity names.
+        
+        include_unbound : bool, optional
+            Should placeholder nodes be included?
+        
+        Returns
+        -------
+        dict
+            A dictionary of nodes, indexed by entity names.
+        
+        """
         node_dict = dict()
         for entity in entities:
             node_dict[entity] = list()
@@ -130,24 +204,33 @@ class Blackboard(networkx.Graph):
         return node_dict
 
     def write_safe(self):
-        g = self.copy()
-        for u,v,d in g.edges(data=True):
+        """Return a copy of the Blackboard graph that is safe to write to GraphML.
+        
+        Returns
+        -------
+        graph : ~reasoner.Blackboard.Blackboard
+            The write-safe graph.
+        
+        """
+        graph = self.copy()
+        for u,v,d in graph.edges(data=True):
             d['entity_source'] = d['entities'][0]
             d['entity_target'] = d['entities'][1]
             del d['entities']
             if 'p' in d and type(d['p']).__module__ == numpy.__name__:
                 d['p'] = numpy.asscalar(d['p'])
                 d['1-p'] = numpy.asscalar(d['1-p'])
-        return g
+        return graph
     
     
 class QueryBuilder():
-    
+    """Construct all possible queries from a dictionary of entities (keys) to nodes (values).
+    """
     def __init__(self):
         self.query_list = list()
 
     def get_all_queries(self, index, n, query):
-        """recursively move through the given entities and bind them with all given instances"""
+        #recursively move through the given entities and bind them with all given instances
         if index == n:
             self.query_list.append(query)
         else:
@@ -156,7 +239,19 @@ class QueryBuilder():
                 self.get_all_queries(index+1, n, q)
     
     def get_queries(self, instances):
-        """find all possible binding combinations for entities is variable instances"""
+        """Find all possible binding combinations for ``instances``.
+        
+        Parameters
+        ----------
+        instances : dict
+            A dict of node names, indexed by entity names.
+        
+        Returns
+        -------
+        list
+            A list queries.
+        
+        """
         self.instances = instances
         self.keys = list(self.instances.keys())
         self.get_all_queries(0, len(self.keys), dict())
