@@ -66,7 +66,7 @@ class PharosDrugToTarget(JsonApiAction):
 class PharosTargetToDisease(JsonApiAction):
 
     def __init__(self):
-        super().__init__(['bound(Target)'],['bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Target, Pathway)',  'connected(Target, Pathway) and connected(Pathway, Cell)',  'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
+        super().__init__(['bound(Target)'],['bound(Disease)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
 
     def execute(self, query):
@@ -144,3 +144,47 @@ class PharosTargetToPathway(JsonApiAction):
                 node['URI'] = property['href']
             return {'Pathway':[{'edge':{}, 'node':node}]}
         return None
+
+
+class PharosTargetToTissue(JsonApiAction):
+
+    def __init__(self):
+        super().__init__(['bound(Target)'],['bound(Cell)', 'connected(Target, Pathway) and connected(Pathway, Cell)'])
+
+
+    def execute(self, query):
+        target = query['Target']
+        response = self.parse_request('https://pharos.nih.gov/idg/api/v1/targets/search?q='+quote(target))
+        content = response['content']
+        if len(content) != 1:
+            print("WARNING: Target not unique: "+target)
+            return []
+        links_url = content[0]['_links']['href']
+        print(links_url)
+        tissue_list = []
+        links = self.parse_request(links_url+'(kind=ix.idg.models.Expression)')
+        for link in links:
+            tissue = self.link_to_tissue(link)
+            if tissue != None:
+                tissue_list.append(tissue)
+        return tissue_list
+
+
+    def link_to_tissue(self, link):
+        properties = link['properties']
+        edge = {}
+        if 'href' in link:
+            edge['href'] = link['href']
+        for property in properties:
+            if 'label' in property and 'term' in property:
+                node = {}
+                node['name'] = property['term']
+                node['source'] = property['label']
+                if 'href' in property and property['href'] != None:
+                    node['URI'] = property['href']
+                return {'Cell':[{'node': node,'edge':edge}]}
+        return None
+
+
+
+
