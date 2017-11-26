@@ -2,6 +2,7 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import networkx
 import datetime
+import re
 
 from .ActionPlanner import ActionPlanner, Noop, Success
 from .KnowledgeMap import KnowledgeMap
@@ -11,7 +12,7 @@ from .ConnectionPGM import ConnectionPGM
 
 from .actions.eutils import *
 from .actions.sparql import *
-from .actions.pharos import PharosDrugToTarget
+from .actions.pharos import *
 from .actions.file_actions import *
 
 class Agent:
@@ -20,6 +21,9 @@ class Agent:
         self.blackboard = Blackboard()
         self.discount = discount
         query = self.parser.parse(question)
+        if len(query) == 0:
+            print('Query could not be parsed.')
+            return None
 
         if state_action_tuple is not None:
           (action_list, state_vars, goal_state) = state_action_tuple
@@ -29,10 +33,10 @@ class Agent:
         self.planner.make_plan(self.discount)
         
         if query['from']['bound'] == True:
-            self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'])
+            self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'], name = query['from']['term'])
             
         if query['to']['bound'] == True:
-            self.blackboard.add_node(query['to']['term'], entity = query['to']['entity'])
+            self.blackboard.add_node(query['to']['term'], entity = query['to']['entity'], name = query['to']['term'])
 
     def show_blackboard(self, width=2, height=2):
         plt.figure(figsize=(width, height))
@@ -131,7 +135,7 @@ class Agent:
     def in_goal_state(self):
         current_state = self.observe_state()['state']
         diff = set(self.planner.goal_state) - set(current_state)
-        return(len(diff) == 0)
+        return len(diff) == 0
     
     def analyze(self, source, target):
         # create a subgraph that consists of all nodes on a path between source and target
@@ -140,7 +144,15 @@ class Agent:
         self.calculate_edge_probabilities()
         try:
             path = networkx.shortest_path(self.blackboard, source, target, '1-p')
-            return(path)
+            path_data = list()
+            for node in path:
+                attributes = self.blackboard.nodes[node].copy()
+                if 'unbound' in attributes and attributes['unbound'] == True:
+                    attributes['name'] = re.sub(r'_[0-9]+?$', '', attributes['name'])
+                #if attributes['entity'] in path_data:
+                #    raise Exception('Path already contains entity ' + attributes['entity'])
+                path_data.append(attributes)
+            return path_data
         except networkx.NetworkXNoPath:
             print("no path exists.")
             return []
@@ -148,7 +160,7 @@ class Agent:
     def get_lists(self):
         action_list =[
             {
-                'action':DrugBankDrugToTarget(),
+                'action':DrugBankDrugToUniProtTarget(),
                 'p_success':0.5,
                 'reward':2
             },
@@ -158,6 +170,12 @@ class Agent:
                 'p_success':0.5,
                 'reward':1
             },
+            
+            {
+                'action':PharosTargetToDisease(),
+                'p_success':0.5,
+                'reward':2
+            }, 
 
             {
                 'action':GoFunctionTargetToPathway(),
