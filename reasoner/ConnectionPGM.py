@@ -7,6 +7,7 @@ class ConnectionPGM:
         self.set_models()
 
     def set_models(self):
+        """initialize class with predefined JAGS model strings"""
         self.models = {
             'pubmed':{'model':  '''
                                 model {
@@ -29,14 +30,17 @@ class ConnectionPGM:
 
         
     def evaluate(self, model_name, observations, variables, n_iter=1000, chains=4):
+        """run JAGS MCMC with specified model"""
         model = pyjags.Model(self.models[model_name]['model'], data=observations, chains=chains)
         samples = model.sample(n_iter, vars=variables)
-        return(samples)
+        return samples
 
     def get_mean(self, samples, varname):
-        return(np.mean(samples[varname]))
+        """calculate sample mean"""
+        return np.mean(samples[varname])
             
     def summary(self, samples, varname, p=95):
+        """calculate summary statistics for samples"""
         values = samples[varname]
         ci = np.percentile(values, [100-p, p])
         print('{:<6} mean = {:>5.1f}, {}% credible interval [{:>4.1f} {:>4.1f}]'.format(
