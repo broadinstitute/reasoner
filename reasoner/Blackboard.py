@@ -1,4 +1,5 @@
 import networkx
+import numpy
 
 class Blackboard(networkx.Graph):
     def __init__(self):
@@ -11,7 +12,7 @@ class Blackboard(networkx.Graph):
         return attributes['name']
     
     def add_placeholder(self, entity):
-        self.placeholders.append('empty_' + entity + '_' + str(len(self.placeholders)))
+        self.placeholders.append('unknown_' + entity.lower() + '_' + str(len(self.placeholders)))
         self.add_node(self.placeholders[-1], entity=entity, unbound=True)
         return self.placeholders[-1]
   
@@ -113,16 +114,31 @@ class Blackboard(networkx.Graph):
     
     
   
-    def get_entity_nodes(self,entities):
+    def get_entity_nodes(self,entities, include_unbound = False):
         node_dict = dict()
         for entity in entities:
             node_dict[entity] = list()
         
-        for n,d in self.nodes(data=True):
-            if d['entity'] in entities:
-                node_dict[d['entity']].append(n)
+        if include_unbound == True:
+            for n,d in self.nodes(data=True):
+                if d['entity'] in entities:
+                    node_dict[d['entity']].append(n)
+        else:
+            for n,d in self.nodes(data=True):
+                if d['entity'] in entities and (not 'unbound' in d or d['unbound'] == False):
+                    node_dict[d['entity']].append(n)
         return node_dict
 
+    def write_safe(self):
+        g = self.copy()
+        for u,v,d in g.edges(data=True):
+            d['entity_source'] = d['entities'][0]
+            d['entity_target'] = d['entities'][1]
+            del d['entities']
+            if 'p' in d and type(d['p']).__module__ == numpy.__name__:
+                d['p'] = numpy.asscalar(d['p'])
+                d['1-p'] = numpy.asscalar(d['1-p'])
+        return g
     
     
 class QueryBuilder():
@@ -131,6 +147,7 @@ class QueryBuilder():
         self.query_list = list()
 
     def get_all_queries(self, index, n, query):
+        """recursively move through the given entities and bind them with all given instances"""
         if index == n:
             self.query_list.append(query)
         else:
@@ -139,6 +156,7 @@ class QueryBuilder():
                 self.get_all_queries(index+1, n, q)
     
     def get_queries(self, instances):
+        """find all possible binding combinations for entities is variable instances"""
         self.instances = instances
         self.keys = list(self.instances.keys())
         self.get_all_queries(0, len(self.keys), dict())
