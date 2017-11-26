@@ -181,7 +181,7 @@ class MeshTools(Eutilities):
                 return ('Cell', bound)
 
             elif any([treenum.startswith('C23') for treenum in treenums]):
-                if any([treenum in ['C23'] for treenum in treenums]):
+                if any([treenum in ['C23', 'C23.550.288.500'] for treenum in treenums]):
                     bound = False
                 return ('Symptom', bound)
 
