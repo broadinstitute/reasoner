@@ -102,11 +102,45 @@ class PharosTargetToDisease(JsonApiAction):
             if 'label' in prop and 'numval' in prop:
                 disease_edge[prop['label']]=prop['numval']
 
-        return {'Pathway':[], 'Cell':[], 'Symptom':[], 'Disease':[{'node': disease_node,'edge':disease_edge}]}
+        return {'Disease':[{'node': disease_node,'edge':disease_edge}]}
 
 
     def get_property(seld, properties,property):
         for prop in properties:
             if prop['label'] == property:
                 return prop['term']
+        return None
+
+
+class PharosTargetToPathway(JsonApiAction):
+
+    def __init__(self):
+        super().__init__(['bound(Target)'],['bound(Pathway)', 'connected(Target, Pathway)'])
+
+    def execute(self, query):
+        target = query['Target']
+        response = self.parse_request('https://pharos.nih.gov/idg/api/v1/targets/search?q='+quote(target))
+        content = response['content']
+        if len(content) != 1:
+            print("WARNING: Target not unique: "+target)
+            return []
+        properties_url = content[0]['_properties']['href']
+        print(properties_url)
+        pathway_list = []
+        properties = self.parse_request(properties_url+'(label=*Pathway*)')
+        for property in properties:
+            pathway = self.property_to_pathway(property)
+            if pathway != None:
+                pathway_list.append(pathway)
+        return pathway_list
+
+
+    def property_to_pathway(self, property):
+        if 'label' in property and 'term' in property:
+            node = {}
+            node['name'] = property['term']
+            node['source'] = property['label']
+            if 'href' in property and property['href'] != None:
+                node['URI'] = property['href']
+            return {'Pathway':[{'edge':{}, 'node':node}]}
         return None
