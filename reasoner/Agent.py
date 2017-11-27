@@ -151,11 +151,31 @@ class Agent:
 
     def set_edge_stats(self, path_graph):
         pubmed = PubmedEdgeStats()
+        variant_pattern = re.compile("\((.*)\):")
         stats = dict()
         ph = set(self.blackboard.placeholders)
         for (u, v) in path_graph.edges():
             if len({u,v} & ph) == 0:
-                stats[(u,v)] = pubmed.get_edge_stats(u,v)  
+                start = u
+                end = v
+                
+                ## extract the gene name if it's a variant
+                if self.blackboard.nodes[u]['entity'] == 'Variant':
+                    m = variant_pattern.search(u)
+                    if m is not None:
+                        start = m.group(1)
+                    else:
+                        print(u)
+                
+                if self.blackboard.nodes[v]['entity'] == 'Variant':
+                    m = variant_pattern.search(v)
+                    if m is not None:
+                        end = m.group(1)
+                    else:
+                        print(v)
+                    
+                stats[(u,v)] = pubmed.get_edge_stats(start,end)  
+        
         # use path graph to iterate but apply updates to blackboard
         networkx.set_edge_attributes(self.blackboard, stats)
 
@@ -184,7 +204,8 @@ class Agent:
                 samples = pgm.evaluate('pubmed', evidence, variables)
                 sample_mean = pgm.get_mean(samples, 'is_connection')
                 
-            attributes[(u,v)] = {'p':sample_mean,'1-p':1-sample_mean}
+            # add 1 to cost because the default cost in networx is 1
+            attributes[(u,v)] = {'p':sample_mean,'cost':1+(1-sample_mean)}
         networkx.set_edge_attributes(self.blackboard, attributes)
 
     def in_goal_state(self):
@@ -213,10 +234,12 @@ class Agent:
         
         Returns
         -------
-        path : list
-            An ordered list of nodes from source to target. Each node is represented by a dictionary of
-            node attributes, minimally including its 'name' and 'entity'. If no path was found, an
-            empty list is returned.
+        path : dict
+            A dictionary with entries 'nodes' and 'edges', each of which is a list of path elements,
+            listed in the order from source to target. Each node is represented by a dictionary of
+            node attributes, minimally including its 'name' and 'entity'. Similarly, each edge has a
+            dictionary with attributes, minimally its probability 'p'. If no path was found, an
+            empty dictionary is returned.
         
         """
         # create a subgraph that consists of all nodes on a path between source and target
@@ -224,14 +247,16 @@ class Agent:
         self.set_edge_stats(path_graph)
         self.calculate_edge_probabilities()
         try:
-            path_nodes = networkx.shortest_path(self.blackboard, source, target, '1-p')
-            path = list()
-            for node in path_nodes:
-                attributes = self.blackboard.nodes[node].copy()
+            path_nodes = networkx.shortest_path(self.blackboard, source, target, 'cost')
+            path = {'nodes':[], 'edges':[]}
+            for i in range(len(path_nodes)):
+                attributes = self.blackboard.nodes[path_nodes[i]].copy()
                 if 'unbound' in attributes and attributes['unbound'] == True:
                     attributes['name'] = re.sub(r'_[0-9]+?$', '', attributes['name'])
-                path.append(attributes)
+                path['nodes'].append(attributes)
+                if i < (len(path_nodes)-1):
+                    path['edges'].append(self.blackboard.edges[path_nodes[i], path_nodes[i+1]])
             return path
         except networkx.NetworkXNoPath:
             print("No path exists.")
-            return []
+            return {}
