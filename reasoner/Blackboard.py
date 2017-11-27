@@ -204,7 +204,7 @@ class Blackboard(networkx.Graph):
         return node_dict
 
     def write_safe(self):
-        """Return a copy of the Blackboard graph that is safe to write to GraphML.
+        """Return a copy of the blackboard graph that is safe to write to GraphML.
         
         Returns
         -------
@@ -219,7 +219,8 @@ class Blackboard(networkx.Graph):
             del d['entities']
             if 'p' in d and type(d['p']).__module__ == numpy.__name__:
                 d['p'] = numpy.asscalar(d['p'])
-                d['1-p'] = numpy.asscalar(d['1-p'])
+            if 'cost' in d and type(d['cost']).__module__ == numpy.__name__:
+                d['cost'] = numpy.asscalar(d['cost'])
         return graph
     
     

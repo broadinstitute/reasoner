@@ -77,19 +77,13 @@ class KnowledgeMap:
                         {
                             'action':PharosDrugToTarget(),
                             'p_success':0.5,
-                            'reward':0.01 #2
+                            'reward':2
                         },
                         
                         {
                             'action':DrugBankDrugToUniProtTarget(),
                             'p_success':0.5,
                             'reward':1
-                        },
-
-                        {
-                            'action':PharosTargetToDisease(),
-                            'p_success':0.5,
-                            'reward':0.01 #2
                         }, 
 
                         {
@@ -105,14 +99,62 @@ class KnowledgeMap:
                         },
 
                         {
-                            'action':PubmedPathwayDiseasePath(),
-                            'p_success':0.9,
+                            'action':WikiPWPathwayToCell(),
+                            'p_success':0.3,
                             'reward':2
                         },
 
-                           {
+                        {
+                            'action':PharosTargetToTissue(),
+                            'p_success':0.5,
+                            'reward':2
+                        },
+
+                        {
+                            'action':PharosTargetToPathway(),
+                            'p_success':0.5,
+                            'reward':2
+                        },
+
+                        {
+                            'action':PharosTargetToDisease(),
+                            'p_success':0.5,
+                            'reward':2
+                        },
+
+                        {
+                            'action':PubmedPathwayDiseasePath(),
+                            'p_success':0.9,
+                            'reward':1
+                        },
+
+                        {
+                            'action':CellOntologyTargetAndPathwayToCell(),
+                            'p_success':0.3,
+                            'reward':3
+                        },
+
+                        {
+                            'action':CellOntologyTargetAndCellToPathway(),
+                            'p_success':0.3,
+                            'reward':3
+                        },
+
+                        {
                             'action':PubmedCellDiseasePath(),
                             'p_success':0.9,
+                            'reward':1
+                        },
+
+                        {
+                            'action':DskdDiseaseToSymptom(),
+                            'p_success':0.5,
+                            'reward':2
+                        },
+
+                        {
+                            'action':MeshScopeNoteDiseaseToSymptom(),
+                            'p_success':0.5,
                             'reward':1
                         },
 
