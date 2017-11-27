@@ -202,6 +202,49 @@ class Blackboard(networkx.Graph):
                 if d['entity'] in entities and (not 'unbound' in d or d['unbound'] == False):
                     node_dict[d['entity']].append(n)
         return node_dict
+    
+    
+    def get_entity_edges(self, entity_pairs, include_unbound = False):
+        """Get all edges that connect instances of specific entities.
+        
+        Parameters
+        ----------
+        entity_pairs : list
+            A list of entity name tuples (size 2).
+        
+        include_unbound : bool, optional
+            Should placeholder nodes be included?
+        
+        Returns
+        -------
+        dict
+            A dictionary of edges, indexed by entity tuples.
+        
+        """
+        edge_dict = dict()
+        for entity_pair in entity_pairs:
+            edge_dict[entity_pair] = list()
+        
+        if include_unbound == True:
+            for u,v in self.edges():
+                etup = (self.nodes[u]['entity'], self.nodes[v]['entity'])
+                rev = tuple(reversed(etup))
+                if etup in entity_pairs:
+                    edge_dict[etup].append((u,v))
+                elif rev in entity_pairs:
+                    edge_dict[rev].append((v,u))
+        else:
+            for u,v in self.edges():
+                u_bound = (not 'unbound' in self.nodes[u]) or self.nodes[u]['unbound'] == False
+                v_bound = (not 'unbound' in self.nodes[v]) or self.nodes[v]['unbound'] == False
+                if u_bound and v_bound:
+                    etup = (self.nodes[u]['entity'], self.nodes[v]['entity'])
+                    rev = tuple(reversed(etup))
+                    if etup in entity_pairs:
+                        edge_dict[etup].append((u,v))
+                    elif rev in entity_pairs:
+                        edge_dict[rev].append((v,u))
+        return edge_dict
 
     def write_safe(self):
         """Return a copy of the blackboard graph that is safe to write to GraphML.
@@ -227,19 +270,25 @@ class Blackboard(networkx.Graph):
 class QueryBuilder():
     """Construct all possible queries from a dictionary of entities (keys) to nodes (values).
     """
-    def __init__(self):
+    def __init__(self, blackboard):
         self.query_list = list()
+        self.blackboard = blackboard
 
     def get_all_queries(self, index, n, query):
         #recursively move through the given entities and bind them with all given instances
         if index == n:
             self.query_list.append(query)
         else:
-            for instance in self.instances[self.keys[index]]:
-                q = {**query, **{self.keys[index]:instance}}
-                self.get_all_queries(index+1, n, q)
+            if isinstance(self.keys[index], tuple):
+                for instance in self.instances[self.keys[index]]:
+                    q = {**query, **{self.keys[index][0]:instance[0], self.keys[index][1]:instance[1]}}
+                    self.get_all_queries(index+1, n, q)
+            else:
+                for instance in self.instances[self.keys[index]]:
+                    q = {**query, **{self.keys[index]:instance}}
+                    self.get_all_queries(index+1, n, q)
     
-    def get_queries(self, instances):
+    def get_queries(self, action):
         """Find all possible binding combinations for ``instances``.
         
         Parameters
@@ -253,7 +302,19 @@ class QueryBuilder():
             A list queries.
         
         """
-        self.instances = instances
+        unconnected_entities = list()
+        for bound in action.precondition_bindings:
+            is_connected = False
+            for connection in action.precondition_connections:
+                if bound in connection:
+                    is_connected = True
+                    break
+            if is_connected == False:
+                unconnected_entities.append(bound)
+        
+        self.instances = self.blackboard.get_entity_edges(action.precondition_connections)
+        self.instances.update(self.blackboard.get_entity_nodes(unconnected_entities))
+        
         self.keys = list(self.instances.keys())
         self.get_all_queries(0, len(self.keys), dict())
         return self.query_list
