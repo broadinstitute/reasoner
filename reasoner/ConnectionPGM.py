@@ -18,7 +18,7 @@ class ConnectionPGM:
         self.models = {
             'pubmed':{'model':  '''
                         model {
-                            theta ~ dbeta(1,10)
+                            theta ~ dbeta(2,8)
                             is_connection ~ dbern(theta)
                             
                             tau_y <- pow(30, -2)
