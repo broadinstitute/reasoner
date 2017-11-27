@@ -65,6 +65,8 @@ class ClinVarDiseaseToVariant(XmlApiAction):
         genes = [self.parse_gene(gene_elem) for gene_elem in variant_elem.findall('./GeneList/Gene')]
         if len(genes) > 0:
             variant['Gene'] = genes
+            if len(genes) == 1:
+                variant['Variant'][0]['node']['symbol'] = genes[0]['node']['name']
 
         conditions = []
         for germline_elem in variant_elem.findall('./ClinicalAssertionList/GermlineList/Germline'):
@@ -146,6 +148,8 @@ class ClinVarDiseaseToCondition(XmlApiAction):
         variant = [{'node':{'id':variant_id,'name':variant_name, 'authority':'ClinVar:VariationID'},'edge':{}}]
 
         genes = [self.parse_gene(gene_elem) for gene_elem in variant_elem.findall('./GeneList/Gene')]
+        if len(genes) == 1:
+            variant[0]['node']['symbol'] = genes[0]['node']['name']
 
         conditions = []
         for germline_elem in variant_elem.findall('./ClinicalAssertionList/GermlineList/Germline'):
