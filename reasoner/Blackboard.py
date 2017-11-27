@@ -269,6 +269,12 @@ class Blackboard(networkx.Graph):
     
 class QueryBuilder():
     """Construct all possible queries from a dictionary of entities (keys) to nodes (values).
+    
+    Parameters
+    ----------
+    blackboard : Blackboard
+        The blackboard to use for the query.
+    
     """
     def __init__(self, blackboard):
         self.query_list = list()
@@ -293,8 +299,8 @@ class QueryBuilder():
         
         Parameters
         ----------
-        instances : dict
-            A dict of node names, indexed by entity names.
+        action : Action
+            The action for which to generate queries.
         
         Returns
         -------
