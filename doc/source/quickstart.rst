@@ -31,12 +31,10 @@ If ``acquire_knowledge()`` was successful, it will return ``True``. To start ana
     
     outcome_pathway = agent.analyze(drug, disease)
 
-The agent will now attempt to calculate a probability for each edge in the knowledge graph by aggregating the evidence that the connection is real with a probabilistic graphical model.
-After that, it will attempt to find the best (i.e., maximum likelihood) path between ``drug`` and ``disease``.
+The agent will now attempt to calculate a probability for each edge in the knowledge graph by aggregating the evidence that the connection is real with a probabilistic graphical model. After that, it will attempt to find the best (i.e., maximum likelihood) path between ``drug`` and ``disease``.
 
-If successful, the path will be returned as a list of node dictionaries, ech of which contains information such as the name and entity of the node, associated identifiers, etc.
-To simply show the names of the nodes on the path in order, call::
+If successful, the path will be returned as a dictionary with keys 'nodes' and 'edges'. These contain lists of the respective path elements. Each element is in turn a dictionary that contains information such as the name and entity of the node, associated identifiers, etc. To simply show the names of the nodes on the path in order, call::
     
-    path_names = [node['name'] for node in outcome_pathway]
+    path_names = [node['name'] for node in outcome_pathway['nodes']]
     print(path_names)
 
