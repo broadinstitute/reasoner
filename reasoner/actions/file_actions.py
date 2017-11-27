@@ -1,3 +1,6 @@
+"""A set of actions based on stored files for offline access.
+"""
+
 from .action import Action
 import pandas as pd
 import os.path
@@ -110,7 +113,8 @@ class CachedFileSourcedAction(FileSourcedAction):
 
 
 class DrugBankDrugToTarget(CachedFileSourcedAction):
-
+    """Use DrugBank to find targets for a drug (returns human genes).
+    """
     def __init__(self, filename='./data/drugbank.txt'):
         column_map = { 'Target': {
             'Name': {'precondition':'Drug'},
@@ -124,7 +128,8 @@ class DrugBankDrugToTarget(CachedFileSourcedAction):
 
 
 class DrugBankDrugToUniProtTarget(CachedFileSourcedAction):
-
+    """Use DrugBank to find targets for a drug (returns proteins for any species).
+    """
     def __init__(self, filename='./data/drugbankUniProt.txt'):
         column_map = { 'Target': {
             'Name': {'precondition':'Drug'},
@@ -137,7 +142,8 @@ class DrugBankDrugToUniProtTarget(CachedFileSourcedAction):
 
 
 class GoFunctionTargetToPathway(CachedFileSourcedAction):
-
+    """Use GeneOntology molecular functions to find pathways for a target.
+    """
     def __init__(self, filename='./data/GO_function.txt'):
         column_map = { 'Pathway': {
             'Symbol': {'precondition':'Target'},
@@ -150,7 +156,8 @@ class GoFunctionTargetToPathway(CachedFileSourcedAction):
 
 
 class GoProcessTargetToPathway(CachedFileSourcedAction):
-
+    """Use GeneOntology processes to find pathways for a target.
+    """
     def __init__(self, filename='./data/GO_process.txt'):
         column_map = { 'Pathway': {
             'Symbol': {'precondition':'Target'},
@@ -163,6 +170,8 @@ class GoProcessTargetToPathway(CachedFileSourcedAction):
 
 
 class MeshScopeNoteDiseaseToSymptom(CachedFileSourcedAction):
+    """Use MeSH scope notes to find symptoms for a disease.
+    """
     def __init__(self, filename='./data/MeshScopeNote.txt'):
         column_map = { 'Symptom': {
             'MeSH_term': {'precondition':'Disease'},
@@ -173,7 +182,8 @@ class MeshScopeNoteDiseaseToSymptom(CachedFileSourcedAction):
 
 
 class CellOntologyTargetAndCellToPathway(CachedFileSourcedAction):
-
+    """Use CellOntology to find pathways given a target and cell.
+    """
     def __init__(self, filename='./data/cellOntology2GO.txt'):
         column_map = {'Pathway':{
             'Symbol': {'precondition': 'Target'},
@@ -187,7 +197,8 @@ class CellOntologyTargetAndCellToPathway(CachedFileSourcedAction):
 
 
 class CellOntologyTargetAndPathwayToCell(CachedFileSourcedAction):
-
+    """Use CellOntology to find cells given a target and pathway.
+    """
     def __init__(self, filename='./data/cellOntology2GO.txt'):
         column_map = {'Cell':{
             'Symbol': {'precondition': 'Target'},
@@ -201,7 +212,8 @@ class CellOntologyTargetAndPathwayToCell(CachedFileSourcedAction):
 
 
 class DskdDiseaseToSymptom(CachedFileSourcedAction):
-
+    """Use Disease Symptom Knowledge DB to find symptoms given a disease.
+    """
     def __init__(self, filename='./data/DiseaseSymptomKnowledgeDatabase.txt'):
         column_map = { 'Symptom': {
             'disease_name': {'precondition':'Disease'},

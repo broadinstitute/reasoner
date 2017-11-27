@@ -5,6 +5,18 @@ from .MeshTools import MeshTools
 
 
 class QueryParser:
+    """Parse an English-language question.
+    
+    ``QueryParser`` uses part-of-speech tagging and pattern matching to
+    turn a natural-language question into a structured query.
+
+    Parameters
+    ----------
+    
+    port : int, optional
+       The port on which the Stanford CoreNLP Server listens. [default: 9501]
+
+    """
     def __init__(self, port=9501):
         self.parser = StanfordServerParser(port=port)
         self.rules = self.get_rules()
@@ -34,6 +46,18 @@ class QueryParser:
             },
             'pp': {
                 '( PP ( TO=to ) ( NP:to_object-o ) )': {}
+            }
+          },
+          
+          '( SBAR ( WHNP ( WDT ) ) ( S ( NP:np1 ) ( VP ( VBZ:action-o ) ( NP:np2 ) ( PP:pp ) ) ) )': {
+            'np1': {
+                '( NP:relation-o )': {}
+            },
+            'np2': {
+                '( NP:from_object-o )': {}
+            },
+            'pp': {
+                '( PP ( TO=to ) ( NP ( NN:to_object-o ) ( NN ) ) )': {}
             }
           },
 
@@ -73,8 +97,8 @@ class QueryParser:
             }
           }
         }
-
-
+        
+        
         rules_protects = {
           '( SBARQ ( WHNP ( WDT ) ( NP:np ) ) ( SQ ( VP ( VBP:relation-o ) ( PP:pp ) ) ) )': {
             'np': {
@@ -111,13 +135,24 @@ class QueryParser:
             (to_object, from_object) = compound_object.split(' and ')
         return({'from':{'term':from_object}, 'to':{'term':to_object}, 'relation':{'term':relation}})
         
-    def parse(self, query):
-        tree = self.parser.parse(query)
+    def parse(self, question):
+        """Parse a natural-language question.
+        
+        Parameters
+        ----------
+        question : str
+            The input question.
+        
+        Returns
+        -------
+        terms : dict
+            A dictionary of parsed terms.
+        
+        """
+        tree = self.parser.parse(question)
         terms = match_rules(tree, self.rules, self.process_matches)
         if terms is None:
             return {}
-        
-
         
         mesh = MeshTools()
         terms['from'].update({k:v for k,v in mesh.get_best_term_entity(terms['from']['term']).items() if k in ('entity', 'bound')})
@@ -135,19 +170,8 @@ class QueryParser:
 
         if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
             terms['to']['entity'] = 'Disease'
-
-         ## TESTING ONLY - REMOVE!!!
-#        if terms['relation'] == 'clinical outcome pathway':
-#            terms['from']['entity'] = 'Drug'
-#            terms['from']['bound'] = True
-#            terms['to']['entity'] = 'Disease'
-#            terms['to']['bound'] = True
-#        elif terms['relation'] == 'protects':
-#            terms['from']['entity'] = 'GeneticCondition'
-#            terms['from']['bound'] = False
-#            terms['to']['entity'] = 'Disease'
-#            terms['to']['bound'] = True
-        return(terms)
+        
+        return terms
 
 
 class NCITTermMapper():
