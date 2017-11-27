@@ -170,6 +170,7 @@ class QueryParser:
 
         if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
             terms['to']['entity'] = 'Disease'
+            
         
         return terms
 

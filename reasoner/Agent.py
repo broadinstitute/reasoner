@@ -36,25 +36,25 @@ class Agent:
         self.parser = QueryParser()
         self.blackboard = Blackboard()
         self.discount = discount
-        query = self.parser.parse(question)
-        if len(query) == 0:
+        self.query = self.parser.parse(question)
+        if len(self.query) == 0:
             print('Query could not be parsed.')
             return None
         
         km = KnowledgeMap()
-        if query['relation']['term'] in ('clinical outcome pathway', 'outcome pathway','clinical outcome path', 'outcome path'):
+        if self.query['relation']['term'] in ('clinical outcome pathway', 'outcome pathway','clinical outcome path', 'outcome path'):
             km.load_module('outcome_path')
-        elif query['relation']['term'] in ('protect', 'protects'):
+        elif self.query['relation']['term'] in ('protect', 'protects'):
             km.load_module('protects_from')
         
         self.planner = ActionPlanner(km, km.default_goal)
         self.planner.make_plan(self.discount)
         
-        if query['from']['bound'] == True:
-            self.blackboard.add_node(query['from']['term'], entity = query['from']['entity'], name = query['from']['term'])
+        if self.query['from']['bound'] == True:
+            self.blackboard.add_node(self.query['from']['term'], entity = self.query['from']['entity'], name = self.query['from']['term'])
             
-        if query['to']['bound'] == True:
-            self.blackboard.add_node(query['to']['term'], entity = query['to']['entity'], name = query['to']['term'])
+        if self.query['to']['bound'] == True:
+            self.blackboard.add_node(self.query['to']['term'], entity = self.query['to']['entity'], name = self.query['to']['term'])
 
     def show_blackboard(self, width=2, height=2):
         """Plot a figure showing the current blackboard content.
