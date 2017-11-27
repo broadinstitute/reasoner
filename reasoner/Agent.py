@@ -127,7 +127,7 @@ class Agent:
                 print("No connections found.")
                 return False
             
-            queries = QueryBuilder().get_queries(self.blackboard.get_entity_nodes(next_action.precondition_entities))
+            queries = QueryBuilder(self.blackboard).get_queries(next_action)
             for query in queries:
                 result = next_action.execute(query)
                 self.blackboard.add_knowledge(query, result, next_action)
