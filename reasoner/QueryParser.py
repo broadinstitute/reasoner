@@ -158,30 +158,18 @@ class QueryParser:
         terms['from'].update({k:v for k,v in mesh.get_best_term_entity(terms['from']['term']).items() if k in ('entity', 'bound')})
         terms['to'].update({k:v for k,v in mesh.get_best_term_entity(terms['to']['term']).items() if k in ('entity', 'bound')})
         
-        # if terms['from']['entity'] is None:
-            # tm = NCITTermMapper()
-            # terms['from']['entity'] = tm.get_entity(terms['from']['term'])
-            # terms['from']['bound'] = True
-        
-        # if terms['to']['entity'] is None:
-            # tm = NCITTermMapper()
-            # terms['to']['entity'] = tm.get_entity(terms['to']['term'])
-            # terms['to']['bound'] = True
-
-        # if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
-            # terms['to']['entity'] = 'Disease'
-            
-        ## TESTING ONLY - REMOVE!!!
-        if terms['relation']['term'] == 'clinical outcome pathway':
-            terms['from']['entity'] = 'Drug'
+        if terms['from']['entity'] is None:
+            tm = NCITTermMapper()
+            terms['from']['entity'] = tm.get_entity(terms['from']['term'])
             terms['from']['bound'] = True
-            terms['to']['entity'] = 'Disease'
+        
+        if terms['to']['entity'] is None:
+            tm = NCITTermMapper()
+            terms['to']['entity'] = tm.get_entity(terms['to']['term'])
             terms['to']['bound'] = True
-        elif terms['relation']['term'] == 'protects':
-            terms['from']['entity'] = 'GeneticCondition'
-            terms['from']['bound'] = False
+
+        if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
             terms['to']['entity'] = 'Disease'
-            terms['to']['bound'] = True
         
         return terms
 
