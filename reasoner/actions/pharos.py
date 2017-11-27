@@ -1,3 +1,6 @@
+"""Actions that use Pharos as a knowledge source.
+"""
+
 import json
 from urllib.request import urlopen
 from urllib.parse import quote
@@ -19,7 +22,8 @@ class JsonApiAction(Action):
 
 
 class PharosDrugToTarget(JsonApiAction):
-
+    """Find targets for a drug.
+    """
     def __init__(self):
         super().__init__(['bound(Drug)'],['bound(Target) and connected(Drug, Target)'])
 
@@ -64,7 +68,8 @@ class PharosDrugToTarget(JsonApiAction):
 
 
 class PharosTargetToDisease(JsonApiAction):
-
+    """Find a path from a target to a disease.
+    """
     def __init__(self):
         super().__init__(['bound(Target)'],['bound(Disease)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
@@ -113,7 +118,8 @@ class PharosTargetToDisease(JsonApiAction):
 
 
 class PharosTargetToPathway(JsonApiAction):
-
+    """Find pathways for a target.
+    """
     def __init__(self):
         super().__init__(['bound(Target)'],['bound(Pathway)', 'connected(Target, Pathway)'])
 
@@ -147,7 +153,8 @@ class PharosTargetToPathway(JsonApiAction):
 
 
 class PharosTargetToTissue(JsonApiAction):
-
+    """Find a path from target to tissue.
+    """
     def __init__(self):
         super().__init__(['bound(Target)'],['bound(Cell)', 'connected(Target, Pathway) and connected(Pathway, Cell)'])
 

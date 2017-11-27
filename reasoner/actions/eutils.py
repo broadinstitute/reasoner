@@ -1,5 +1,4 @@
 """Actions to access NCBI E-Utilities.
-
 """
 
 import json
@@ -69,7 +68,8 @@ class EutilitiesAction(Action):
 
 
 class ClinvarDiseaseToCondition(EutilitiesAction):
-    
+    """Find a all conditions connected to a disease via a common variant in ClinVar.
+    """
     def __init__(self):
         super().__init__(['bound(Disease)'],
         ['bound(Variant) and connected(Disease, Variant)',
@@ -150,7 +150,8 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
 
 
 class MeshConditionToGeneticCondition(EutilitiesAction):
-    
+    """Use MeSH to identify whether a condition has a genetic cause.
+    """
     def __init__(self):
         super().__init__(['bound(Condition)', 'bound(Variant)', 'connected(Variant, Condition)'],['bound(GeneticCondition)', 'connected(Variant, GeneticCondition)'])
     
@@ -174,7 +175,8 @@ class MeshConditionToGeneticCondition(EutilitiesAction):
         return(genetic_conditions)
     
 class MedGenConditionToGeneticCondition(EutilitiesAction):
-    
+    """Use MedGen to identify whether a condition has a genetic cause.
+    """
     def __init__(self):
         super().__init__(['bound(Condition)', 'bound(Variant)', 'connected(Variant, Condition)'],['bound(GeneticCondition)', 'connected(Variant, GeneticCondition)'])
     
@@ -293,6 +295,8 @@ class PubmedQuery(EutilitiesAction):
 
 
 class PubmedEdgeStats(PubmedQuery):
+    """Get connection statistics based on term cooccurence from PubMed.
+    """
     def __init__(self):
         super().__init__([], [])
 
@@ -326,6 +330,8 @@ class PubmedEdgeStats(PubmedQuery):
 
 
 class PubmedDrugDiseasePath(PubmedQuery):
+    """Use PubMed to find a path between a drug and a disease.
+    """
     def __init__(self):
         super().__init__(['bound(Drug)', 'bound(Disease)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
@@ -334,6 +340,8 @@ class PubmedDrugDiseasePath(PubmedQuery):
 
 
 class PubmedDrugSymptomPath(PubmedQuery):
+    """Use PubMed to find a path between a drug and a symptom.
+    """
     def __init__(self):
         super().__init__(['bound(Drug)', 'bound(Symptom)'], ['bound(Target)', 'bound(Pathway)', 'bound(Cell)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom)'])
 
@@ -342,6 +350,8 @@ class PubmedDrugSymptomPath(PubmedQuery):
 
 
 class PubmedDrugCellPath(PubmedQuery):
+    """Use PubMed to find a path between a drug and a cell.
+    """
     def __init__(self):
         super().__init__(['bound(Drug)', 'bound(Cell)'], ['bound(Target)', 'bound(Pathway)', 'connected(Drug, Target) and connected(Target, Pathway) and connected(Pathway, Cell)'])
 
@@ -350,6 +360,8 @@ class PubmedDrugCellPath(PubmedQuery):
 
 
 class PubmedDrugPathwayPath(PubmedQuery):
+    """Use PubMed to find a path between a drug and a pathway.
+    """
     def __init__(self):
         super().__init__(['bound(Drug)', 'bound(Pathway)'], ['bound(Target)', 'connected(Drug, Target) and connected(Target, Pathway)'])
 
@@ -359,6 +371,8 @@ class PubmedDrugPathwayPath(PubmedQuery):
 
 
 class PubmedTargetDiseasePath(PubmedQuery):
+    """Use PubMed to find a path between a target and a disease.
+    """
     def __init__(self):
         super().__init__(['bound(Target)', 'bound(Disease)'], ['bound(Pathway)', 'bound(Cell)', 'bound(Symptom)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
@@ -367,6 +381,8 @@ class PubmedTargetDiseasePath(PubmedQuery):
 
 
 class PubmedTargetSymptomPath(PubmedQuery):
+    """Use PubMed to find a path between a target and a symptom.
+    """
     def __init__(self):
         super().__init__(['bound(Target)', 'bound(Symptom)'], ['bound(Pathway)', 'bound(Cell)', 'connected(Target, Pathway) and connected(Pathway, Cell) and connected(Cell, Symptom)'])
 
@@ -375,6 +391,8 @@ class PubmedTargetSymptomPath(PubmedQuery):
 
 
 class PubmedTargetCellPath(PubmedQuery):
+    """Use PubMed to find a path between a target and a cell.
+    """
     def __init__(self):
         super().__init__(['bound(Target)', 'bound(Cell)'], ['bound(Pathway)', 'connected(Target, Pathway) and connected(Pathway, Cell)'])
 
@@ -383,6 +401,8 @@ class PubmedTargetCellPath(PubmedQuery):
 
 
 class PubmedPathwayDiseasePath(PubmedQuery):
+    """Use PubMed to find a path between a pathway and a disease.
+    """
     def __init__(self):
         super().__init__(['bound(Pathway)', 'bound(Disease)'], ['bound(Cell)', 'bound(Symptom)', 'connected(Pathway, Cell) and connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
@@ -391,6 +411,8 @@ class PubmedPathwayDiseasePath(PubmedQuery):
 
 
 class PubmedPathwaySymptomPath(PubmedQuery):
+    """Use PubMed to find a path between a pathway and a symptom.
+    """
     def __init__(self):
         super().__init__(['bound(Pathway)', 'bound(Symptom)'], ['bound(Cell)', 'connected(Pathway, Cell) and connected(Cell, Symptom)'])
 
@@ -399,6 +421,8 @@ class PubmedPathwaySymptomPath(PubmedQuery):
 
 
 class PubmedCellDiseasePath(PubmedQuery):
+    """Use PubMed to find a path between a cell and a disease.
+    """
     def __init__(self):
         super().__init__(['bound(Cell)', 'bound(Disease)'], ['bound(Symptom)', 'connected(Cell, Symptom) and connected(Symptom, Disease)'])
 
