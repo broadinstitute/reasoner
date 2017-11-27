@@ -15,7 +15,7 @@ class EutilitiesAction(Action):
     def __init__(self, precondition, effect):
         super().__init__(precondition, effect)
         self.url_prefix = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
-        
+
     def get_request(self, url):
         with urllib.request.urlopen(url) as response:
             res = response.read().decode()
@@ -23,46 +23,46 @@ class EutilitiesAction(Action):
 
     def get_json_request(self, url):
         return self.parse_json(self.get_request(url))
-    
+
     def get_xml_request(self, url):
         return self.parse_xml(self.get_request(url))
-    
+
     def parse_json(self, obj):
         return json.loads(obj)
-    
+
     def parse_xml(self, obj):
         return etree.fromstring(obj)
-    
+
     def esearch(self, term, db, retstart = 0, retmax = 20, retmode = "json", quote = True, sort = None, count = False):
         if quote == True:
             term = urllib.parse.quote_plus(term)
         query = 'esearch.fcgi?db=' + db +'&term=' + term + '&retmode=' + retmode + '&retstart=' + str(retstart) + '&retmax=' + str(retmax)
-        
+
         if sort is not None:
             query = query + '&sort=' + sort
         if count == True:
             query = query + '&rettype=count'
-        
+
         res = self.get_json_request(self.url_prefix + query)
         return res
-    
+
     def esummary(self, entry_id, db, retmode="json"):
         query = 'esummary.fcgi?db=' + db +'&id=' + entry_id + '&retmode=' + retmode
         res = self.get_json_request(self.url_prefix + query)
         return res
-    
+
     def efetch(self, entry_id, db, rettype = None, retmode = None):
         query = 'efetch.fcgi?db=' + db + '&id=' + entry_id
         if rettype is not None:
             query = query + '&rettype=' + rettype
         if retmode is not None:
             query = query + '&retmode=' + retmode
-        
+
         url = self.url_prefix + query
         with urllib.request.urlopen(url) as response:
             res = response.read()
         return res
-    
+
     def add_quotation_marks(self, query):
         return '"%s"' % query
 
@@ -75,19 +75,96 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
         ['bound(Variant) and connected(Disease, Variant)',
         'bound(Variant) and connected(Disease, Variant) and bound(Gene) and connected(Variant, Gene)',
         'bound(Variant) and connected(Disease, Variant) and bound(Condition) and connected(Variant, Condition)'
-        ]) 
-    
+        ])
+
+
     def execute(self, query):
-        search_results = self.esearch(self.add_quotation_marks(query['Disease'])+' [dis]', 'clinvar')
+        search_results = self.esearch(self.add_quotation_marks(query['Disease'])+' [dis]', 'clinvar', retmax = 200)
         if len(search_results['esearchresult']['idlist']) == 0:
             return {}
-        
+
         uid = ','.join(search_results['esearchresult']['idlist'])
-        fetch_result = self.parse_xml(self.efetch(uid, 'clinvar', rettype='variation'))
+        fetch_result = self.esummary(uid, 'clinvar')['result']
         variants = self.load_variants(fetch_result)
         result = self.find_disease(variants, query['Disease'])
         return result
-    
+
+
+    def load_variants(self, result):
+        return [self.parse_variant(id, result[id]) for id in result['uids']]
+
+
+    def parse_variant(self, variant_id, variant_in):
+        variant_name = variant_in['title']
+        genes = []
+        for gene in variant_in['genes']:
+            if self.parse_gene(variant_in['variation_set'], gene) != None:
+                genes.append(self.parse_gene(variant_in['variation_set'], gene))
+        conditions = self.load_conditions(variant_in['supporting_submissions']['rcv'])
+
+        variant_out = {'Variant':[{'node':{'id':variant_id,'name':variant_name, 'authority':'ClinVar:VariationID'},'edge':{}}]}
+        if len(genes) > 0:
+            variant_out['Gene'] = genes
+            if len(genes) == 1:
+                variant_out['Variant'][0]['node']['symbol'] = genes[0]['node']['name']
+        if len(conditions) > 0:
+            variant_out['Condition'] = conditions
+
+        return variant_out
+
+
+    def parse_gene(self, variation_set, gene_dict):
+        if 'symbol' in gene_dict:
+            node = {'name':gene_dict['symbol']}
+            if 'geneid' in gene_dict:
+                node['id'] = gene_dict['geneid']
+                node['authority'] = 'Entrez:GeneID'
+            edge = {}
+            if 'variant_type' in variation_set[0]:
+                edge['relationship'] = variation_set[0]['variant_type']
+            return {'node': node, 'edge':edge}
+        return None
+
+
+    def load_conditions(self, rcvs):
+        conditions = []
+        result_set = self.parse_xml(self.efetch(','.join(rcvs),'clinvar',rettype='clinvarset'))
+        for clin_var_set in result_set.findall('./ClinVarSet'):
+            for assertion_elem in clin_var_set.findall('./ReferenceClinVarAssertion'):
+                conditions.extend(self.parse_conditions(assertion_elem))
+
+        return conditions
+
+
+    def parse_conditions(self, assertion_elem):
+        conditions = []
+        edge = {}
+        if assertion_elem.find('./ClinicalSignificance/Description') != None:
+            edge['clinical_significance']=assertion_elem.find('./ClinicalSignificance/Description').text
+        if assertion_elem.find('./ClinicalSignificance/ReviewStatus') != None:
+            edge['review_status']=assertion_elem.find('./ClinicalSignificance/ReviewStatus').text
+
+        for trait_elem in assertion_elem.findall('./TraitSet/Trait'):
+            if trait_elem.attrib['Type'] == 'Disease':
+                node = self.parse_disease(trait_elem)
+                if node != None and node['name'] != 'not specified' and node['name'] != 'not provided':
+                    conditions.append({'node':node, 'edge':edge})
+
+        return conditions
+
+
+    def parse_disease(self, trait_elem):
+        if trait_elem.find('./Name/ElementValue') == None:
+            return None
+        node = {'name': trait_elem.find('./Name/ElementValue').text}
+        for xref_elem in trait_elem.findall('./XRef'):
+            if 'id' not in node or xref_elem.attrib['DB']=='MedGen':
+                node['id'] = xref_elem.attrib['ID']
+                node['authority'] = xref_elem.attrib['DB']
+
+        return node
+
+
     def find_disease(self, variants, query_term):
         for variant in variants:
             if 'Condition' not in variant.keys():
@@ -99,54 +176,8 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
                     remove_idx.append(i)
             variant['Condition'] = [x for i,x in enumerate(variant['Condition']) if i not in remove_idx]
         return(variants)
-    
-    def parse_conditions(self, germline_elem):
-        conditions = []
-        for phenotype_elem in germline_elem.findall('./PhenotypeList/Phenotype'):
-            condition = {'node':{'name':phenotype_elem.attrib['Name']},'edge':{}}
-            for xref_elem in phenotype_elem.findall('./XRefList/XRef'):
-                if 'id' not in condition['node'] or xref_elem.attrib['DB']=='MedGen':
-                    condition['node']['id'] = xref_elem.attrib['ID']
-                    condition['node']['authority'] = xref_elem.attrib['DB']
-            if germline_elem.find('ReviewStatus') != None:
-                condition['edge']['review_status'] = germline_elem.find('ReviewStatus').text
-            if germline_elem.find('./ClinicalSignificance/Description')  != None:
-                condition['edge']['clinical_significance'] = germline_elem.find('./ClinicalSignificance/Description').text
-                if germline_elem.find('./ClinicalSignificance/Citation/ID') != None:
-                    condition['edge']['pmid'] = germline_elem.find('./ClinicalSignificance/Citation/ID').text
-            if condition['node']['name'] != 'not specified' and condition['node']['name'] != 'not provided' :
-                conditions.append(condition)
-        return conditions
 
 
-    def parse_gene(self, gene_elem):
-        gene = {}
-        gene['node'] = {'id':gene_elem.attrib['GeneID'],'name':gene_elem.attrib['Symbol'], 'authority':'Entrez:GeneID'}
-        gene['edge'] = {'relationship': gene_elem.attrib['RelationshipType']}
-        return gene
-
-
-    def parse_variant(self, variant_elem):
-
-        variant_name = variant_elem.attrib['VariationName']
-        variant_id = variant_elem.attrib['VariationID']
-        variant = {'Variant':[{'node':{'id':variant_id,'name':variant_name, 'authority':'ClinVar:VariationID'},'edge':{}}]}
-
-        genes = [self.parse_gene(gene_elem) for gene_elem in variant_elem.findall('./GeneList/Gene')]
-        if len(genes) > 0:
-            variant['Gene'] = genes
-
-        conditions = []
-        for germline_elem in variant_elem.findall('./ClinicalAssertionList/GermlineList/Germline'):
-            conditions.extend(self.parse_conditions(germline_elem))
-        if len(conditions) > 0:
-            variant['Condition'] = conditions
-        return variant
-
-
-    def load_variants(self, root):
-        return [self.parse_variant(child) for child in root.findall('./VariationReport')]
-    
 
 
 class MeshConditionToGeneticCondition(EutilitiesAction):
@@ -154,15 +185,15 @@ class MeshConditionToGeneticCondition(EutilitiesAction):
     """
     def __init__(self):
         super().__init__(['bound(Condition)', 'bound(Variant)', 'connected(Variant, Condition)'],['bound(GeneticCondition)', 'connected(Variant, GeneticCondition)'])
-    
+
     def execute(self, query):
         search_results = self.esearch(query['Condition'], 'mesh')
         if len(search_results['esearchresult']['idlist']) == 0:
             return {}
-        
+
         uid = ','.join(search_results['esearchresult']['idlist'])
         summary = self.esummary(uid, 'mesh')
-        
+
         genetic_conditions = list()
         for uid in summary['result']['uids']:
             entry = summary['result'][uid]
@@ -173,21 +204,21 @@ class MeshConditionToGeneticCondition(EutilitiesAction):
                 genetic_conditions.append({'GeneticCondition':[{'node':{'name':query['Condition'], 'mesh_term':term, 'uid':uid, 'mesh_id':mesh_id}, 'edge':{}}]})
 
         return(genetic_conditions)
-    
+
 class MedGenConditionToGeneticCondition(EutilitiesAction):
     """Use MedGen to identify whether a condition has a genetic cause.
     """
     def __init__(self):
         super().__init__(['bound(Condition)', 'bound(Variant)', 'connected(Variant, Condition)'],['bound(GeneticCondition)', 'connected(Variant, GeneticCondition)'])
-    
+
     def execute(self, query):
         """Uses MedGen to identify whether a given condition is genetic.
-        
+
         Parameters
         ----------
         query : str
             name of condition
-        
+
         Returns
         -------
         genetic_conditions : list
@@ -195,35 +226,35 @@ class MedGenConditionToGeneticCondition(EutilitiesAction):
             Keys are returned entities ('GeneticCondition'), values are
             a 'node' and 'edge' dict, each of which contains attributes
             for the respective structure.
-        
+
         """
-        
+
         search_results = self.esearch(self.add_quotation_marks(query['Condition']) + '[ExactTitle]', 'medgen')
         if len(search_results['esearchresult']['idlist']) == 0:
             return {}
-        
+
         uid = ','.join(search_results['esearchresult']['idlist'])
         summary = self.esummary(uid, 'medgen')
-        
+
         genetic_conditions = list()
         for uid in summary['result']['uids']:
             entry = summary['result'][uid]
             if entry['title'] == query['Condition']:
                 genetic_conditions.append({'GeneticCondition':[{'node':{'name':entry['title'], 'uid':uid, 'medgen_cid':entry['conceptid']}, 'edge':{}}]})
-        
+
         return(genetic_conditions)
-    
+
 
 
 class PubmedQuery(EutilitiesAction):
     def __init__(self, precondition, effect):
         super().__init__(precondition, effect)
         self.mesh_tools = MeshTools()
-    
+
     def parse_mesh_heading(self, mh):
         desc = mh.find('DescriptorName')
         entity = self.mesh_tools.id2entity(desc.attrib['UI'])
-        
+
         if entity[1] == False:
             return (None, {})
         else:
@@ -231,7 +262,7 @@ class PubmedQuery(EutilitiesAction):
             major = desc.attrib['MajorTopicYN'] == 'Y'
             if qual is not None:
                  major = major or qual.attrib['MajorTopicYN'] == 'Y'
-                
+
             term_dict = {'node':{'name':desc.text,
                                  'mesh:ui':desc.attrib['UI'],
                                  'major_topic':major},
@@ -239,21 +270,21 @@ class PubmedQuery(EutilitiesAction):
                         }
         return (entity[0], term_dict)
 
-        
+
     def extract_mesh_terms(self, article):
         mesh_headings = dict()
         for mh in article.findall('./MedlineCitation/MeshHeadingList/MeshHeading'):
             (entity, term) = self.parse_mesh_heading(mh)
-            
+
             if entity is None:
                 continue
-            
+
             if entity in mesh_headings:
                 mesh_headings[entity].append(term)
             else:
                 mesh_headings[entity] = [term]
-        return mesh_headings      
-    
+        return mesh_headings
+
     def generate_query_string(self, terms, mesh = True):
         if mesh:
             query_list = [term + ' [MeSH Term]' for term in terms]
@@ -267,9 +298,9 @@ class PubmedQuery(EutilitiesAction):
         search_results = self.esearch(query_string, 'pubmed', sort='relevance')
         if len(search_results['esearchresult']['idlist']) == 0:
             return {}
-        
+
         uid = ','.join(search_results['esearchresult']['idlist'])
-        
+
         article_xml = self.efetch(uid, 'pubmed', retmode="xml")
         root = self.parse_xml(article_xml)
         return [self.extract_mesh_terms(article) for article in root.findall('./PubmedArticle')]
@@ -306,7 +337,7 @@ class PubmedEdgeStats(PubmedQuery):
         search_results = self.esearch(query, 'pubmed', sort = 'most+recent', retstart = count-1)
         if len(search_results['esearchresult']['idlist']) == 0:
             return -1
-        
+
         uid = search_results['esearchresult']['idlist'][-1]
         summary = self.esummary(uid, 'pubmed')
         #return(dateutil.parser.parse(summary['result'][uid]['pubdate']))
@@ -320,7 +351,7 @@ class PubmedEdgeStats(PubmedQuery):
         query = self.generate_query_string((start, end))
         stats = dict()
         stats['article_count'] = self.get_article_count(query)
-        
+
         if stats['article_count'] > 0:
             year_first_article = self.get_oldest_article_date(query, stats['article_count'])
             if not year_first_article == -1:
