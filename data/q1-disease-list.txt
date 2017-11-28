@@ -1,0 +1,22 @@
+Disease
+Osteoporosis
+Human Immunodeficiency Virus Infection
+Cholera
+Ebola Virus Infection
+Malaria
+Osteomalacia
+Hypercholesterolemia
+Diabetes Mellitus, Type 2
+Asthma
+Chronic Pancreatitis
+Alzheimer Disease
+Myocardial Infarction
+Duchenne Muscular Dystrophy
+Deficiency of N-glycanase 1
+Alcohol Dependence
+Major Depression
+Niemann Pick Type C
+Huntington Disease
+Alkaptonuria
+Sickle Cell Disease
+Post-Traumatic Stress Disorder
