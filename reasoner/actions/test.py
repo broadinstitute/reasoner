@@ -13,6 +13,14 @@ class AddDrugTarget(Action):
     def __init__(self):
         super().__init__(['bound(Drug)'], ['bound(Target) and connected(Drug, Target)'])
 
+class AddDrugTarget_Good(Action):
+    def __init__(self):
+        super().__init__(['bound(Drug)'], ['bound(Target) and connected(Drug, Target)'])
+
+class AddDrugTarget_Mediocre(Action):
+    def __init__(self):
+        super().__init__(['bound(Drug)'], ['bound(Target) and connected(Drug, Target)'])
+        
 class AddTargetPathway(Action):
     def __init__(self):
         super().__init__(['bound(Target)'], ['bound(Pathway) and connected(Target, Pathway)'])
