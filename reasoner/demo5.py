@@ -9,6 +9,8 @@ from IPython.display import clear_output
 
 from reasoner.ConnectionPGM import ConnectionPGM
 
+plt.style.use('ggplot')
+
 articles = widgets.IntSlider(
                 value=10,
                 min=0,
