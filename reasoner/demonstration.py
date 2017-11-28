@@ -32,4 +32,6 @@ def handle(sender):
 def start_agent():
     question = widgets.Text(placeholder='Enter a question', disabled=False)
     question.on_submit(handle)
+    print('\n')
     display(question)
+    print('\n\n')
