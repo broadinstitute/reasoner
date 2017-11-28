@@ -70,16 +70,18 @@ class EutilitiesAction(Action):
 class ClinvarDiseaseToCondition(EutilitiesAction):
     """Find a all conditions connected to a disease via a common variant in ClinVar.
     """
-    def __init__(self):
+    def __init__(self, additional_search_term = None):
         super().__init__(['bound(Disease)'],
         ['bound(Variant) and connected(Disease, Variant)',
         'bound(Variant) and connected(Disease, Variant) and bound(Gene) and connected(Variant, Gene)',
         'bound(Variant) and connected(Disease, Variant) and bound(Condition) and connected(Variant, Condition)'
         ])
-
+        self.additional_term = ''
+        if additional_search_term != None:
+            self.additional_term = additional_search_term
 
     def execute(self, query):
-        search_results = self.esearch(self.add_quotation_marks(query['Disease'])+' [dis]', 'clinvar', retmax = 200)
+        search_results = self.esearch(self.add_quotation_marks(query['Disease'])+' [dis]'+self.additional_term, 'clinvar', retmax = 200)
         if len(search_results['esearchresult']['idlist']) == 0:
             return {}
 
@@ -177,6 +179,89 @@ class ClinvarDiseaseToCondition(EutilitiesAction):
             variant['Condition'] = [x for i,x in enumerate(variant['Condition']) if i not in remove_idx]
         return(variants)
 
+
+
+class ClinvarDiseaseToGene(EutilitiesAction):
+    """Find a all conditions connected to a disease via a common variant in ClinVar.
+    """
+    def __init__(self, additional_search_term = None):
+        super().__init__(['bound(Disease)'],
+        ['bound(Variant) and connected(Disease, Variant)',
+        'bound(Variant) and connected(Disease, Variant) and bound(Gene) and connected(Variant, Gene)',
+        'bound(Variant) and connected(Disease, Variant) and bound(Condition) and connected(Variant, Condition)'
+        ])
+        self.additional_term = ''
+        if additional_search_term != None:
+            self.additional_term = additional_search_term
+
+    def execute(self, query):
+        search_results = self.esearch(self.add_quotation_marks(query['Disease'])+' [dis]'+self.additional_term, 'clinvar', retmax = 200)
+        if len(search_results['esearchresult']['idlist']) == 0:
+            return {}
+
+        uid = ','.join(search_results['esearchresult']['idlist'])
+        fetch_result = self.esummary(uid, 'clinvar')['result']
+        variants = self.load_variants(fetch_result)
+        result = self.find_disease(variants, query['Disease'])
+        return result
+
+
+    def load_variants(self, result):
+        return [self.parse_variant(id, result[id]) for id in result['uids']]
+
+
+    def parse_variant(self, variant_id, variant_in):
+        variant_name = variant_in['title']
+        genes = []
+        for gene in variant_in['genes']:
+            if self.parse_gene(variant_in['variation_set'], gene) != None:
+                genes.append(self.parse_gene(variant_in['variation_set'], gene))
+
+        variant_out = {'Variant':[{'node':{'id':variant_id,'name':variant_name, 'authority':'ClinVar:VariationID'},'edge':{}}]}
+        if len(genes) > 0:
+            variant_out['Gene'] = genes
+            if len(genes) == 1:
+                variant_out['Variant'][0]['node']['symbol'] = genes[0]['node']['name']
+
+        return variant_out
+
+
+    def parse_gene(self, variation_set, gene_dict):
+        if 'symbol' in gene_dict:
+            node = {'name':gene_dict['symbol']}
+            if 'geneid' in gene_dict:
+                node['id'] = gene_dict['geneid']
+                node['authority'] = 'Entrez:GeneID'
+            edge = {}
+            if 'variant_type' in variation_set[0]:
+                edge['relationship'] = variation_set[0]['variant_type']
+            return {'node': node, 'edge':edge}
+        return None
+
+
+    def parse_disease(self, trait_elem):
+        if trait_elem.find('./Name/ElementValue') == None:
+            return None
+        node = {'name': trait_elem.find('./Name/ElementValue').text}
+        for xref_elem in trait_elem.findall('./XRef'):
+            if 'id' not in node or xref_elem.attrib['DB']=='MedGen':
+                node['id'] = xref_elem.attrib['ID']
+                node['authority'] = xref_elem.attrib['DB']
+
+        return node
+
+
+    def find_disease(self, variants, query_term):
+        for variant in variants:
+            if 'Condition' not in variant.keys():
+                continue
+            remove_idx = list()
+            for i in range(len(variant['Condition'])):
+                if query_term in variant['Condition'][i]['node']['name'].lower():
+                    variant['Variant'][0]['edge'] = variant['Condition'][i]['edge']
+                    remove_idx.append(i)
+            variant['Condition'] = [x for i,x in enumerate(variant['Condition']) if i not in remove_idx]
+        return(variants)
 
 
 
