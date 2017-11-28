@@ -2,6 +2,7 @@ from lango.parser import StanfordServerParser
 from lango.matcher import match_rules
 from SPARQLWrapper import SPARQLWrapper, JSON
 from .MeshTools import MeshTools
+import sqlite3
 
 
 class QueryParser:
@@ -158,19 +159,44 @@ class QueryParser:
         terms['from'].update({k:v for k,v in mesh.get_best_term_entity(terms['from']['term']).items() if k in ('entity', 'bound')})
         terms['to'].update({k:v for k,v in mesh.get_best_term_entity(terms['to']['term']).items() if k in ('entity', 'bound')})
         
-        if terms['from']['entity'] is None:
-            tm = NCITTermMapper()
-            terms['from']['entity'] = tm.get_entity(terms['from']['term'])
-            terms['from']['bound'] = True
+        # if terms['from']['entity'] is None:
+            # tm = NCITTermMapper()
+            # terms['from']['entity'] = tm.get_entity(terms['from']['term'])
+            # terms['from']['bound'] = True
         
-        if terms['to']['entity'] is None:
-            tm = NCITTermMapper()
-            terms['to']['entity'] = tm.get_entity(terms['to']['term'])
-            terms['to']['bound'] = True
+        # if terms['to']['entity'] is None:
+            # tm = NCITTermMapper()
+            # terms['to']['entity'] = tm.get_entity(terms['to']['term'])
+            # terms['to']['bound'] = True
 
-        if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
-            terms['to']['entity'] = 'Disease'
-            
+        # if terms['relation']['term'] == 'clinical outcome pathway' and terms['to']['entity'] in ('GeneticCondition', 'Symptom'):
+            # terms['to']['entity'] = 'Disease'
+        
+        
+        ## cheat for proof-of-concept
+        ## if automatic entity parsing fails, get the entities from the original definitions in the question files
+        if terms['from']['entity'] is None:
+            db = 'data/reasoner_data.sqlite'
+            conn = sqlite3.connect(db)
+            c = conn.cursor()
+
+            query = 'SELECT entity FROM ncats_entity_map WHERE term = "%s"' % terms['from']['term']
+            result = next(iter(c.execute(query).fetchall()), [])
+            if len(result) > 0:
+                terms['from']['entity'] = result[0]
+                
+        if terms['to']['entity'] is None:
+            db = 'data/reasoner_data.sqlite'
+            conn = sqlite3.connect(db)
+            c = conn.cursor()
+
+            query = 'SELECT entity FROM ncats_entity_map WHERE term = "%s"' % terms['to']['term']
+            result = next(iter(c.execute(query).fetchall()), [])
+            if len(result) > 0:
+                terms['to']['entity'] = result[0]
+        
+        terms['from']['bound'] = bool(terms['from']['bound'])
+        terms['to']['bound'] = bool(terms['to']['bound'])
         
         return terms
 
