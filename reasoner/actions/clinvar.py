@@ -461,6 +461,8 @@ class ClinvarAction(EutilitiesAction):
                     variant['Variant'][0]['edge'] = variant['Condition'][i]['edge']
                     remove_idx.append(i)
             variant['Condition'] = [x for i,x in enumerate(variant['Condition']) if i not in remove_idx]
+            if len(variant['Condition']) == 0:
+                variant.pop('Condition')
         return(variants)
 
 
