@@ -21,14 +21,13 @@ class ConnectionPGM:
                             theta ~ dbeta(2,8)
                             is_connection ~ dbern(theta)
                             
-                            tau_y <- pow(30, -2)
-                            lambda_y ~ dnorm(50, tau_y)
+                            lambda_y ~ dgamma(25, 0.5)
                             years_since_first_article ~ dpois(lambda_y)
 
                             p_pub_prior_conn ~ dbeta(2,8)
                             p_pub_prior_notconn ~ dbeta(7,3)
                             p_pub <- p_pub_prior_conn * is_connection  + p_pub_prior_notconn * (1-is_connection) 
-                            r_pub <- years_since_first_article
+                            r_pub <- 1+years_since_first_article
                             num_articles ~ dnegbin(p_pub, r_pub)
 
                             p_causal_prior ~ dbeta(1,10)
