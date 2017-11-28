@@ -132,8 +132,6 @@ def run_pgm(sender):
         evidence['years_since_first_article'] = years.value
         
     variables = set(cp.models[model_name]['variables']) - set(evidence.keys())
-    print(evidence)
-    print(variables)
     samples = cp.evaluate('pubmed', evidence, variables)
     
     trace = pd.Panel({k: v.squeeze(0) for k, v in samples.items()})
