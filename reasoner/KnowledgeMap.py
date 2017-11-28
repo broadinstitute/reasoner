@@ -88,20 +88,20 @@ class KnowledgeMap:
 
                         {
                             'action':GoFunctionTargetToPathway(),
-                            'p_success':0.7,
-                            'reward':1.2
+                            'p_success':0.5,
+                            'reward':1
                         },
 
                         {
                             'action':WikiPWTargetToPathway(),
-                            'p_success':0.6,
+                            'p_success':0.5,
                             'reward':2
                         },
 
                         {
                             'action':WikiPWPathwayToCell(),
                             'p_success':0.3,
-                            'reward':2
+                            'reward':1
                         },
 
                         {
@@ -113,14 +113,14 @@ class KnowledgeMap:
                         {
                             'action':PharosTargetToPathway(),
                             'p_success':0.5,
-                            'reward':2
+                            'reward':3
                         },
 
-                        {
-                            'action':PharosTargetToDisease(),
-                            'p_success':0.5,
-                            'reward':2
-                        },
+#                        {
+#                            'action':PharosTargetToDisease(),
+#                            'p_success':0.5,
+#                            'reward':2
+#                        },
 
                         {
                             'action':PubmedPathwayDiseasePath(),
@@ -128,29 +128,35 @@ class KnowledgeMap:
                             'reward':1
                         },
 
-                        {
-                            'action':CellOntologyTargetAndPathwayToCell(),
-                            'p_success':0.3,
-                            'reward':3
-                        },
+#                        {
+#                            'action':CellOntologyTargetAndPathwayToCell(),
+#                            'p_success':0.3,
+#                            'reward':3
+#                        },
 
-                        {
-                            'action':CellOntologyTargetAndCellToPathway(),
-                            'p_success':0.3,
-                            'reward':3
-                        },
+#                        {
+#                            'action':CellOntologyTargetAndCellToPathway(),
+#                            'p_success':0.3,
+#                            'reward':3
+#                        },
 
                         {
                             'action':PubmedCellDiseasePath(),
                             'p_success':0.9,
                             'reward':1
                         },
-
+                        
                         {
-                            'action':DskdDiseaseToSymptom(),
-                            'p_success':0.5,
-                            'reward':2
+                            'action':PubmedTargetDiseasePath(),
+                            'p_success':0.9,
+                            'reward':1
                         },
+
+#                        {
+#                            'action':DskdDiseaseToSymptom(),
+#                            'p_success':0.5,
+#                            'reward':2
+#                        },
 
                         {
                             'action':MeshScopeNoteDiseaseToSymptom(),
@@ -160,14 +166,14 @@ class KnowledgeMap:
 
                         {
                             'action':PubmedDiseaseToSymptom(),
-                            'p_success':0.9,
-                            'reward':0.5
+                            'p_success':0.7,
+                            'reward':1
                         },
 
                         {
                             'action':PubmedDrugDiseasePath(),
-                            'p_success':0.99,
-                            'reward':0.5
+                            'p_success':0.8,
+                            'reward':0.8
                         }
                     ],
                 
