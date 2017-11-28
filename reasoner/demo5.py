@@ -1,5 +1,3 @@
-%matplotlib inline
-
 import numpy as np
 import pandas as pd
 from pandas.plotting import *
@@ -10,8 +8,6 @@ from ipywidgets import widgets
 from IPython.display import clear_output
 
 from reasoner.ConnectionPGM import ConnectionPGM
-
-plt.style.use('ggplot')
 
 articles = widgets.IntSlider(
                 value=10,
