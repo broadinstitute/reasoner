@@ -89,13 +89,29 @@ def plot(trace, var):
     axes[0].locator_params(tight=True)
  
     # Autocorrelation for each chain:
-    axes[1].set_xlim(0, 100)
-    for chain in trace[var].columns:
-        autocorrelation_plot(trace[var,:,chain], axes[1], label=chain)
+    #axes[1].set_xlim(0, 100)
+    #for chain in trace[var].columns:
+    #    autocorrelation_plot(trace[var,:,chain], axes[1], label=chain)
  
     # Trace plot:
-    axes[2].set_ylabel('Parameter value')
-    trace[var].plot(ax=axes[2])
+    #axes[2].set_ylabel('Parameter value')
+    #trace[var].plot(ax=axes[2])
+ 
+    # Save figure
+    plt.tight_layout()
+    
+def plot_all(trace):
+    
+    var = list(trace.keys())
+    n_var = len(trace)
+    
+    fig, axes = plt.subplots(1, n_var, figsize=(3*n_var, 3))
+ 
+    # Marginal posterior density estimate:
+    for i in range(len(var)):
+        trace[var[i]].plot.hist(ax=axes[i], bins = 20)
+        axes[i].set_xlabel(var[i])
+        axes[i].locator_params(tight=True)
  
     # Save figure
     plt.tight_layout()
@@ -132,7 +148,7 @@ def run_pgm(sender):
         evidence['years_since_first_article'] = years.value
         
     variables = set(cp.models[model_name]['variables']) - set(evidence.keys())
-    samples = cp.evaluate('pubmed', evidence, variables)
+    samples = cp.evaluate('pubmed', evidence, variables, chains = 1, n_iter = 4000)
     
     trace = pd.Panel({k: v.squeeze(0) for k, v in samples.items()})
     trace.axes[0].name = 'Variable'
@@ -142,15 +158,22 @@ def run_pgm(sender):
     # Point estimates:
     print(trace.to_frame().mean())
 
+    print('')
+    
     # Bayesian equal-tailed 95% credible intervals:
     print(trace.to_frame().quantile([0.05, 0.95]))
 
     # Display diagnostic plots
-    for var in trace:
-        try:
-            plot(trace, var)
-        except Exception as inst:
-            continue
+    try:
+        plot_all(trace)
+    except Exception:
+        pass
+        
+#    for var in trace:
+#        try:
+#            plot(trace, var)
+#        except Exception as inst:
+#            continue
         
 run_button.on_click(run_pgm)
     
