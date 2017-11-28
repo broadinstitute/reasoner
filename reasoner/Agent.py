@@ -120,7 +120,7 @@ class Agent:
         next_action = self.planner.get_action(current_state['state'])
 
         while not isinstance(next_action, Success):
-            print('current state: ' + str(current_state['state']))
+            print('\ncurrent state: ' + str(current_state['state']))
             print('next action: ' + type(next_action).__name__)
             
             if isinstance(next_action, Noop):
