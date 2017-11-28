@@ -49,6 +49,18 @@ class KnowledgeMap:
                             },
 
                             {
+                                'action':ClinvarDiseaseToGene(),
+                                'p_success':0.5,
+                                'reward':1
+                            },
+
+                            {
+                                'action':ClinvarGeneToCondition(),
+                                'p_success':0.5,
+                                'reward':1
+                            },
+
+                            {
                                 'action':MeshConditionToGeneticCondition(),
                                 'p_success':0.5,
                                 'reward':2
