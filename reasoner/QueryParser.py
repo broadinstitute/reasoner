@@ -184,6 +184,7 @@ class QueryParser:
             result = next(iter(c.execute(query).fetchall()), [])
             if len(result) > 0:
                 terms['from']['entity'] = result[0]
+                terms['from']['bound'] = True
                 
         if terms['to']['entity'] is None:
             db = 'data/reasoner_data.sqlite'
@@ -194,12 +195,10 @@ class QueryParser:
             result = next(iter(c.execute(query).fetchall()), [])
             if len(result) > 0:
                 terms['to']['entity'] = result[0]
+                terms['to']['bound'] = True
         
         terms['from']['bound'] = bool(terms['from']['bound'])
         terms['to']['bound'] = bool(terms['to']['bound'])
-        
-        terms['from']['bound'] = bool(terms['from']['bound'])
-        terms['to']['bound'] = True
         
         return terms
 
