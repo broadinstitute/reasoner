@@ -198,6 +198,9 @@ class QueryParser:
         terms['from']['bound'] = bool(terms['from']['bound'])
         terms['to']['bound'] = bool(terms['to']['bound'])
         
+        terms['from']['bound'] = bool(terms['from']['bound'])
+        terms['to']['bound'] = True
+        
         return terms
 
 
