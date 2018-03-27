@@ -101,3 +101,6 @@ ENV/
 .mypy_cache/
 reasoner.psproj
 *.pickle
+.DS_Store
+neotest/sandbox/
+neotest/config/config.yaml

@@ -1,0 +1,19 @@
+chembl:
+	host:
+	database:
+	user:
+	password:
+
+semmeddb:
+	host:
+	database:
+	user:
+	password:
+
+neo4j:
+	host:
+	user:
+	password:
+
+umls:
+	apikey:	

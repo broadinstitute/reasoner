@@ -1,0 +1,440 @@
+cui,name,original_name
+C1512230,Glycolysis/Gluconeogenesis Pathway,KEGG_GLYCOLYSIS_GLUCONEOGENESIS
+C1516586,Citrate Cycle (TCA Cycle) Pathway,KEGG_CITRATE_CYCLE_TCA_CYCLE
+C0030892,Pentose Phosphate Pathway,KEGG_PENTOSE_PHOSPHATE_PATHWAY
+C1518959,Pentose and Glucuronate Interconversions Pathway,KEGG_PENTOSE_AND_GLUCURONATE_INTERCONVERSIONS
+C1517322,Fructose and Mannose Metabolism Pathway,KEGG_FRUCTOSE_AND_MANNOSE_METABOLISM
+C1156458,Galactose Metabolism Pathway,KEGG_GALACTOSE_METABOLISM
+C1510949,Ascorbate and Aldarate Metabolism Pathway,KEGG_ASCORBATE_AND_ALDARATE_METABOLISM
+C0596563,fatty acid metabolism,KEGG_FATTY_ACID_METABOLISM
+C2981164,Steroid Hormone Biosynthesis Pathway,KEGG_STEROID_BIOSYNTHESIS
+C2981164,Steroid Hormone Biosynthesis Pathway,KEGG_STEROID_HORMONE_BIOSYNTHESIS
+C0030013,Oxidative Phosphorylation,KEGG_OXIDATIVE_PHOSPHORYLATION
+C0920640,Purine Metabolism Pathway,KEGG_PURINE_METABOLISM
+C0920641,pyrimidine metabolism,KEGG_PYRIMIDINE_METABOLISM
+C2984226,"Alanine, Aspartate and Glutamate Metabolism Pathway",KEGG_ALANINE_ASPARTATE_AND_GLUTAMATE_METABOLISM
+C1512222,"Glycine, Serine and Threonine Metabolism Pathway",KEGG_GLYCINE_SERINE_AND_THREONINE_METABOLISM
+C2984227,Cysteine and Methionine Metabolism Pathway,KEGG_CYSTEINE_AND_METHIONINE_METABOLISM
+C1519946,"Valine, Leucine and Isoleucine Degradation Pathway",KEGG_VALINE_LEUCINE_AND_ISOLEUCINE_DEGRADATION
+C1519945,"Valine, Leucine and Isoleucine Biosynthesis Pathway",KEGG_VALINE_LEUCINE_AND_ISOLEUCINE_BIOSYNTHESIS
+C1518091,Lysine Degradation Pathway,KEGG_LYSINE_DEGRADATION
+C1510938,Arginine and Proline Metabolism Pathway,KEGG_ARGININE_AND_PROLINE_METABOLISM
+C1156823,Histidine Metabolism Pathway,KEGG_HISTIDINE_METABOLISM
+C1156790,tyrosine metabolism,KEGG_TYROSINE_METABOLISM
+C1327004,Phenylalanine Metabolism Pathway,KEGG_PHENYLALANINE_METABOLISM
+C1156787,Tryptophan Metabolism Pathway,KEGG_TRYPTOPHAN_METABOLISM
+C1156837,Beta-Alanine Metabolism Pathway,KEGG_BETA_ALANINE_METABOLISM
+C1515220,Taurine and Hypotaurine Metabolism Pathway,KEGG_TAURINE_AND_HYPOTAURINE_METABOLISM
+C1519230,Selenoamino Acid Metabolism Pathway,KEGG_SELENOAMINO_ACID_METABOLISM
+C1158188,glutathione metabolism,KEGG_GLUTATHIONE_METABOLISM
+C1514954,Starch and Sucrose Metabolism Pathway,KEGG_STARCH_AND_SUCROSE_METABOLISM
+C0596625,N-Glycan Biosynthesis Pathway,KEGG_N_GLYCAN_BIOSYNTHESIS
+C1518516,O-Glycan Biosynthesis Pathway,KEGG_O_GLYCAN_BIOSYNTHESIS
+C1512234,Glycosaminoglycan Degradation Pathway,KEGG_GLYCOSAMINOGLYCAN_DEGRADATION
+C1516498,Glycosaminoglycan Biosynthesis Pathway - Chondroitin Sulfate,KEGG_GLYCOSAMINOGLYCAN_BIOSYNTHESIS_CHONDROITIN_SULFATE
+C1156904,Glycosaminoglycan Biosynthesis Pathway - Keratan Sulfate,KEGG_GLYCOSAMINOGLYCAN_BIOSYNTHESIS_KERATAN_SULFATE
+C2984230,Glycosaminoglycan Biosynthesis Pathway - Heparan Sulfate,KEGG_GLYCOSAMINOGLYCAN_BIOSYNTHESIS_HEPARAN_SULFATE
+C1158379,Glycerolipid Metabolism Pathway,KEGG_GLYCEROLIPID_METABOLISM
+C1512795,Inositol Phosphate Metabolism Pathway,KEGG_INOSITOL_PHOSPHATE_METABOLISM
+C2984231,Glycerophospholipid Metabolism Pathway,KEGG_GLYCEROPHOSPHOLIPID_METABOLISM
+C2984232,Ether Lipid Metabolism Pathway,KEGG_ETHER_LIPID_METABOLISM
+C1879725,Arachidonic Acid Metabolism Pathway,KEGG_ARACHIDONIC_ACID_METABOLISM
+C1819989,Linoleic Acid Metabolism Pathway,KEGG_LINOLEIC_ACID_METABOLISM
+C2984233,alpha-Linolenic Acid Metabolism Pathway,KEGG_ALPHA_LINOLENIC_ACID_METABOLISM
+C1158861,Pyruvate Metabolism Pathway,KEGG_PYRUVATE_METABOLISM
+C1512238,Glyoxylate and Dicarboxylate Metabolism Pathway,KEGG_GLYOXYLATE_AND_DICARBOXYLATE_METABOLISM
+C1514494,Propanoate Metabolism Pathway,KEGG_PROPANOATE_METABOLISM
+C1511350,Butanoate Metabolism Pathway,KEGG_BUTANOATE_METABOLISM
+C1518583,One Carbon Pool by Folate Pathway,KEGG_ONE_CARBON_POOL_BY_FOLATE
+C1159440,Riboflavin Metabolism Pathway,KEGG_RIBOFLAVIN_METABOLISM
+C1518324,Nicotinate and Nicotinamide Metabolism Pathway,KEGG_NICOTINATE_AND_NICOTINAMIDE_METABOLISM
+C1518876,Pantothenate and CoA Biosynthesis Pathway,KEGG_PANTOTHENATE_AND_COA_BIOSYNTHESIS
+C1157038,Folate Biosynthesis Pathway,KEGG_FOLATE_BIOSYNTHESIS
+C1327201,Retinol Metabolism Pathway,KEGG_RETINOL_METABOLISM
+C1514238,Porphyrin and Chlorophyll Metabolism Pathway,KEGG_PORPHYRIN_AND_CHLOROPHYLL_METABOLISM
+C2984235,Limonene and Pinene Degradation Pathway,KEGG_LIMONENE_AND_PINENE_DEGRADATION
+C0597071,nitrogen metabolism,KEGG_NITROGEN_METABOLISM
+C1159409,Sulfur Metabolism Pathway,KEGG_SULFUR_METABOLISM
+C1327001,Transfer RNA Aminoacylation,KEGG_AMINOACYL_TRNA_BIOSYNTHESIS
+C2984236,Metabolism of Xenobiotics by Cytochrome P450 Pathway,KEGG_METABOLISM_OF_XENOBIOTICS_BY_CYTOCHROME_P450
+C2984237,Drug Metabolism by Cytochrome P450 Pathway,KEGG_DRUG_METABOLISM_CYTOCHROME_P450
+C2984239,Biosynthesis of Unsaturated Fatty Acids Pathway,KEGG_BIOSYNTHESIS_OF_UNSATURATED_FATTY_ACIDS
+C1512885,Internal Ribosome Entry Pathway,KEGG_RIBOSOME
+C2984321,RNA Degradation Pathway,KEGG_RNA_DEGRADATION
+C2984241,RNA Polymerase Assembly Pathway,KEGG_RNA_POLYMERASE
+C2984261,DNA Replication Pathway,KEGG_DNA_REPLICATION
+C2984264,Spliceosome Pathway,KEGG_SPLICEOSOME
+C1752727,Proteasome Pathway,KEGG_PROTEASOME
+C1514545,Protein Export Pathway,KEGG_PROTEIN_EXPORT
+C2752275,PPAR Signaling Pathway,KEGG_PPAR_SIGNALING_PATHWAY
+C2984269,Base Excision Repair Pathway,KEGG_BASE_EXCISION_REPAIR
+C2984260,Nucleotide Excision Repair Pathway,KEGG_NUCLEOTIDE_EXCISION_REPAIR
+C2984283,Mismatch Repair Pathway,KEGG_MISMATCH_REPAIR
+C2984295,Homologous Recombination Pathway,KEGG_HOMOLOGOUS_RECOMBINATION
+C2984257,Non-Homologous End-Joining Pathway,KEGG_NON_HOMOLOGOUS_END_JOINING
+C1515678,p38 MAPK Signaling Pathway BioCarta,KEGG_MAPK_SIGNALING_PATHWAY
+C2984323,ERBB Family Signaling Pathway,KEGG_ERBB_SIGNALING_PATHWAY
+C2984272,Calcium-Mediated Signaling Pathway,KEGG_CALCIUM_SIGNALING_PATHWAY
+C2610749,chemokine-mediated signaling pathway,KEGG_CHEMOKINE_SIGNALING_PATHWAY
+C1519051,Phosphatidylinositol Signaling System Pathway,KEGG_PHOSPHATIDYLINOSITOL_SIGNALING_SYSTEM
+C0007586,Cell Cycle,KEGG_CELL_CYCLE
+C2984284,Oocyte Meiosis Pathway,KEGG_OOCYTE_MEIOSIS
+C1515680,p53 Signaling Pathway BioCarta,KEGG_P53_SIGNALING_PATHWAY
+C1519749,Ubiquitin-mediated Proteolysis Pathway,KEGG_UBIQUITIN_MEDIATED_PROTEOLYSIS
+C2265640,Autophagy Regulation Pathway,KEGG_REGULATION_OF_AUTOPHAGY
+C2984253,Lysosome Assembly Pathway,KEGG_LYSOSOME
+C2984285,Endocytosis Pathway,KEGG_ENDOCYTOSIS
+C2984308,Peroxisome Biogenesis Pathway,KEGG_PEROXISOME
+C1515673,mTOR Signaling Pathway BioCarta,KEGG_MTOR_SIGNALING_PATHWAY
+C0162638,Apoptosis,KEGG_APOPTOSIS
+C2984279,Cardiac Muscle Contraction Pathway,KEGG_CARDIAC_MUSCLE_CONTRACTION
+C2265839,Vascular Smooth Muscle Contraction Pathway,KEGG_VASCULAR_SMOOTH_MUSCLE_CONTRACTION
+C1155491,regulation of Wnt signaling pathway,KEGG_WNT_SIGNALING_PATHWAY
+C2984245,Dorso-Ventral Axis Formation Pathway,KEGG_DORSO_VENTRAL_AXIS_FORMATION
+C1155452,Notch Signaling Pathway,KEGG_NOTCH_SIGNALING_PATHWAY
+C1155468,Hedgehog Signaling Pathway,KEGG_HEDGEHOG_SIGNALING_PATHWAY
+C1515163,TGF Beta Signaling Pathway BioCarta,KEGG_TGF_BETA_SIGNALING_PATHWAY
+C2984268,Axon Guidance,KEGG_AXON_GUIDANCE
+C1155410,vascular endothelial growth factor receptor signaling pathway,KEGG_VEGF_SIGNALING_PATHWAY
+C1512810,Focal adhesion pathway,KEGG_FOCAL_ADHESION
+C2984324,ECM-Receptor Interaction Signaling Pathway,KEGG_ECM_RECEPTOR_INTERACTION
+C2984274,Adherens Junction Assembly Pathway,KEGG_ADHERENS_JUNCTION
+C2984287,Tight Junction Assembly Pathway,KEGG_TIGHT_JUNCTION
+C2984290,Gap Junction Assembly Pathway,KEGG_GAP_JUNCTION
+C2984246,Antigen Processing and Presentation Pathway,KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION
+C1817393,Toll-Like Receptor Signaling Pathway,KEGG_TOLL_LIKE_RECEPTOR_SIGNALING_PATHWAY
+C2984315,NOD-Like Receptor Signaling Pathway,KEGG_NOD_LIKE_RECEPTOR_SIGNALING_PATHWAY
+C2984316,RIG-I-Like Receptor Signaling Pathway,KEGG_RIG_I_LIKE_RECEPTOR_SIGNALING_PATHWAY
+C2984314,Cytosolic DNA-Sensing Pathway,KEGG_CYTOSOLIC_DNA_SENSING_PATHWAY
+C2984327,Jak-STAT Signaling Pathway,KEGG_JAK_STAT_SIGNALING_PATHWAY
+C2984271,Hematopoietic Cell Lineage Pathway,KEGG_HEMATOPOIETIC_CELL_LINEAGE
+C2984255,Natural Killer Cell-Mediated Cytotoxicity Pathway,KEGG_NATURAL_KILLER_CELL_MEDIATED_CYTOTOXICITY
+C1325934,T Cell Receptor Signaling Pathway,KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY
+C1325924,B Cell Receptor Signaling Pathway,KEGG_B_CELL_RECEPTOR_SIGNALING_PATHWAY
+C2984288,Fc Epsilon Receptor I Signaling Pathway KEGG,KEGG_FC_EPSILON_RI_SIGNALING_PATHWAY
+C2984252,Leukocyte Transendothelial Migration Pathway,KEGG_LEUKOCYTE_TRANSENDOTHELIAL_MIGRATION
+C2984294,Long-Term Potentiation Pathway,KEGG_LONG_TERM_POTENTIATION
+C2984256,Neurotrophin Signaling Pathway,KEGG_NEUROTROPHIN_SIGNALING_PATHWAY
+C2984275,Long-Term Depression Pathway,KEGG_LONG_TERM_DEPRESSION
+C2984335,Olfactory Transduction Pathway,KEGG_OLFACTORY_TRANSDUCTION
+C2984266,Taste Transduction Pathway,KEGG_TASTE_TRANSDUCTION
+C2984248,Actin Cytoskeleton Regulation Pathway,KEGG_REGULATION_OF_ACTIN_CYTOSKELETON
+C1155395,insulin receptor signaling pathway,KEGG_INSULIN_SIGNALING_PATHWAY
+C2984292,Gonadotropin-Releasing Hormone Signaling Pathway,KEGG_GNRH_SIGNALING_PATHWAY
+C2984303,Progesterone-Mediated Oocyte Maturation Pathway,KEGG_PROGESTERONE_MEDIATED_OOCYTE_MATURATION
+C2984280,Melanogenesis Pathway,KEGG_MELANOGENESIS
+C2246617,Adipocytokine Signaling Pathway,KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY
+C2984301,Type II Diabetes Mellitus Pathway,KEGG_TYPE_II_DIABETES_MELLITUS
+C2984334,Type I Diabetes Mellitus Pathway,KEGG_TYPE_I_DIABETES_MELLITUS
+C2984262,Maturity Onset Diabetes of the Young Pathway,KEGG_MATURITY_ONSET_DIABETES_OF_THE_YOUNG
+C2984313,Aldosterone-Regulated Sodium Reabsorption Pathway,KEGG_ALDOSTERONE_REGULATED_SODIUM_REABSORPTION
+C2984297,Vasopressin-Regulated Water Reabsorption Pathway,KEGG_VASOPRESSIN_REGULATED_WATER_REABSORPTION
+C2984305,Proximal Tubule Bicarbonate Reclamation Pathway,KEGG_PROXIMAL_TUBULE_BICARBONATE_RECLAMATION
+C2984276,Vibrio cholerae Infection Pathway,KEGG_VIBRIO_CHOLERAE_INFECTION
+C2984332,Epithelial Cell Signaling Pathway in Helicobacter pylori Infection,KEGG_EPITHELIAL_CELL_SIGNALING_IN_HELICOBACTER_PYLORI_INFECTION
+C2984286,Pathogenic Escherichia coli Infection Pathway,KEGG_PATHOGENIC_ESCHERICHIA_COLI_INFECTION
+C2984278,Colorectal Cancer Pathway,KEGG_COLORECTAL_CANCER
+C2984311,Renal Cell Carcinoma Pathway,KEGG_RENAL_CELL_CARCINOMA
+C2984259,Pancreatic Cancer Pathway,KEGG_PANCREATIC_CANCER
+C2984333,Endometrial Cancer Pathway,KEGG_ENDOMETRIAL_CANCER
+C2984291,Glioblastoma Multiforme Pathway,KEGG_GLIOMA
+C2984325,Prostate Cancer Pathway,KEGG_PROSTATE_CANCER
+C2984307,Papillary Thyroid Carcinoma Pathway,KEGG_THYROID_CANCER
+C2984322,Basal Cell Carcinoma Pathway,KEGG_BASAL_CELL_CARCINOMA
+C2984289,Melanoma Pathway,KEGG_MELANOMA
+C2984270,Bladder Cancer Pathway,KEGG_BLADDER_CANCER
+C2984277,Chronic Myeloid Leukemia Pathway,KEGG_CHRONIC_MYELOID_LEUKEMIA
+C2984331,Acute Myeloid Leukemia Pathway,KEGG_ACUTE_MYELOID_LEUKEMIA
+C2984312,Small Cell Lung Cancer Pathway,KEGG_SMALL_CELL_LUNG_CANCER
+C2984258,Non-Small Cell Lung Cancer Pathway,KEGG_NON_SMALL_CELL_LUNG_CANCER
+C2984299,Asthma Pathway,KEGG_ASTHMA
+C2984319,Autoimmune Thyroid Disease Pathway,KEGG_AUTOIMMUNE_THYROID_DISEASE
+C2984317,Systemic Lupus Erythematosus Pathway,KEGG_SYSTEMIC_LUPUS_ERYTHEMATOSUS
+C2984265,Allograft Rejection Pathway,KEGG_ALLOGRAFT_REJECTION
+C2984293,Graft-Versus-Host Disease Pathway,KEGG_GRAFT_VERSUS_HOST_DISEASE
+C2984310,Primary Immunodeficiency Pathway,KEGG_PRIMARY_IMMUNODEFICIENCY
+C2984282,Dilated Cardiomyopathy Pathway,KEGG_DILATED_CARDIOMYOPATHY
+C2984254,Viral Myocarditis Pathway,KEGG_VIRAL_MYOCARDITIS
+C1514645,RELA Pathway,BIOCARTA_RELA_PATHWAY
+C1511457,CSK Protein Kinase Activation Pathway,BIOCARTA_CSK_PATHWAY
+C1515844,AKT Signaling Pathway,BIOCARTA_AKT_PATHWAY
+C1515846,ALK Pathway,BIOCARTA_ALK_PATHWAY
+C1564374,"Complement C3 Convertase, Alternative Pathway",BIOCARTA_CHEMICAL_PATHWAY
+C1510698,ATM Signaling Pathway,BIOCARTA_ATM_PATHWAY
+C1325924,B Cell Receptor Signaling Pathway,BIOCARTA_BCR_PATHWAY
+C3156056,TNFSF11-mediated signaling pathway,BIOCARTA_RANKL_PATHWAY
+C1516311,Caspase Cascade Pathway,BIOCARTA_CASPASE_PATHWAY
+C1512119,EGF Receptor Downregulation by CBL Pathway,BIOCARTA_CBL_PATHWAY
+C1511415,CCR3 Signaling Pathway,BIOCARTA_CCR3_PATHWAY
+C2755995,CD40 signaling pathway,BIOCARTA_CD40_PATHWAY
+C1517343,G1/S Checkpoint Pathway,BIOCARTA_G1_PATHWAY
+C1517347,G2-M Cell Cycle Checkpoint,BIOCARTA_G2_PATHWAY
+C1516396,Ceramide Signaling Pathway BioCarta,BIOCARTA_CERAMIDE_PATHWAY
+C0312760,Complement activation classic pathway,BIOCARTA_CLASSIC_PATHWAY
+C2753317,vitamin D receptor signaling pathway,BIOCARTA_VDR_PATHWAY
+C2984475,HDAC Class I Signaling Pathway,BIOCARTA_HDAC_PATHWAY
+C1511458,CTCF Pathway,BIOCARTA_CTCF_PATHWAY
+C1511459,CTL-mediated Immune Response Pathway,BIOCARTA_CTL_PATHWAY
+C1511460,CXCR4 Signaling Pathway,BIOCARTA_CXCR4_PATHWAY
+C1511437,CFTR Pathway,BIOCARTA_CFTR_PATHWAY
+C2984281,Cytokine-Cytokine Receptor Signaling Pathway,BIOCARTA_CYTOKINE_PATHWAY
+C1514665,RNA Interference Pathway,BIOCARTA_RNA_PATHWAY
+C1518143,MTA3 Pathway,BIOCARTA_MTA3_PATHWAY
+C1516142,Calcineurin Pathway,BIOCARTA_CALCINEURIN_PATHWAY
+C1155379,epidermal growth factor receptor signaling pathway,BIOCARTA_EGF_PATHWAY
+C1512125,Erythropoietin Signaling Pathway,BIOCARTA_EPO_PATHWAY
+C2984324,ECM-Receptor Interaction Signaling Pathway,BIOCARTA_ECM_PATHWAY
+C3179234,ERK Signal Tranduction Pathway,BIOCARTA_ERK_PATHWAY
+C0427588,Extrinsic coagulation pathway finding,BIOCARTA_EXTRINSIC_PATHWAY
+C3546404,Fas-FasL signaling pathway,BIOCARTA_FAS_PATHWAY
+C1517172,Fibrinolysis Pathway,BIOCARTA_FIBRINOLYSIS_PATHWAY
+C0428919,Right free wall accessory pathway,BIOCARTA_FREE_PATHWAY
+C1155440,gamma-aminobutyric acid signaling pathway,BIOCARTA_GABA_PATHWAY
+C1512233,Glycolysis Pathway,BIOCARTA_GLYCOLYSIS_PATHWAY
+C2610544,growth hormone receptor signaling pathway,BIOCARTA_GH_PATHWAY
+C1519178,Salmonella Pathway,BIOCARTA_SALMONELLA_PATHWAY
+C2984412,HIF-1-Alpha Transcription Factor Pathway,BIOCARTA_HIF_PATHWAY
+C2984416,IGF1 Pathway,BIOCARTA_IGF1_PATHWAY
+C1512589,IL17 Signaling Pathway,BIOCARTA_IL17_PATHWAY
+C1512594,IL2 Signaling Pathway,BIOCARTA_IL2_PATHWAY
+C1512595,IL3 Signaling Pathway,BIOCARTA_IL3_PATHWAY
+C1512596,IL4 Signaling Pathway,BIOCARTA_IL4_PATHWAY
+C1512597,IL5 Signaling Pathway,BIOCARTA_IL5_PATHWAY
+C1512598,IL6 Signaling Pathway,BIOCARTA_IL6_PATHWAY
+C1512587,IL10 Anti-inflammatory Signaling Pathway,BIOCARTA_IL10_PATHWAY
+C1512588,IL12 Signaling Pathway,BIOCARTA_IL12_PATHWAY
+C1512593,IL2RB Pathway,BIOCARTA_IL2RB_PATHWAY
+C1512599,IL7 Signaling Pathway,BIOCARTA_IL7_PATHWAY
+C3821688,fibroblast growth factor receptor apoptotic signaling pathway,BIOCARTA_DEATH_PATHWAY
+C1512774,Inhibition of Cellular Proliferation by Gleevec Pathway,BIOCARTA_GLEEVEC_PATHWAY
+C2984427,Insulin Pathway,BIOCARTA_INSULIN_PATHWAY
+C1155451,integrin-mediated signaling pathway,BIOCARTA_INTEGRIN_PATHWAY
+C0427580,Intrinsic coagulation pathway finding,BIOCARTA_INTRINSIC_PATHWAY
+C1521888,Keratinocyte Differentiation Pathway,BIOCARTA_KERATINOCYTE_PATHWAY
+C1138407,"Complement Pathway, Mannose-Binding Lectin",BIOCARTA_LECTIN_PATHWAY
+C1514612,Pyk2 and Map Kinase Pathway,BIOCARTA_PYK2_PATHWAY
+C1155571,MAPK cascade involved in cell wall organization or biogenesis,BIOCARTA_MAPK_PATHWAY
+C1518805,PPAR-alpha Gene Regulation Pathway,BIOCARTA_PPARA_PATHWAY
+C2984148,Monocyte Phagocytosis and Adhesion Pathway,BIOCARTA_MONOCYTE_PATHWAY
+C1515673,mTOR Signaling Pathway BioCarta,BIOCARTA_MTOR_PATHWAY
+C1512585,IGF1R Antiapoptosis Pathway,BIOCARTA_IGF1R_PATHWAY
+C1514129,Pitx2 Transcription Regulation Pathway,BIOCARTA_PITX2_PATHWAY
+C3820630,nerve growth factor signaling pathway,BIOCARTA_NGF_PATHWAY
+C1513836,NFAT Pathway,BIOCARTA_NFAT_PATHWAY
+C1513837,NFKB Activation Pathway,BIOCARTA_NFKB_PATHWAY
+C2984374,p53 Pathway for Transcriptional Regulation,BIOCARTA_P53_PATHWAY
+C1155400,platelet-derived growth factor receptor signaling pathway,BIOCARTA_PDGF_PATHWAY
+C1511416,CCR5 Signaling Pathway,BIOCARTA_CCR5_PATHWAY
+C2984469,Sphingosine 1-Phosphate Receptor 1 Signaling Pathway,BIOCARTA_EDG1_PATHWAY
+C1511443,CK1/CDK5 Regulation Pathway,BIOCARTA_CDK5_PATHWAY
+C1513801,Myosin Phosphatase Pathway,BIOCARTA_MYOSIN_PATHWAY
+C1752727,Proteasome Pathway,BIOCARTA_PROTEASOME_PATHWAY
+C1518829,PTEN-Dependent Cell Cycle Arrest and Apoptosis Pathway,BIOCARTA_PTEN_PATHWAY
+C1514676,Rab GTPases in Endocytosis Pathway,BIOCARTA_RAB_PATHWAY
+C1514677,Rac1 Cell Motility Signaling Pathway,BIOCARTA_RAC1_PATHWAY
+C1514638,RAS-RAF Pathway Deregulation,BIOCARTA_RAS_PATHWAY
+C1514642,RB Checkpoint Signaling Pathway,BIOCARTA_RB_PATHWAY
+C1516107,BAD Regulation Pathway,BIOCARTA_BAD_PATHWAY
+C1511443,CK1/CDK5 Regulation Pathway,BIOCARTA_CK1_PATHWAY
+C1515619,eIF2 Regulation Pathway,BIOCARTA_EIF2_PATHWAY
+C1515620,eIF4 Regulation Pathway,BIOCARTA_EIF4_PATHWAY
+C2984480,Mast/Stem Cell Growth Factor Receptor Signaling Pathway,BIOCARTA_STEM_PATHWAY
+C1515677,p27 Regulation Pathway,BIOCARTA_P27_PATHWAY
+C1518790,PGC1a Regulation Pathway,BIOCARTA_PGC1A_PATHWAY
+C1519593,PML Transcription Regulation Pathway,BIOCARTA_PML_PATHWAY
+C2246618,leptin-mediated signaling pathway,BIOCARTA_LEPTIN_PATHWAY
+C1514941,Rho Cell Motility Signaling Pathway,BIOCARTA_RHO_PATHWAY
+C1512128,ERBB2 Signaling Pathway,BIOCARTA_HER2_PATHWAY
+C2611120,ERK5 cascade,BIOCARTA_ERK5_PATHWAY
+C3158851,TIRAP-dependent toll-like receptor signaling pathway,BIOCARTA_MAL_PATHWAY
+C1513340,Mitochondria in Apoptotic Signaling Pathway,BIOCARTA_MITOCHONDRIA_PATHWAY
+C1519748,Ubiquitin-Proteasomal Pathway,BIOCARTA_PARKIN_PATHWAY
+C1512591,IL1R Signaling Pathway,BIOCARTA_IL1R_PATHWAY
+C1155393,Hepatocyte Growth Factor Receptor Signaling Pathway,BIOCARTA_MET_PATHWAY
+C1516087,Attenuation of GPCR Signaling Pathway,BIOCARTA_GPCR_PATHWAY
+C1519150,SODD/TNFR1 Signaling Pathway,BIOCARTA_SODD_PATHWAY
+C1519425,Sonic Hedgehog Pathway,BIOCARTA_SHH_PATHWAY
+C1514596,Ptc1 Regulation of Cell Cycle Pathway,BIOCARTA_PTC1_PATHWAY
+C1514959,Stathmin Pathway,BIOCARTA_STATHMIN_PATHWAY
+C1512322,HSP27 Regulation Pathway,BIOCARTA_HSP27_PATHWAY
+C1325933,regulation of T cell receptor signaling pathway,BIOCARTA_TCR_PATHWAY
+C1517941,Longevity Pathway,BIOCARTA_LONGEVITY_PATHWAY
+C1519126,SARS Coronavirus Protease Pathway,BIOCARTA_SARS_PATHWAY
+C1510659,Osmoregulation,BIOCARTA_STRESS_PATHWAY
+C1515165,TNFR1 Signaling Pathway,BIOCARTA_TNFR1_PATHWAY
+C1515166,TNFR2 Signaling Pathway,BIOCARTA_TNFR2_PATHWAY
+C1155478,Toll signaling pathway,BIOCARTA_TOLL_PATHWAY
+C1515173,TPO Signaling Pathway,BIOCARTA_TPO_PATHWAY
+C1511454,CREB Activation Signaling Pathway,BIOCARTA_CREB_PATHWAY
+C1511399,CARM1 Transcription Regulation Pathway,BIOCARTA_CARM1_PATHWAY
+C1519656,Trka Receptor Signaling Pathway,BIOCARTA_TRKA_PATHWAY
+C1155410,vascular endothelial growth factor receptor signaling pathway,BIOCARTA_VEGF_PATHWAY
+C1520113,Wnt Signaling Pathway,BIOCARTA_WNT_PATHWAY
+C2984415,Interferon-Gamma Signaling Pathway,ST_INTERFERON_GAMMA_PATHWAY
+C2246616,tumor necrosis factor-mediated signaling pathway,ST_TUMOR_NECROSIS_FACTOR_PATHWAY
+C1516956,Erk1/Erk2 MAPK Signaling Pathway,ST_ERK1_ERK2_MAPK_PATHWAY
+C1516311,Caspase Cascade Pathway,SA_CASPASE_CASCADE
+C4232398,PCP pathway involved in axon chemotaxis,SIG_CHEMOTAXIS
+C3158959,interleukin-13-mediated signaling pathway,ST_IL_13_PATHWAY
+C1515678,p38 MAPK Signaling Pathway BioCarta,ST_P38_MAPK_PATHWAY
+C0037080,Signal Pathways,WNT_SIGNALING
+C1517615,JAK-STAT Pathway Deregulation,ST_JAK_STAT_PATHWAY
+C3156085,adrenergic receptor signaling pathway,ST_ADRENERGIC
+C1155451,integrin-mediated signaling pathway,ST_INTEGRIN_SIGNALING_PATHWAY
+C1514955,Stat3 Signaling Pathway,ST_STAT3_PATHWAY
+C3546404,Fas-FasL signaling pathway,SA_FAS_SIGNALING
+C2610474,type I interferon signaling pathway,ST_TYPE_I_INTERFERON_PATHWAY
+C1325924,B Cell Receptor Signaling Pathway,SIG_BCR_SIGNALING_PATHWAY
+C3824245,extrinsic apoptotic signaling pathway via B cell antigen receptor,ST_B_CELL_ANTIGEN_RECEPTOR
+C3158958,interleukin-4-mediated signaling pathway,ST_INTERLEUKIN_4_PATHWAY
+C3178960,Wnt beta-Catenin Signaling Pathway,ST_WNT_BETA_CATENIN_PATHWAY
+C3821688,fibroblast growth factor receptor apoptotic signaling pathway,SA_PROGRAMMED_CELL_DEATH
+C3546404,Fas-FasL signaling pathway,ST_FAS_SIGNALING_PATHWAY
+C1518829,PTEN-Dependent Cell Cycle Arrest and Apoptosis Pathway,SA_PTEN_PATHWAY
+C1519656,Trka Receptor Signaling Pathway,SA_TRKA_RECEPTOR
+C2984383,Endothelin Pathway,PID_ENDOTHELIN_PATHWAY
+C3271849,ERBB4-ERBB4 signaling pathway,PID_ERBB4_PATHWAY
+C2984353,Aurora B Signaling Pathway,PID_AURORA_B_PATHWAY
+C2984427,Insulin Pathway,PID_INSULIN_PATHWAY
+C1155452,Notch Signaling Pathway,PID_NOTCH_PATHWAY
+C2984441,Noncanonical Wnt Signaling Pathway,PID_WNT_NONCANONICAL_PATHWAY
+C1325933,regulation of T cell receptor signaling pathway,PID_TCR_PATHWAY
+C2984421,IL27-Mediated Signaling Pathway,PID_IL27_PATHWAY
+C1709808,RB-E2F Pathway Deregulation,PID_E2F_PATHWAY
+C2755995,CD40 signaling pathway,PID_CD40_PATHWAY
+C1155393,Hepatocyte Growth Factor Receptor Signaling Pathway,PID_MET_PATHWAY
+C2984479,PTPN1 Signaling Pathway,PID_PTP1B_PATHWAY
+C3548666,adenylate cyclase-inhibiting adrenergic receptor signaling pathway involved in heart process,PID_AR_PATHWAY
+C2984348,Arf6 Trafficking Pathway,PID_ARF6_TRAFFICKING_PATHWAY
+C1514810,Reelin Signaling Pathway BioCarta,PID_REELIN_PATHWAY
+C2984438,Nectin Adhesion Pathway,PID_NECTIN_PATHWAY
+C2984463,Regulation of p38-alpha and p38-beta Pathway,PID_P38_ALPHA_BETA_PATHWAY
+C1155491,regulation of Wnt signaling pathway,PID_WNT_SIGNALING_PATHWAY
+C2984493,TRAIL Signaling Pathway,PID_TRAIL_PATHWAY
+C3271239,Cdc42 signaling pathway,PID_CDC42_PATHWAY
+C2984482,Proto-Oncogene Tyrosine-Protein Kinase Receptor Ret Signaling Pathway,PID_RET_PATHWAY
+C1510698,ATM Signaling Pathway,PID_ATM_PATHWAY
+C2984346,Arf6 Pathway,PID_ARF6_PATHWAY
+C2984433,LKB1 Signaling Pathway,PID_LKB1_PATHWAY
+C2262808,Canonical Wnt Signaling Pathway,PID_WNT_CANONICAL_PATHWAY
+C2984344,Angiopoietin-1 Receptor Signaling Pathway,PID_ANGIOPOIETIN_RECEPTOR_PATHWAY
+C3546404,Fas-FasL signaling pathway,PID_FAS_PATHWAY
+C1522722,Circadian Rhythm Pathway 2,PID_CIRCADIAN_PATHWAY
+C2984465,Telomerase Regulation Pathway,PID_TELOMERASE_PATHWAY
+C3271680,netrin-activated signaling pathway,PID_NETRIN_PATHWAY
+C2984419,IL1-Mediated Signaling Pathway,PID_IL1_PATHWAY
+C2984498,Cone Cell Visual Signal Transduction Pathway,PID_CONE_PATHWAY
+C2984347,Arf6 Signaling Pathway,PID_ARF6_DOWNSTREAM_PATHWAY
+C1511460,CXCR4 Signaling Pathway,PID_CXCR4_PATHWAY
+C2984416,IGF1 Pathway,PID_IGF1_PATHWAY
+C2984492,TNF Receptor Family Signaling Pathway,PID_TNF_PATHWAY
+C2984452,PLK1 Signaling Pathway,PID_PLK1_PATHWAY
+C2984458,Ras Signaling in the CD4+ TCR Pathway,PID_TCR_RAS_PATHWAY
+C1512597,IL5 Signaling Pathway,PID_IL5_PATHWAY
+C2984404,FOXO Transcription Factor Family Signaling Pathway,PID_FOXO_PATHWAY
+C3271719,positive regulation of endothelial cell chemotaxis by VEGF-activated vascular endothelial growth factor receptor signaling pathway,PID_VEGF_VEGFR_PATHWAY
+C1518146,MYC Pathway Deregulation,PID_MYC_PATHWAY
+C2984486,RANBP2-Mediated Sumoylation Transcription Regulation Pathway,PID_RANBP2_PATHWAY
+C2984423,IL2/PI3K Signaling Pathway,PID_IL2_PI3K_PATHWAY
+C1516396,Ceramide Signaling Pathway BioCarta,PID_CERAMIDE_PATHWAY
+C1155399,Nerve Growth Factor Receptor Signaling Pathway,PID_P75_NTR_PATHWAY
+C1517693,LIS1 Pathway,PID_LIS1_PATHWAY
+C2984490,Syndecan-4-Mediated Signaling Pathway,PID_SYNDECAN_4_PATHWAY
+C2984395,ERBB2/ERBB3 Signaling Pathway,PID_ERBB2_ERBB3_PATHWAY
+C2984403,FOXM1 Transcription Factor Signaling Pathway,PID_FOXM1_PATHWAY
+C1155364,BMP Receptor Signaling Pathway,PID_BMP_PATHWAY
+C1512595,IL3 Signaling Pathway,PID_IL3_PATHWAY
+C2984431,JNK Signaling in the CD4+ TCR Pathway,PID_TCR_JNK_PATHWAY
+C2984420,IL23-Mediated Signaling Pathway,PID_IL23_PATHWAY
+C1512300,HIV-I Nef in Apoptosis Pathway,PID_HIV_NEF_PATHWAY
+C2984487,Syndecan-1-Mediated Signaling Pathway,PID_SYNDECAN_1_PATHWAY
+C2266215,rhodopsin mediated signaling pathway,PID_RHODOPSIN_PATHWAY
+C1522927,retinoic acid receptor signaling pathway,PID_RETINOIC_ACID_PATHWAY
+C2984484,p38-gamma and p38-delta Signaling Pathway,PID_P38_GAMMA_DELTA_PATHWAY
+C1516311,Caspase Cascade Pathway,PID_CASPASE_PATHWAY
+C2984372,CXCR3-Mediated Signaling Pathway,PID_CXCR3_PATHWAY
+C2984496,VEGFR1 Signaling Pathway,PID_VEGFR1_PATHWAY
+C2984480,Mast/Stem Cell Growth Factor Receptor Signaling Pathway,PID_KIT_PATHWAY
+C1512125,Erythropoietin Signaling Pathway,PID_EPO_PATHWAY
+C2984424,IL2/STAT5 Signaling Pathway,PID_IL2_STAT5_PATHWAY
+C2984361,Calcium Signaling in the CD4+ TCR Pathway,PID_TCR_CALCIUM_PATHWAY
+C2984488,Syndecan-2-Mediated Signaling Pathway,PID_SYNDECAN_2_PATHWAY
+C2984351,Aurora Kinase Signaling Pathway,PID_AURORA_A_PATHWAY
+C2984428,Insulin-Mediated Glucose Transport Pathway,PID_INSULIN_GLUCOSE_PATHWAY
+C2984489,Syndecan-3-Mediated Signaling Pathway,PID_SYNDECAN_3_PATHWAY
+C1516117,BARD1 Pathway,PID_BARD1_PATHWAY
+C2984374,p53 Pathway for Transcriptional Regulation,PID_P53_REGULATION_PATHWAY
+C1510921,Anthrax Toxin Pathway,PID_ANTHRAX_PATHWAY
+C1514638,RAS-RAF Pathway Deregulation,PID_RAS_PATHWAY
+C2984495,NTRK1/MAPK Signaling Pathway,PID_MAPK_TRK_PATHWAY
+C2984340,Alpha-Synuclein Signaling Pathway,PID_ALPHA_SYNUCLEIN_PATHWAY
+C1155389,fibroblast growth factor receptor signaling pathway,PID_FGF_PATHWAY
+C1514677,Rac1 Cell Motility Signaling Pathway,PID_RAC1_PATHWAY
+C2984418,IL12/STAT4 Signaling Pathway,PID_IL12_STAT4_PATHWAY
+C1514567,Protein Translation Pathway,REACTOME_TRANSLATION
+C1720827,"Apoptosis, Extrinsic Pathway",REACTOME_EXTRINSIC_PATHWAY_FOR_APOPTOSIS
+C2984269,Base Excision Repair Pathway,REACTOME_BASE_EXCISION_REPAIR
+C1155491,regulation of Wnt signaling pathway,REACTOME_SIGNALING_BY_WNT
+C1660172,regulation of neurotrophin TRK receptor signaling pathway,REACTOME_SIGNALLING_BY_NGF
+C3269560,regulation of nodal signaling pathway,REACTOME_SIGNALING_BY_NODAL
+C2610544,growth hormone receptor signaling pathway,REACTOME_GROWTH_HORMONE_RECEPTOR_SIGNALING
+C2984284,Oocyte Meiosis Pathway,REACTOME_MEIOSIS
+C1155391,negative regulation of fibroblast growth factor receptor signaling pathway,REACTOME_NEGATIVE_REGULATION_OF_FGFR_SIGNALING
+C3269898,regulation of Kit signaling pathway,REACTOME_REGULATION_OF_KIT_SIGNALING
+C1516690,Cofactors and Vitamins Metabolism Pathway,REACTOME_METABOLISM_OF_VITAMINS_AND_COFACTORS
+C3271822,interleukin-7-mediated signaling pathway,REACTOME_IL_7_SIGNALING
+C0007586,Cell Cycle,REACTOME_CELL_CYCLE
+C3271849,ERBB4-ERBB4 signaling pathway,REACTOME_SIGNALING_BY_ERBB4
+C1512128,ERBB2 Signaling Pathway,REACTOME_SIGNALING_BY_ERBB2
+C2752245,regulation of hippo signaling,REACTOME_SIGNALING_BY_HIPPO
+C1155252,"regulation of complement activation, alternative pathway",REACTOME_REGULATION_OF_COMPLEMENT_CASCADE
+C3271714,insulin receptor signaling pathway via phosphatidylinositol 3-kinase,REACTOME_INSULIN_RECEPTOR_SIGNALLING_CASCADE
+C1155364,BMP Receptor Signaling Pathway,REACTOME_SIGNALING_BY_BMP
+C1516498,Glycosaminoglycan Biosynthesis Pathway - Chondroitin Sulfate,REACTOME_CHONDROITIN_SULFATE_BIOSYNTHESIS
+C1156904,Glycosaminoglycan Biosynthesis Pathway - Keratan Sulfate,REACTOME_KERATAN_SULFATE_BIOSYNTHESIS
+C3545190,downregulation of EGFR family signaling pathway,REACTOME_EGFR_DOWNREGULATION
+C1325933,regulation of T cell receptor signaling pathway,REACTOME_TCR_SIGNALING
+C1511135,Biodegradation of Xenobiotics Pathway,REACTOME_XENOBIOTICS
+C1514823,Regulation of Apoptosis Pathway,REACTOME_REGULATION_OF_APOPTOSIS
+C1512233,Glycolysis Pathway,REACTOME_GLYCOLYSIS
+C3156337,"blood coagulation, common pathway",REACTOME_COMMON_PATHWAY
+C1516087,Attenuation of GPCR Signaling Pathway,REACTOME_SIGNALING_BY_GPCR
+C3822245,intracellular signal transduction pathway involved in mitotic cell cycle G2/M transition decatenation checkpoint,REACTOME_CELL_CYCLE_MITOTIC
+C1512230,Glycolysis/Gluconeogenesis Pathway,REACTOME_GLUCONEOGENESIS
+C3159085,opioid receptor signaling pathway,REACTOME_OPIOID_SIGNALLING
+C1155417,adenylate cyclase-activating G-protein coupled receptor signaling pathway,REACTOME_ADENYLATE_CYCLASE_ACTIVATING_PATHWAY
+C2249475,activation of G-protein coupled receptor protein signaling pathway,REACTOME_G_PROTEIN_ACTIVATION
+C1155400,platelet-derived growth factor receptor signaling pathway,REACTOME_SIGNALING_BY_PDGF
+C1156026,post-chaperonin tubulin folding pathway,REACTOME_POST_CHAPERONIN_TUBULIN_FOLDING_PATHWAY
+C2984279,Cardiac Muscle Contraction Pathway,REACTOME_MUSCLE_CONTRACTION
+C3158377,mRNA splicing via endonucleolytic cleavage and ligation involved in unfolded protein response,REACTOME_MRNA_SPLICING
+C1517344,G1 to S Transition Pathway,REACTOME_G1_S_TRANSITION
+C1511399,CARM1 Transcription Regulation Pathway,REACTOME_TRANSCRIPTION
+C2984260,Nucleotide Excision Repair Pathway,REACTOME_NUCLEOTIDE_EXCISION_REPAIR
+C2984268,Axon Guidance,REACTOME_AXON_GUIDANCE
+C3158377,mRNA splicing via endonucleolytic cleavage and ligation involved in unfolded protein response,REACTOME_UNFOLDED_PROTEIN_RESPONSE
+C2265839,Vascular Smooth Muscle Contraction Pathway,REACTOME_SMOOTH_MUSCLE_CONTRACTION
+C1158861,Pyruvate Metabolism Pathway,REACTOME_PYRUVATE_METABOLISM
+C2984428,Insulin-Mediated Glucose Transport Pathway,REACTOME_GLUCOSE_TRANSPORT
+C1519341,Skeletal Myogenesis Pathway,REACTOME_MYOGENESIS
+C1511689,DNA Repair Pathway,REACTOME_DNA_REPAIR
+C2984419,IL1-Mediated Signaling Pathway,REACTOME_IL1_SIGNALING
+C2984415,Interferon-Gamma Signaling Pathway,REACTOME_INTERFERON_GAMMA_SIGNALING
+C1512834,Interferon Signaling Modulation Pathway,REACTOME_INTERFERON_SIGNALING
+C1512594,IL2 Signaling Pathway,REACTOME_IL_2_SIGNALING
+C1512598,IL6 Signaling Pathway,REACTOME_IL_6_SIGNALING
+C1155452,Notch Signaling Pathway,REACTOME_SIGNALING_BY_NOTCH
+C0427580,Intrinsic coagulation pathway finding,REACTOME_INTRINSIC_PATHWAY
+C2984261,DNA Replication Pathway,REACTOME_DNA_REPLICATION
+C1155395,insulin receptor signaling pathway,REACTOME_SIGNALING_BY_INSULIN_RECEPTOR
+C0920640,Purine Metabolism Pathway,REACTOME_PURINE_METABOLISM
+C0162638,Apoptosis,REACTOME_APOPTOSIS
+C1512298,HIV-1 Infection Pathway,REACTOME_HIV_INFECTION
+C1880989,Glucuronidation Pathway,REACTOME_GLUCURONIDATION
+C0009546,"Complement Pathway, Alternative",REACTOME_COMPLEMENT_CASCADE
+C1155389,fibroblast growth factor receptor signaling pathway,REACTOME_SIGNALING_BY_FGFR
+C2984290,Gap Junction Assembly Pathway,REACTOME_GAP_JUNCTION_ASSEMBLY
+C0920641,pyrimidine metabolism,REACTOME_PYRIMIDINE_METABOLISM
+C1720828,"Apoptosis, Intrinsic Pathway",REACTOME_INTRINSIC_PATHWAY_FOR_APOPTOSIS
+C3271714,insulin receptor signaling pathway via phosphatidylinositol 3-kinase,REACTOME_PI3K_CASCADE
+C2984142,Function of SLRP in Bone Pathway,NABA_PROTEOGLYCANS
