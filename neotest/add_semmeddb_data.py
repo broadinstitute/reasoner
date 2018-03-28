@@ -71,7 +71,8 @@ def sql2neo_object(session, db, object_cui, object_type, subject_type):
 def sql2neo_direct(session, db, subject_cui, object_cui):
     typemap = {'dsyn': 'Disease',
                'moft': 'Pathway',
-               'celf': 'Pathway'}
+               'celf': 'Pathway',
+               'neop': 'Pathway'}
 
     sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
        "FROM PREDICATION "
