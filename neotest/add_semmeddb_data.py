@@ -3,19 +3,22 @@ import mysql.connector
 from neo4j.v1 import GraphDatabase
 from Config import Config
 
+
 def db_select(db, sql):
     cursor = db.cursor(dictionary=True)
     try:
         cursor.execute(sql)
         results = cursor.fetchall()
     except:
-       print("Error: unable to fetch data")
+        print("Error: unable to fetch data")
+    
     return(results)
 
 
 def get_cuis(session, node_type):
-  result = session.run("MATCH (n:%s)-[:HAS_IDENTFIER]->(id:Identifier {type: 'cui', resource: 'UMLS'}) RETURN DISTINCT id as cui" % (node_type))
-  return(result)
+    result = session.run("MATCH (n:%s)-[:HAS_ID]->(id:Identifier {type: 'cui', resource: 'UMLS'}) RETURN DISTINCT id.id as cui" % (node_type))
+    return([record['cui'] for record in result])
+
 
 def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_type, target_name, predicate):
     tx.run("MERGE (o:%s)-[:HAS_ID]->(:Identifier {id: {origin_cui}}) "
@@ -89,10 +92,10 @@ def sql2neo_direct(session, db, subject_cui, object_cui):
     results = db_select(db, sql)
     return_cuis = set()
     for row in results:
-        if row['SUBJECT_SEMTYPE'] in typemap and row['OBJECT_SEMTYPE']:
-          session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
+        if row['SUBJECT_SEMTYPE'] in typemap and row['OBJECT_SEMTYPE'] in typemap:
+            session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
         else:
-          print(row['SUBJECT_SEMTYPE'], row['OBJECT_SEMTYPE'])
+            print(row['SUBJECT_SEMTYPE'], row['OBJECT_SEMTYPE'])
 
 
 def disease2symptoms(session, db, cui):
@@ -121,6 +124,9 @@ def pathway2cell(session, db, cui):
 def cell2tissue(session, db, cui):
     return(sql2neo(session, db, cui, 'Cell', 'Tissue'))
 
+def cell2pathway(session, db, cui):
+    return(sql2neo(session, db, cui, 'Cell', 'Pathway'))
+
 
 # Open database connection
 config = Config().config
@@ -138,30 +144,31 @@ pathway = pd.read_csv(pathway_file)
 
 with driver.session() as session:
 
-    print('disease:')
-    for index, row in disease.iterrows():
-        disease2symptoms(session, db, row['cui'])
-        disease2tissue(session, db, row['cui'])
-        disease2cell(session, db, row['cui'])
-        # for p_index, p_row in pathway.iterrows():
-        #     sql2neo_direct(session, db, row['cui'], p_row['cui'])
-        #     sql2neo_direct(session, db, p_row['cui'], row['cui'])
+    # print('disease:')
+    # for index, row in disease.iterrows():
+    #     disease2symptoms(session, db, row['cui'])
+    #     disease2tissue(session, db, row['cui'])
+    #     disease2cell(session, db, row['cui'])
+    #     # for p_index, p_row in pathway.iterrows():
+    #     #     sql2neo_direct(session, db, row['cui'], p_row['cui'])
+    #     #     sql2neo_direct(session, db, p_row['cui'], row['cui'])
 
-    print('pathway:')
-    for index, row in pathway.iterrows():
-        pathway2cell(session, db, row['cui'])
+    # print('pathway:')
+    # for index, row in pathway.iterrows():
+    #     pathway2cell(session, db, row['cui'])
         
-    print('symptom:')
-    for symptom_cui in get_cuis(session, 'Symptom'):
-        symptom2tissue(session, db, symptom_cui)
+    # print('symptom:')
+    # for symptom_cui in get_cuis(session, 'Symptom'):
+    #     symptom2tissue(session, db, symptom_cui)
     
-    print('tissue:')
-    for tissue_cui in get_cuis(session, 'Tissue'):
-        tissue2cell(session, db, tissue_cui)
+    # print('tissue:')
+    # for tissue_cui in get_cuis(session, 'Tissue'):
+    #     tissue2cell(session, db, tissue_cui)
 
     print('cell:')
-    for cell_cuis in get_cuis(session, 'Cell'):
-        cell2tissue(session, db, cell_cui)
+    for cell_cui in get_cuis(session, 'Cell'):
+        # cell2tissue(session, db, cell_cui)
+        cell2pathway(session, db, cell_cui)
 
 
 
