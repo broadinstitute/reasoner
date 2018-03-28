@@ -3,7 +3,9 @@ from neo4j.v1 import GraphDatabase
 from Config import Config
 
 def add_drug(tx, id, name, synonyms, exids, mechanism):
-    tx.run("MERGE (drug:Drug {id: {id}, name: {name}, mechanism_of_action: {mechanism}}) "
+    tx.run("MERGE (drug:Drug {id: {id}}) "
+           "SET drug.name = {name} "
+           "SET drug.mechanism_of_action: {mechanism} "
            "MERGE (drug)-[:HAS_SYNONYM]->(:Synonym {name: {name}})",
            id=id, name=name, mechanism=mechanism)
 
@@ -22,7 +24,8 @@ def add_drug(tx, id, name, synonyms, exids, mechanism):
 
 def add_target(tx, id, name, synonyms, exids, drug_id):
     tx.run("MATCH (drug:Drug {id: $drug_id}) "
-           "MERGE (target:Target {id: $id, name: $name}) "
+           "MERGE (target:Target {id: $id}) "
+           "SET target.name = {name} "
            "MERGE (drug)-[:TARGETS]->(target)",
            id=id, name=name, drug_id=drug_id)
 
