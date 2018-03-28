@@ -1,5 +1,7 @@
+import pandas as pd
 import mysql.connector
-from .Config import Config
+from neo4j.v1 import GraphDatabase
+from Config import Config
 
 def db_select(db, sql):
     cursor = db.cursor(dictionary=True)
@@ -12,53 +14,97 @@ def db_select(db, sql):
 
 
 def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_type, target_name, predicate):
-    tx.run("MATCH (o:{origin_type})-[:HAS_ID]->(:Identifier {id: {origin_cui}}) "
-           "MERGE (o)-[:{predicate}]->(t:{target_type} {id: {target_cui}, name: {target_name}}) "
+    tx.run("MATCH (o:%s)-[:HAS_ID]->(:Identifier {id: {origin_cui}}) "
+           "MERGE (o)-[:%s]->(t:%s {id: {target_cui}, name: {target_name}}) "
            "MERGE (t)-[:HAS_ID]->(:Identifier {id: {target_cui}, type: 'cui', resource: 'UMLS'}) "
-           "MERGE (t)-[:HAS_SYNONYM]->(:Synonym {name: {target_name}, type: 'umls_concept'})",
-           origin_cui=origin_cui, origin_type=origin_type, target_cui=target_cui, target_type=target_type, target_name=target_name, predicate=predicate)
+           "MERGE (t)-[:HAS_SYNONYM]->(:Synonym {name: {target_name}, type: 'umls_concept'})" % (origin_type, predicate, target_type),
+           origin_cui=origin_cui, target_cui=target_cui, target_name=target_name)
 
+def sql2neo(session, db, subject_cui, subject_type, object_type):
+    typemap = {'Disease': 'dsyn',
+               'Symptom': 'sosy',
+               'Tissue': 'tisu',
+               'Cell': 'cell',
+               'Pathway': ['moft', 'celf']}
 
-def disease2symptoms(session, db, disease_cui):
-    sql = "SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE FROM PREDICATION WHERE SUBJECT_CUI = '%s' AND SUBJECT_SEMTYPE = 'dsyn' AND OBJECT_SEMTYPE = 'sosy' AND PREDICATE = 'CAUSES' LIMIT 100;"
-    results = db_select(sql)
-    return_cuis = []
+    if object_type == 'Pathway':
+        sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
+           "FROM PREDICATION "
+           "WHERE SUBJECT_CUI = '%s' "
+           "AND OBJECT_SEMTYPE IN ('%s') LIMIT 100;") % (subject_cui, "','".join(typemap[object_type]))
+    else:
+        sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
+               "FROM PREDICATION "
+               "WHERE SUBJECT_CUI = '%s' "
+               "AND OBJECT_SEMTYPE = '%s' LIMIT 100;") % (subject_cui, typemap[object_type])
+    results = db_select(db, sql)
+    return_cuis = set()
     for row in results:
-        return_cuis.append(row['OBJECT_CUI'])
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], 'Disease', row['OBJECT_CUI'], 'Symptom', row['OBJECT_NAME'], row['PREDICATE'])
+        return_cuis.add(row['OBJECT_CUI'])
+        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], subject_type, row['OBJECT_CUI'], object_type, row['OBJECT_NAME'], row['PREDICATE'])
     return(return_cuis)
 
-def symptom2tissue(session, db, symptom_cui):
-    sql = "SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE FROM PREDICATION WHERE SUBJECT_CUI = '%s' AND SUBJECT_SEMTYPE = 'tisu' AND OBJECT_SEMTYPE = 'sosy' AND PREDICATE = 'LOCATION_OF' LIMIT 100;"
-    results = db_select(sql)
-    return_cuis = []
+def sql2neo_object(session, db, object_cui, object_type, subject_type):
+    typemap = {'Disease': 'dsyn',
+               'Symptom': 'sosy',
+               'Tissue': 'tisu',
+               'Cell': 'cell',
+               'Pathway': ['moft', 'celf']}
+
+    if subject_type == 'Pathway':
+        sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
+           "FROM PREDICATION "
+           "WHERE OBJECT_CUI = '%s' "
+           "AND SUBJECT_SEMTYPE IN ('%s') LIMIT 100;") % (object_cui, "','".join(typemap[subject_type]))
+    else:
+        sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
+               "FROM PREDICATION "
+               "WHERE OBJECT_CUI = '%s' "
+               "AND SUBJECT_SEMTYPE = '%s' LIMIT 100;") % (object_cui, typemap[subject_type])
+    results = db_select(db, sql)
+    return_cuis = set()
     for row in results:
-        return_cuis.append(row['OBJECT_CUI'])
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], 'Symptom', row['OBJECT_CUI'], 'Tissue', row['OBJECT_NAME'], row['PREDICATE'])
+        return_cuis.add(row['SUBJECT_CUI'])
+        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], subject_type, row['OBJECT_CUI'], object_type, row['OBJECT_NAME'], row['PREDICATE'])
     return(return_cuis)
 
-def tissue2cell(session, db, tissue_cui):
-    sql = "SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE FROM PREDICATION WHERE SUBJECT_CUI = '%s' AND SUBJECT_SEMTYPE = 'cell' AND OBJECT_SEMTYPE = 'tisu' AND PREDICATE = 'PART_OF' LIMIT 100;"
-    results = db_select(sql)
-    return_cuis = []
+def sql2neo_direct(session, db, subject_cui, object_cui):
+    typemap = {'dsyn': 'Disease',
+               'moft': 'Pathway',
+               'celf': 'Pathway'}
+
+    sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
+       "FROM PREDICATION "
+       "WHERE SUBJECT_CUI = '%s' "
+       "AND OBJECT_CUI = '%s' LIMIT 100;") % (subject_cui, object_cui)
+    results = db_select(db, sql)
+    return_cuis = set()
     for row in results:
-        return_cuis.append(row['OBJECT_CUI'])
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], 'Tissue', row['OBJECT_CUI'], 'Cell', row['OBJECT_NAME'], row['PREDICATE'])
-    return(return_cuis)
+        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
 
-def pathway2cell(session, db, pathway_cui):
-    sql = "SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE FROM PREDICATION WHERE SUBJECT_CUI = '%s' AND (SUBJECT_SEMTYPE = 'celf' OR SUBJECT_SEMTYPE = 'moft') AND OBJECT_SEMTYPE = 'cell' AND PREDICATE = 'AFFECTS' LIMIT 100;"
-    results = db_select(sql)
-    return_cuis = []
-    for row in results:
-        return_cuis.append(row['OBJECT_CUI'])
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], 'Pathway', row['OBJECT_CUI'], 'Cell', row['OBJECT_NAME'], row['PREDICATE'])
-    return(return_cuis)
 
-#SELECT DISTINCT PREDICATE FROM PREDICATION WHERE SUBJECT_SEMTYPE = 'cell' AND OBJECT_SEMTYPE = 'tisu' LIMIT 10;
-#SELECT DISTINCT PREDICATE FROM PREDICATION WHERE (SUBJECT_SEMTYPE = 'celf' OR SUBJECT_SEMTYPE = 'moft') AND OBJECT_SEMTYPE = 'cell' LIMIT 10;
-#SELECT DISTINCT PREDICATE FROM PREDICATION WHERE SUBJECT_SEMTYPE = 'cell' AND (OBJECT_SEMTYPE = 'celf' OR OBJECT_SEMTYPE = 'moft') LIMIT 10;
+def disease2symptoms(session, db, cui):
+    return(sql2neo(session, db, cui, 'Disease', 'Symptom'))
 
+#def disease2pathway(session, db, cui):
+#    return(sql2neo(session, db, cui, 'Disease', 'Pathway'))
+
+def disease2tissue(session, db, cui):
+    return(sql2neo_object(session, db, cui, 'Disease', 'Tissue'))
+
+def disease2cell(session, db, cui):
+    return(sql2neo(session, db, cui, 'Disease', 'Cell')|sql2neo_object(session, db, cui, 'Disease', 'Cell'))
+
+
+
+def symptom2tissue(session, db, cui):
+    return(sql2neo(session, db, cui, 'Symptom', 'Tissue'))
+
+def tissue2cell(session, db, cui):
+    return(sql2neo(session, db, cui, 'Tissue', 'Cell'))
+
+def pathway2cell(session, db, cui):
+    return(sql2neo(session, db, cui, 'Pathway', 'Cell'))
 
 
 # Open database connection
@@ -76,16 +122,34 @@ disease = pd.read_csv(disease_file)
 pathway = pd.read_csv(pathway_file)
 
 with driver.session() as session:
+    symptom_cuis = set()
+    tissue_cuis = set()
+    cell_cuis = set()
+
+    print('disease:')
     for index, row in disease.iterrows():
         print(row)
-        symptom_cuis = disease2symptoms(session, db, row['cui'])
-        for symptom_cui in symptom_cuis:
-            tissue_cuis = symptom2tissue(session, db, symptom_cui)
-            for tissue_cui in tissue_cuis:
-                cell_cuis = tissue2cell(session, db, tissue_cui)
+        symptom_cuis = symptom_cuis|disease2symptoms(session, db, row['cui'])
+        tissue_cuis = tissue_cuis|disease2cell(session, db, row['cui'])
+        cell_cuis = cell_cuis|disease2cell(session, db, row['cui'])
+        for p_index, p_row in pathway.iterrows():
+            sql2neo_direct(session, db, row['cui'], p_row['cui'])
+            sql2neo_direct(session, db, p_row['cui'], row['cui'])
 
+    print('pathway:')
     for index, row in pathway.iterrows():
-        pathway2cell(session, db, row['cui'])
+        print(row)
+        cell_cuis = cell_cuis|pathway2cell(session, db, row['cui'])
+        
+    print('symptom:')
+    for symptom_cui in symptom_cuis:
+        tissue_cuis = tissue_cuis|symptom2tissue(session, db, symptom_cui)
+    
+    print('tissue:')
+    for tissue_cui in tissue_cuis:
+        cell_cuis = cell_cuis|tissue2cell(session, db, tissue_cui)
+
+
 
 
 # disconnect from server
