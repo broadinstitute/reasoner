@@ -39,6 +39,7 @@ def add_target(tx, id, name, synonyms, exids, drug_id):
                "MERGE (target)-[:HAS_ID]->(identifier)",
             id=id, exid=exid, resource=resource)
 
+config = Config().config
 driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['user'], config['neo4j']['password']))
 
 dbfile = './data/drugbank.xml'

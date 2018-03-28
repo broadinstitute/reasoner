@@ -2,6 +2,7 @@ import pandas as pd
 from umls.UmlsQuery import UmlsQuery
 from Config import Config
 
+config = Config().config
 apikey = Config().config['umls']['apikey']
 
 cop_file = './data/cop_benchmark.csv'

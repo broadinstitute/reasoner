@@ -9,6 +9,7 @@ def add_pathway(tx, name, url, entrez_ids):
     	   "MERGE (item)-[:PART_OF]->(pathway)",
     	name=name, url=url, entrez_ids=entrez_ids)
 
+config = Config().config
 driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['user'], config['neo4j']['password']))
 
 msigdb_file = './data/c2.cp.v6.1.entrez.gmt'

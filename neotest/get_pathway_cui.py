@@ -11,6 +11,7 @@ def add_pathway(tx, cui, name, original_name):
            cui=cui, name=name, original_name=original_name)
 
 
+config = Config().config
 apikey = Config().config['umls']['apikey']
 
 path_file = './data/c2.cp.v6.1.entrez.gmt'
