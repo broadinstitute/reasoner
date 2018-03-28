@@ -66,13 +66,13 @@ with driver.session() as session:
             result = query_umls(uq, query_base)
 
         if result:
-            cuis = cuis.append(result['cui'], result['name'], pathway['name'])
+            cuis = cuis.append({'cui':result['cui'], 'umls_name':result['name'], 'msigdb_name':pathway['name']})
             session.write_transaction(
                 add_pathway,
                 result['cui'], result['name'],
                 pathway['name'], pathway['url'], pathway['entrez_ids'])
         else:
-            cuis = cuis.append('na', 'na', pathway['name'])
+            cuis = cuis.append({'cui':'na', 'umls_name':'na', 'msigdb_name':pathway['name']})
             session.write_transaction(
                 add_pathway_noumls,
                 pathway['name'], pathway['url'], pathway['entrez_ids'])
