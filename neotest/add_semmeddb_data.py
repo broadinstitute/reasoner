@@ -14,11 +14,15 @@ def db_select(db, sql):
 
 
 def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_type, target_name, predicate):
-    tx.run("MATCH (o:%s)-[:HAS_ID]->(:Identifier {id: {origin_cui}}) "
-           "MERGE (o)-[:%s]->(t:%s {id: {target_cui}, name: {target_name}}) "
+    tx.run("MERGE (o:%s)-[:HAS_ID]->(:Identifier {id: {origin_cui}}) "
+           "MERGE (t:%s)-[:HAS_ID]->(:Identifier {id: {target_cui}}) "
+           "SET t.id = {target_cui} "
+           "SET t.name = {target_name} "
+           "MERGE (o)-[:%s]-> (t) "
            "MERGE (t)-[:HAS_ID]->(:Identifier {id: {target_cui}, type: 'cui', resource: 'UMLS'}) "
-           "MERGE (t)-[:HAS_SYNONYM]->(:Synonym {name: {target_name}, type: 'umls_concept'})" % (origin_type, predicate, target_type),
+           "MERGE (t)-[:HAS_SYNONYM]->(:Synonym {name: {target_name}, type: 'umls_concept'})" % (origin_type, target_type, predicate),
            origin_cui=origin_cui, target_cui=target_cui, target_name=target_name)
+    print("added connection: " + predicate + " " + target_name)
 
 def sql2neo(session, db, subject_cui, subject_type, object_type):
     typemap = {'Disease': 'dsyn',
@@ -81,7 +85,10 @@ def sql2neo_direct(session, db, subject_cui, object_cui):
     results = db_select(db, sql)
     return_cuis = set()
     for row in results:
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
+        if row['SUBJECT_SEMTYPE'] in typemap and row['OBJECT_SEMTYPE']:
+          session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
+        else:
+          print(row['SUBJECT_SEMTYPE'], row['OBJECT_SEMTYPE'])
 
 
 def disease2symptoms(session, db, cui):
@@ -131,11 +138,11 @@ with driver.session() as session:
     for index, row in disease.iterrows():
         print(row)
         symptom_cuis = symptom_cuis|disease2symptoms(session, db, row['cui'])
-        tissue_cuis = tissue_cuis|disease2cell(session, db, row['cui'])
+        tissue_cuis = tissue_cuis|disease2tissue(session, db, row['cui'])
         cell_cuis = cell_cuis|disease2cell(session, db, row['cui'])
-        for p_index, p_row in pathway.iterrows():
-            sql2neo_direct(session, db, row['cui'], p_row['cui'])
-            sql2neo_direct(session, db, p_row['cui'], row['cui'])
+        # for p_index, p_row in pathway.iterrows():
+        #     sql2neo_direct(session, db, row['cui'], p_row['cui'])
+        #     sql2neo_direct(session, db, p_row['cui'], row['cui'])
 
     print('pathway:')
     for index, row in pathway.iterrows():
