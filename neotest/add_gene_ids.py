@@ -1,6 +1,6 @@
 import pandas as pd
 from neo4j.v1 import GraphDatabase
-from .Config import Config
+from Config import Config
 
 def get_hgnc_ids(session):
     result = session.run("MATCH ()-[:HAS_ID]->(id:Identifier) "

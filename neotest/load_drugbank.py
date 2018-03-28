@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as etree
 from neo4j.v1 import GraphDatabase
-from .Config import Config
+from Config import Config
 
 def add_drug(tx, id, name, synonyms, exids, mechanism):
     tx.run("MERGE (drug:Drug {id: {id}, name: {name}, mechanism_of_action: {mechanism}}) "

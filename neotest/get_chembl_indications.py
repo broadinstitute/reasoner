@@ -1,7 +1,7 @@
 import mysql.connector
 import xml.etree.ElementTree as etree
 from neo4j.v1 import GraphDatabase
-from .Config import Config
+from Config import Config
 
 
 def get_chembl_ids(session):

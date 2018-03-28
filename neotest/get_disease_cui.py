@@ -1,6 +1,6 @@
 import pandas as pd
 from umls.UmlsQuery import UmlsQuery
-from .Config import Config
+from Config import Config
 
 apikey = Config().config['umls']['apikey']
 

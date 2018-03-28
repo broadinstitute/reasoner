@@ -1,5 +1,5 @@
 from neo4j.v1 import GraphDatabase
-from .Config import Config
+from Config import Config
 
 def add_pathway(tx, name, url, entrez_ids):
     tx.run("MERGE (pathway:Pathway {name: {name}, url: {url}}) "

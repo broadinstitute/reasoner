@@ -1,7 +1,7 @@
 import pandas as pd
 from umls.UmlsQuery import UmlsQuery
 from neo4j.v1 import GraphDatabase
-from .Config import Config
+from Config import Config
 
 
 def add_pathway(tx, cui, name, original_name):
