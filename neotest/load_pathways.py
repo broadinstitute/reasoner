@@ -10,11 +10,11 @@ def add_pathway(tx, cui, umls_name, msigdb_name, url, entrez_ids):
            "MERGE (pathway)-[:HAS_ID]->(:Identifier {id: {cui}, type: 'cui', resource: 'UMLS'}) "
            "MERGE (pathway)-[:HAS_SYNONYM]->(:Synonym {name: {umls_name}, type: 'umls_concept', resource: 'UMLS'}) "
            "MERGE (pathway)-[:HAS_SYNONYM]->(:Synonym {name: {msigdb_name}, type: 'msigdb_pathway', resource: 'MSigDB'})",
-    	   "WITH pathway "
-    	   "UNWIND {entrez_ids} as entrez_id "
-    	   "MATCH (item:Target)-[:HAS_ID]->(identifier:Identifier {id: entrez_id, type: 'entrez_gene_id'}) "
-    	   "MERGE (item)-[:PART_OF]->(pathway)",
-    	cui=cui, umls_name=umls_name, msigdb_name=msigdb_name, url=url, entrez_ids=entrez_ids)
+           "WITH pathway "
+           "UNWIND {entrez_ids} as entrez_id "
+           "MATCH (item:Target)-[:HAS_ID]->(identifier:Identifier {id: entrez_id, type: 'entrez_gene_id'}) "
+           "MERGE (item)-[:PART_OF]->(pathway)",
+        cui=cui, umls_name=umls_name, msigdb_name=msigdb_name, url=url, entrez_ids=entrez_ids)
 
 
 def add_pathway_noumls(tx, msigdb_name, url, entrez_ids):
@@ -51,15 +51,15 @@ outfile = './data/cop_pathway_cui.csv'
 
 pathways = []
 with open(msigdb_file) as f:
-	for line in f:
-		parts = line.strip().split('\t')
-		pathways.append({'name':parts[0], 'url':parts[1], 'entrez_ids':parts[2:]})
+    for line in f:
+        parts = line.strip().split('\t')
+        pathways.append({'name':parts[0], 'url':parts[1], 'entrez_ids':parts[2:]})
 
 uq = UmlsQuery(apikey)
 cuis = pd.DataFrame(columns=["cui", "umls_name", "msigdb_name"])
 with driver.session() as session:
-	for pathway in pathways:
-		
+    for pathway in pathways:
+        
         query_base = ' '.join(pathway['name'].split('_')[1:]).lower()
         result = query_umls(uq, query_base + ' pathway')
         if not result:
