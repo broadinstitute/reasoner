@@ -12,20 +12,20 @@ def get_chembl_ids(session):
 def add_indication(tx, chembl_id, mesh_id, mesh_heading, efo_id, efo_term):
     if mesh_id is not None and efo_id is not None:
         tx.run("MATCH (drug:Drug)-[:HAS_ID]->(:Identifier {id: {chembl_id}, resource: 'ChEMBL'}) "
-               "MERGE (drug)-[:HAS_INDICATION]->(condition:Condition)-[:HAS_ID]->(:Identifier {id: {mesh_id}, term: {mesh_heading}, type: 'mesh_id', resource: 'MeSH'}) "
-               "MERGE (condition)-[:HAS_ID]->(:Identifier {id: {efo_id}, term: {efo_term}, type: 'efo_id', resource: 'EFO'}) "
-               "MERGE (condition)-[:HAS_SYNONYM]->(:Synonym {name: {mesh_heading}, type: 'mesh_heading'}) "
-               "MERGE (condition)-[:HAS_SYNONYM]->(:Synonym {name: {efo_term}, type: 'efo_term'})",
+               "MERGE (drug)-[:HAS_INDICATION]->(disease:Disease)-[:HAS_ID]->(:Identifier {id: {mesh_id}, term: {mesh_heading}, type: 'mesh_id', resource: 'MeSH'}) "
+               "MERGE (disease)-[:HAS_ID]->(:Identifier {id: {efo_id}, term: {efo_term}, type: 'efo_id', resource: 'EFO'}) "
+               "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {mesh_heading}, type: 'mesh_heading'}) "
+               "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {efo_term}, type: 'efo_term'})",
                chembl_id=chembl_id, mesh_id=mesh_id, mesh_heading=mesh_heading.lower(), efo_id=efo_id, efo_term=efo_term.lower())
     elif mesh_id is not None:
         tx.run("MATCH (drug:Drug)-[:HAS_ID]->(:Identifier {id: {chembl_id}, resource: 'ChEMBL'}) "
-               "MERGE (drug)-[:HAS_INDICATION]->(condition:Condition)-[:HAS_ID]->(:Identifier {id: {mesh_id}, term: {mesh_heading}, type: 'mesh_id', resource: 'MeSH'}) "
-               "MERGE (condition)-[:HAS_SYNONYM]->(:Synonym {name: {mesh_heading}, type: 'mesh_heading'})",
+               "MERGE (drug)-[:HAS_INDICATION]->(disease:Disease)-[:HAS_ID]->(:Identifier {id: {mesh_id}, term: {mesh_heading}, type: 'mesh_id', resource: 'MeSH'}) "
+               "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {mesh_heading}, type: 'mesh_heading'})",
                chembl_id=chembl_id, mesh_id=mesh_id, mesh_heading=mesh_heading.lower())
     elif efo_id is not None:
         tx.run("MATCH (drug:Drug)-[:HAS_ID]->(:Identifier {id: {chembl_id}, resource: 'ChEMBL'}) "
-           "MERGE (drug)-[:HAS_INDICATION]->(condition:Condition)-[:HAS_ID]->(:Identifier {id: {efo_id}, term: {efo_term}, type: 'efo_id', resource: 'EFO'}) "
-           "MERGE (condition)-[:HAS_SYNONYM]->(:Synonym {name: {efo_term}, type: 'efo_term'})",
+           "MERGE (drug)-[:HAS_INDICATION]->(disease:Disease)-[:HAS_ID]->(:Identifier {id: {efo_id}, term: {efo_term}, type: 'efo_id', resource: 'EFO'}) "
+           "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {efo_term}, type: 'efo_term'})",
            chembl_id=chembl_id, efo_id=efo_id, efo_term=efo_term.lower())
 
 
