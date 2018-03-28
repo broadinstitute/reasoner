@@ -104,3 +104,4 @@ reasoner.psproj
 .DS_Store
 neotest/sandbox/
 neotest/config/config.yaml
+neotest/data/drugbank.xml
