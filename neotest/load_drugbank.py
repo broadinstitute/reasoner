@@ -49,9 +49,7 @@ root = tree.getroot()
 
 ns = {'drugbank': 'http://www.drugbank.ca'}
 
-n = 1
 for drug in root.findall('drugbank:drug', ns):
-    if n > 100: break
     drug_name = drug.find('drugbank:name', ns).text
     drug_id = ''
     for did in drug.findall('drugbank:drugbank-id', ns):
@@ -91,7 +89,6 @@ for drug in root.findall('drugbank:drug', ns):
                     target_exids[exid_res] = exid_id
 
             session.write_transaction(add_target, target_id, target_name, target_synonyms, target_exids, drug_id)
-    n = n+1
 
 print("done")
 
