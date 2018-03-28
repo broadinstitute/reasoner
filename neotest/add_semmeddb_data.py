@@ -18,11 +18,11 @@ def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_type, tar
            "MERGE (t:%s)-[:HAS_ID]->(:Identifier {id: {target_cui}}) "
            "SET t.id = {target_cui} "
            "SET t.name = {target_name} "
-           "MERGE (o)-[:%s]-> (t) "
+           "MERGE (o)-[:%s]->(t) "
            "MERGE (t)-[:HAS_ID]->(:Identifier {id: {target_cui}, type: 'cui', resource: 'UMLS'}) "
            "MERGE (t)-[:HAS_SYNONYM]->(:Synonym {name: {target_name}, type: 'umls_concept'})" % (origin_type, target_type, predicate),
            origin_cui=origin_cui, target_cui=target_cui, target_name=target_name)
-    print("added connection: " + predicate + " " + target_name)
+    print("added connection: " + origin_cui + "," + predicate + "," + target_cui)
 
 def sql2neo(session, db, subject_cui, subject_type, object_type):
     typemap = {'Disease': 'dsyn',
@@ -114,6 +114,9 @@ def tissue2cell(session, db, cui):
 def pathway2cell(session, db, cui):
     return(sql2neo(session, db, cui, 'Pathway', 'Cell'))
 
+def cell2tissue(session, db, cui):
+    return(sql2neo(session, db, cui, 'Cell', 'Tissue'))
+
 
 # Open database connection
 config = Config().config
@@ -136,7 +139,6 @@ with driver.session() as session:
 
     print('disease:')
     for index, row in disease.iterrows():
-        print(row)
         symptom_cuis = symptom_cuis|disease2symptoms(session, db, row['cui'])
         tissue_cuis = tissue_cuis|disease2tissue(session, db, row['cui'])
         cell_cuis = cell_cuis|disease2cell(session, db, row['cui'])
@@ -146,7 +148,6 @@ with driver.session() as session:
 
     print('pathway:')
     for index, row in pathway.iterrows():
-        print(row)
         cell_cuis = cell_cuis|pathway2cell(session, db, row['cui'])
         
     print('symptom:')
@@ -154,6 +155,10 @@ with driver.session() as session:
         tissue_cuis = tissue_cuis|symptom2tissue(session, db, symptom_cui)
     
     print('tissue:')
+    for tissue_cui in tissue_cuis:
+        cell_cuis = cell_cuis|tissue2cell(session, db, tissue_cui)
+
+    print('cell:')
     for tissue_cui in tissue_cuis:
         cell_cuis = cell_cuis|tissue2cell(session, db, tissue_cui)
 
