@@ -12,7 +12,7 @@ def add_pathway(tx, name, url, entrez_ids):
 config = Config().config
 driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['user'], config['neo4j']['password']))
 
-msigdb_file = './data/c2.cp.v6.1.entrez.gmt'
+msigdb_file = './data/c2cp_c5mf_c5bp_v6.1.entrez.gmt'
 
 pathways = []
 with open(msigdb_file) as f:
