@@ -20,15 +20,17 @@ def get_cuis(session, node_type):
     return([record['cui'] for record in result])
 
 
-def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_type, target_name, predicate):
+def add_cui_connection(tx, origin_cui, origin_type, origin_name, target_cui, target_type, target_name, predicate):
     tx.run("MERGE (o:%s)-[:HAS_ID]->(:Identifier {id: {origin_cui}}) "
+           "SET o.id = {origin_cui} "
+           "SET o.name = {origin_name} "
            "MERGE (t:%s)-[:HAS_ID]->(:Identifier {id: {target_cui}}) "
            "SET t.id = {target_cui} "
            "SET t.name = {target_name} "
            "MERGE (o)-[:%s]->(t) "
            "MERGE (t)-[:HAS_ID]->(:Identifier {id: {target_cui}, type: 'cui', resource: 'UMLS'}) "
            "MERGE (t)-[:HAS_SYNONYM]->(:Synonym {name: {target_name}, type: 'umls_concept'})" % (origin_type, target_type, predicate),
-           origin_cui=origin_cui, target_cui=target_cui, target_name=target_name)
+           origin_cui=origin_cui, origin_name=origin_name, target_cui=target_cui, target_name=target_name)
     print("added connection: " + origin_cui + "," + predicate + "," + target_cui)
 
 def sql2neo(session, db, subject_cui, subject_type, object_type):
@@ -52,7 +54,7 @@ def sql2neo(session, db, subject_cui, subject_type, object_type):
     return_cuis = set()
     for row in results:
         return_cuis.add(row['OBJECT_CUI'])
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], subject_type, row['OBJECT_CUI'], object_type, row['OBJECT_NAME'], row['PREDICATE'])
+        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], subject_type, row['SUBJECT_NAME'], row['OBJECT_CUI'], object_type, row['OBJECT_NAME'], row['PREDICATE'])
     return(return_cuis)
 
 def sql2neo_object(session, db, object_cui, object_type, subject_type):
@@ -76,7 +78,7 @@ def sql2neo_object(session, db, object_cui, object_type, subject_type):
     return_cuis = set()
     for row in results:
         return_cuis.add(row['SUBJECT_CUI'])
-        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], subject_type, row['OBJECT_CUI'], object_type, row['OBJECT_NAME'], row['PREDICATE'])
+        session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], subject_type, row['SUBJECT_NAME'], row['OBJECT_CUI'], object_type, row['OBJECT_NAME'], row['PREDICATE'])
     return(return_cuis)
 
 def sql2neo_direct(session, db, subject_cui, object_cui):
@@ -93,7 +95,7 @@ def sql2neo_direct(session, db, subject_cui, object_cui):
     return_cuis = set()
     for row in results:
         if row['SUBJECT_SEMTYPE'] in typemap and row['OBJECT_SEMTYPE'] in typemap:
-            session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
+            session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], typemap[row['SUBJECT_SEMTYPE']], row['SUBJECT_NAME'], row['OBJECT_CUI'], typemap[row['OBJECT_SEMTYPE']], row['OBJECT_NAME'], row['PREDICATE'])
         else:
             print(row['SUBJECT_SEMTYPE'], row['OBJECT_SEMTYPE'])
 

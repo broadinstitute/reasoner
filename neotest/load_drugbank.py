@@ -6,6 +6,7 @@ def add_drug(tx, id, name, synonyms, exids, mechanism):
     tx.run("MERGE (drug:Drug {id: {id}}) "
            "SET drug.name = {name} "
            "SET drug.mechanism_of_action = {mechanism} "
+           "MERGE (drug)-[:HAS_ID]->(:Identifier {id: {id}, type: 'drugbank_id', resource: 'DrugBank'}) "
            "MERGE (drug)-[:HAS_SYNONYM]->(:Synonym {name: {name}})",
            id=id, name=name, mechanism=mechanism)
 
