@@ -146,30 +146,30 @@ pathway = pd.read_csv(pathway_file)
 
 with driver.session() as session:
 
-    # print('disease:')
-    # for index, row in disease.iterrows():
-    #     disease2symptoms(session, db, row['cui'])
-    #     disease2tissue(session, db, row['cui'])
-    #     disease2cell(session, db, row['cui'])
-    #     # for p_index, p_row in pathway.iterrows():
-    #     #     sql2neo_direct(session, db, row['cui'], p_row['cui'])
-    #     #     sql2neo_direct(session, db, p_row['cui'], row['cui'])
+    print('disease:')
+    for index, row in disease.iterrows():
+        disease2symptoms(session, db, row['cui'])
+        disease2tissue(session, db, row['cui'])
+        disease2cell(session, db, row['cui'])
+        # for p_index, p_row in pathway.iterrows():
+        #     sql2neo_direct(session, db, row['cui'], p_row['cui'])
+        #     sql2neo_direct(session, db, p_row['cui'], row['cui'])
 
-    # print('pathway:')
-    # for index, row in pathway.iterrows():
-    #     pathway2cell(session, db, row['cui'])
+    print('pathway:')
+    for index, row in pathway.iterrows():
+        pathway2cell(session, db, row['cui'])
         
-    # print('symptom:')
-    # for symptom_cui in get_cuis(session, 'Symptom'):
-    #     symptom2tissue(session, db, symptom_cui)
+    print('symptom:')
+    for symptom_cui in get_cuis(session, 'Symptom'):
+        symptom2tissue(session, db, symptom_cui)
     
-    # print('tissue:')
-    # for tissue_cui in get_cuis(session, 'Tissue'):
-    #     tissue2cell(session, db, tissue_cui)
+    print('tissue:')
+    for tissue_cui in get_cuis(session, 'Tissue'):
+        tissue2cell(session, db, tissue_cui)
 
     print('cell:')
     for cell_cui in get_cuis(session, 'Cell'):
-        # cell2tissue(session, db, cell_cui)
+        cell2tissue(session, db, cell_cui)
         cell2pathway(session, db, cell_cui)
 
 
