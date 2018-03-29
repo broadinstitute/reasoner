@@ -28,6 +28,11 @@ def add_pathway_noumls(tx, msigdb_name, url, entrez_ids):
         msigdb_name=msigdb_name, url=url, entrez_ids=entrez_ids)
 
 
+def get_pathway_names(session):
+    result = session.run("MATCH (p:Pathway)-[:HAS_SYNONYM]->(s:Synonym {type: 'msigdb_pathway'}) RETURN s.name as msigdb_name")
+    return([record['msigdb_name'] for record in result])
+
+
 def query_umls(uq, query_term):
     result = uq.search(query_term)
     if result:
@@ -58,8 +63,12 @@ with open(msigdb_file) as f:
 uq = UmlsQuery(apikey)
 cuis = pd.DataFrame(columns=["cui", "umls_name", "msigdb_name"])
 with driver.session() as session:
+    existing_pathways = get_pathway_names(session)
     for pathway in pathways:
         
+        if pathway['name'] in existing_pathways:
+            continue
+
         query_base = ' '.join(pathway['name'].split('_')[1:]).lower()
         result = query_umls(uq, query_base + ' pathway')
         if not result:
