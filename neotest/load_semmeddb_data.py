@@ -151,9 +151,9 @@ with driver.session() as session:
         disease2symptoms(session, db, row['cui'])
         disease2tissue(session, db, row['cui'])
         disease2cell(session, db, row['cui'])
-        # for p_index, p_row in pathway.iterrows():
-        #     sql2neo_direct(session, db, row['cui'], p_row['cui'])
-        #     sql2neo_direct(session, db, p_row['cui'], row['cui'])
+        for p_index, p_row in pathway.iterrows():
+            sql2neo_direct(session, db, row['cui'], p_row['cui'])
+            sql2neo_direct(session, db, p_row['cui'], row['cui'])
 
     print('pathway:')
     for index, row in pathway.iterrows():
