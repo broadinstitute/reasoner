@@ -107,7 +107,7 @@ def disease2symptoms(session, db, cui):
 #    return(sql2neo(session, db, cui, 'Disease', 'Pathway'))
 
 def disease2tissue(session, db, cui):
-    return(sql2neo_object(session, db, cui, 'Disease', 'Tissue'))
+    return(sql2neo(session, db, cui, 'Disease', 'Tissue')|sql2neo_object(session, db, cui, 'Disease', 'Tissue'))
 
 def disease2cell(session, db, cui):
     return(sql2neo(session, db, cui, 'Disease', 'Cell')|sql2neo_object(session, db, cui, 'Disease', 'Cell'))
