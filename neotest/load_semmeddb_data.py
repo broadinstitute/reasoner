@@ -36,11 +36,11 @@ def add_cui_connection(tx, origin_cui, origin_type, origin_name, target_cui, tar
 def sql2neo(session, db, subject_cui, subject_type, object_type):
     typemap = {'Disease': 'dsyn',
                'Symptom': 'sosy',
-               'Tissue': 'tisu',
+               'Tissue': ['tisu', 'bpoc', 'blor'],
                'Cell': 'cell',
                'Pathway': ['moft', 'celf']}
 
-    if object_type == 'Pathway':
+    if object_type == 'Pathway' or subject_type == 'Tissue':
         sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
            "FROM PREDICATION "
            "WHERE SUBJECT_CUI = '%s' "
@@ -60,11 +60,11 @@ def sql2neo(session, db, subject_cui, subject_type, object_type):
 def sql2neo_object(session, db, object_cui, object_type, subject_type):
     typemap = {'Disease': 'dsyn',
                'Symptom': 'sosy',
-               'Tissue': 'tisu',
+               'Tissue': ['tisu', 'bpoc', 'blor'],
                'Cell': 'cell',
                'Pathway': ['moft', 'celf']}
 
-    if subject_type == 'Pathway':
+    if subject_type == 'Pathway' or subject_type == 'Tissue':
         sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
            "FROM PREDICATION "
            "WHERE OBJECT_CUI = '%s' "
