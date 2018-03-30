@@ -40,7 +40,7 @@ def sql2neo(session, db, subject_cui, subject_type, object_type):
                'Cell': 'cell',
                'Pathway': ['moft', 'celf']}
 
-    if object_type == 'Pathway' or subject_type == 'Tissue':
+    if object_type == 'Pathway' or object_type == 'Tissue':
         sql = ("SELECT DISTINCT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE "
            "FROM PREDICATION "
            "WHERE SUBJECT_CUI = '%s' "
