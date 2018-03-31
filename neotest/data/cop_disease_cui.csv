@@ -1,35 +1,407 @@
-cui,name,mesh_id
-C0027651,Neoplasms,D009369
-C0020542,"Hypertension, Pulmonary",D006976
-C0029408,Osteoarthritis,D010003
-C0030193,Pain,D010146
-C0006840,Candidiasis,D002177
-C1269683,"Depressive Disorder, Major",D003865
-C0020179,Huntington Disease,D006816
-C0009404,Colorectal Neoplasms,D015179
-C0036341,Schizophrenia,D012559
-C0011991,Diarrhea,D003967
-C0206178,Cytomegalovirus Retinitis,D017726
-C0017636,Glioblastoma,D005909
-C0008370,Cholestasis,D002779
-C0018801,Heart Failure,D006333
-C0085215,Primary Ovarian Insufficiency,D016649
-C0027651,Neoplasms,D009369
-C0024305,"Lymphoma, Non-Hodgkin",D008228
-C0027651,Neoplasms,D009369
-C0007859,Neck Pain,D019547
-C0026764,Multiple Myeloma,D009101
-C0027819,Neuroblastoma,D009447
-C0026764,Multiple Myeloma,D009101
-C0020550,Hyperthyroidism,D006980
-C2239176,"Carcinoma, Hepatocellular",D006528
-C0919267,Ovarian Neoplasms,D010051
-C0007134,"Carcinoma, Renal Cell",D002292
-C0042135,Uterine Inertia,D014593
-C0037286,Skin Neoplasms,D012878
-C0015967,Fever,D005334
-C0017152,Gastritis,D005756
-C0036983,"Shock, Septic",D012772
-C0005778,Blood Coagulation,D001777
-C1135196,"Heart Failure, Diastolic",D054144
-C0018671,Head and Neck Neoplasms,D006258
+cui,name,mesh_id,mesh_term
+C0000737,Abdominal Pain,D015746,Abdominal Pain
+C0001144,Acne Vulgaris,D000152,Acne Vulgaris
+C0948089,Acute Coronary Syndrome,D054058,Acute Coronary Syndrome
+C1961102,Precursor Cell Lymphoblastic Leukemia Lymphoma,D054198,Acute Lymphoblastic Leukemia
+C0023440,Acute Erythroblastic Leukemia,D004915,Acute Erythroblastic Leukemia
+C0184567,Acute onset pain,D059787,Acute Pain
+C0023487,Acute Promyelocytic Leukemia,D015473,AML M3
+C0001403,Addison Disease,D000224,Addison Disease
+C0001973,"Alcoholic Intoxication, Chronic",D000437,"Addiction, Alcohol"
+C0019187,"Hepatitis, Alcoholic",D006519,Alcoholic Hepatitis
+C0009766,Allergic Conjunctivitis,D003233,Allergic Conjunctivitides
+C2607914,Allergic rhinitis (disorder),D065631,Allergic Rhinitides
+C0020517,Hypersensitivity,D006967,Allergies
+C0002395,Alzheimer's Disease,D000544,Alzheimer Dementia
+C0002453,Amenorrhea,D000568,Amenorrhea
+C0002736,Amyotrophic Lateral Sclerosis,D000690,ALS (Amyotrophic Lateral Sclerosis)
+C0002170,Alopecia,D000505,Alopecia
+C0002888,"Anemia, Megaloblastic",D000749,"Anemia, Megaloblastic"
+C0002915,General Anesthesia,D000768,"Anesthesia, General"
+C0002934,Local Anesthetics,D000779,"Anesthetics, Conduction Blocking"
+C0002962,Angina Pectoris,D000787,Angina Pectoris
+C0002994,Angioedema,D000799,Angioedema
+C0019243,"Angioedemas, Hereditary",D054179,"Angioedema, Hereditary"
+C0003123,Anorexia,D000855,Anorexia
+C0003377,"Antimetabolites, Antineoplastic",D000964,"Antimetabolites, Antineoplastic"
+C0003467,Anxiety,D001007,Anxiety
+C0003469,Anxiety Disorders,D001008,Anxiety Disorder
+C0002874,Aplastic Anemia,D000741,"Anemia, Aplastic"
+C0003615,Appendicitis,D001064,Appendicitis
+C0003811,Cardiac Arrhythmia,D001145,Arrhythmia
+C0003864,Arthritis,D001168,Arthritides
+C0003868,"Arthritis, Gouty",D015210,"Arthritides, Gouty"
+C0003873,Rheumatoid Arthritis,D001172,"Arthritis, Rheumatoid"
+C0003962,Ascites,D001201,Ascites
+C0004096,Asthma,D001249,Asthma
+C0004153,Atherosclerosis,D050197,Atheroscleroses
+C0040259,Tinea Pedis,D014008,Athlete Foot
+C0004238,Atrial Fibrillation,D001281,Atrial Fibrillation
+C1263846,Attention deficit hyperactivity disorder,D001289,ADDH
+C0004604,Back Pain,D001416,"Ache, Back"
+C0004623,Bacterial Infections,D001424,Bacterial Infection
+C0085166,Bacterial Vaginosis,D016585,Bacterial Vaginitides
+C0596170,Binge eating disorder,D056912,Binge Eating Disorder
+C0005586,Bipolar Disorder,D001714,"Affective Psychosis, Bipolar"
+C0005695,Bladder Neoplasm,D001749,Bladder Neoplasm
+C0005741,Blepharitis,D001762,Blepharitides
+C0005778,Blood coagulation,D001777,Blood Clotting
+C1449809,Bovine Respiratory Disease Complex,D048090,Bovine Respiratory Disease Complex
+C1458155,Mammary Neoplasms,D001943,Breast Neoplasm
+C0006267,Bronchiectasis,D001987,Bronchiectases
+C0006277,Bronchitis,D001991,Bronchitides
+C0008677,"Bronchitis, Chronic",D029481,"Bronchitis, Chronic"
+C2267227,Bulimia Nervosa,D052018,Bulimia Nervosa
+C0006444,Bursitis,D002062,Bursitides
+C0027651,Neoplasms,D009369,Neoplasia
+C0006840,Candidiasis,D002177,Candidiases
+C0007095,Carcinoid Tumor,D002276,Carcinoid
+C0007117,Basal cell carcinoma,D002280,Basal Cell Carcinoma
+C2239176,Liver carcinoma,D006528,Adult Liver Cancer
+C0007131,Non-Small Cell Lung Carcinoma,D002289,"Carcinoma, Non Small Cell Lung"
+C0007134,Renal Cell Carcinoma,D002292,Adenocarcinoma Of Kidney
+C0007138,"Carcinoma, Transitional Cell",D002295,"Carcinoma, Transitional Cell"
+C0018790,Cardiac Arrest,D006323,"Arrest, Cardiac"
+C0007222,Cardiovascular Diseases,D002318,Cardiovascular Disease
+C0086543,Cataract,D002386,Cataract
+C0041234,Chagas Disease,D014355,American Trypanosomiasis
+C0008325,Cholecystitis,D002764,Cholecystitis
+C0008350,Cholelithiasis,D002769,Cholelithiases
+C0008370,Cholestasis,D002779,Bile Duct Obstruction
+C0600518,Choroidal Neovascularization,D020256,Choroid Neovascularization
+C0524910,"Hepatitis C, Chronic",D019698,Chronic Hepatitis C
+C0024117,Chronic Obstructive Airway Disease,D029424,COAD
+C0149521,"Pancreatitis, Chronic",D050500,Chronic Pancreatitis
+C0009062,Clostridium Infections,D003015,Clostridium Infection
+C0009187,Coccidiosis,D003048,Coccidioses
+C0009241,Cognition Disorders,D003072,Cognition Disorders
+C0232488,Abdominal colic,D003085,Colic
+C0009404,Colorectal Neoplasms,D015179,Colorectal Neoplasm
+C0009443,Common Cold,D003139,"Cold, Common"
+C0018801,Heart failure,D006333,Cardiac Failure
+C0009763,Conjunctivitis,D003231,Conjunctivitides
+C0009806,Constipation,D003248,Constipation
+C1956346,Coronary Artery Disease,D003324,"Artery Disease, Coronary"
+C0010068,Coronary heart disease,D003327,Coronary Disease
+C0010200,Coughing,D003371,Cough
+C0221406,Pituitary-dependent Cushing's disease,D047748,"ACTH Hypersecretion, Pituitary"
+C0006846,Cutaneous Candidiasis,D002179,"Candidiases, Cutaneous"
+C0010674,Cystic Fibrosis,D003550,Cystic Fibrosis
+C0010692,Cystitis,D003556,Cystitides
+C0206178,Cytomegalovirus Retinitis,D017726,Cytomegaloviral Retinitis
+C1956064,Deep Sedation,D054810,Deep Sedation
+C0497327,Dementia,D003704,Amentia
+C0011334,Dental caries,D003731,"Caries, Dental"
+C0038368,Stomatognathic Diseases,D009057,"Disease, Stomatognathic"
+C0011570,Mental Depression,D003863,Depression
+C0011581,Depressive disorder,D003866,Depressive Disorder
+C1269683,Major Depressive Disorder,D003865,"Depressive Disorder, Major"
+C0011603,Dermatitis,D003872,Dermatitides
+C0011608,Dermatitis Herpetiformis,D003874,Dermatitis Herpetiformis
+C0011615,"Dermatitis, Atopic",D003876,Atopic Dermatitides
+C0011630,Dermatomycoses,D003881,Dermatomycoses
+C0040247,Tinea,D014005,Dermatophytoses
+C0037274,Dermatologic disorders,D012871,Dermatoses
+C0011848,Diabetes Insipidus,D003919,Diabetes Insipidus
+C0011860,"Diabetes Mellitus, Non-Insulin-Dependent",D003924,Adult-Onset Diabetes Mellitus
+C0011882,Diabetic Neuropathies,D003929,Diabetic Neuropathies
+C0011991,Diarrhea,D003967,Diarrhea
+C0012358,Dilatation and Curettage,D004107,Curettage and Dilatation
+C0236969,Substance-Related Disorders,D019966,Substance-Related Disorders
+C0029944,Drug Overdose,D062787,Drug Overdose
+C0013238,Dry Eye Syndromes,D015352,Dry Eye Syndrome
+C0013295,Duodenal Ulcer,D004381,Duodenal Ulcer
+C0020479,Hyperlipoproteinemia Type III,D006952,Broad Beta Disease
+C0013369,Dysentery,D004403,"Diarrheal Disease, Infectious"
+C0025874,Metrorrhagia,D008796,Bleeding Between Periods
+C0013384,Dyskinetic syndrome,D020820,Abnormal Movement
+C0013502,Echinococcosis,D004443,"Cyst, Hydatid"
+C0013595,Eczema,D004485,"Dermatitides, Eczematous"
+C0014121,Bacterial Endocarditis,D004697,Bacterial Endocarditides
+C0014175,Endometriosis,D004715,Endometrioses
+C0079278,"Endoscopy, Gastrointestinal",D016099,"Endoscopies, Gastrointestinal"
+C0014544,Epilepsy,D004827,Epilepsies
+C0242350,Erectile dysfunction,D007172,"Dysfunction, Erectile"
+C0014836,Escherichia coli Infections,D004927,E coli Infection
+C0950151,Estrous Cycle,D030762,"Cycle, Estrous"
+C0015404,"Eye Infections, Bacterial",D015818,Bacterial Eye Infection
+C0002986,Fabry Disease,D000795,Anderson Fabry Disease
+C0206245,"Amyloid Neuropathies, Familial",D028227,"Amyloid Neuropathies, Familial"
+C0031069,Familial Mediterranean Fever,D010505,Benign Paroxysmal Peritonitides
+C0525042,Feeding and Eating Disorders of Childhood,D019959,Childhood Eating and Feeding Disorders
+C0015967,Fever,D005334,Fever
+C0016154,Fish Diseases,D005393,"Disease, Fish"
+C0016719,Friedreich Ataxia,D005621,"Ataxia, Friedreich"
+C0016977,Gall Bladder Diseases,D005705,"Bladder Disease, Gall"
+C0017152,Gastritis,D005756,Gastritides
+C0017178,Gastrointestinal Diseases,D005767,"Disease, Gastrointestinal"
+C0017185,Gastrointestinal Neoplasms,D005770,Gastrointestinal Neoplasm
+C0152020,Gastroparesis,D018589,Gastric Stases
+C0017205,Gaucher Disease,D005776,Acid beta-Glucosidase Deficiency
+C2314882,Reproductive tract infection,D060737,Genital Tract Infection
+C0017601,Glaucoma,D005901,Glaucoma
+C0017612,"Glaucoma, Open-Angle",D005902,Compensated Glaucoma
+C0017636,Glioblastoma,D005909,"Astrocytoma, Grade IV"
+C0018021,Goiter,D006042,Goiter
+C0018081,Gonorrhea,D006069,Gonorrhea
+C0018099,Gout,D006073,Gout
+C0085423,Gram-Negative Bacterial Infections,D016905,"Bacterial Infection, Gram-Negative"
+C0085426,Gram-Positive Bacterial Infections,D016908,"Bacterial Infection, Gram-Positive"
+C3495801,Granulomatosis with polyangiitis,D014890,Granulomatosis with Polyangiitides
+C0018567,Hand Dermatoses,D006229,"Dermatoses, Hand"
+C0018621,Hay fever,D006255,"Allergic Rhinitides, Seasonal"
+C0018671,Head and Neck Neoplasms,D006258,Head and Neck Neoplasms
+C0018681,Headache,D006261,Cephalalgia
+C1565107,"Headache Disorders, Secondary",D051271,"Disorder, Secondary Headache"
+C0018799,Heart Diseases,D006331,Cardiac Disease
+C1135196,"Heart Failure, Diastolic",D054144,Diastolic Heart Failure
+C0018889,Helminthiasis,D006373,Helminthiases
+C0019080,Hemorrhage,D006470,Bleeding
+C0019151,Hepatic Encephalopathy,D006501,"Encephalopathies, Hepatic"
+C0019163,Hepatitis B,D006509,Hepatitis B
+C0524909,"Hepatitis B, Chronic",D019694,Chronic Hepatitis B
+C0019196,Hepatitis C,D006526,Hepatitis C
+C0019345,Herpes Labialis,D006560,"Blister, Fever"
+C0019348,Herpes Simplex Infections,D006561,Herpes Simplex
+C0019572,Hirsutism,D006628,Hirsutism
+C0019655,Histoplasmosis,D006660,Histoplasma Infection
+C0019693,HIV Infections,D015658,HIV Infection
+C0019829,Hodgkin Disease,D006689,"Disease, Hodgkin"
+C0600142,Hot flushes,D019584,"Flashes, Hot"
+C0020179,Huntington Disease,D006816,"Chorea, Chronic Progressive Hereditary (Huntington)"
+C0020413,Hymenolepiasis,D006925,Hymenolepiases
+C0020437,Hypercalcemia,D006934,Hypercalcemia
+C0020443,Hypercholesterolemia,D006937,"Cholesterol Level, High"
+C1540912,Hypereosinophilic syndrome,D017681,Hypereosinophilic Syndrome
+C0020473,Hyperlipidemia,D006949,Hyperlipemia
+C0020503,"Hyperparathyroidism, Secondary",D006962,"Hyperparathyroidism, Secondary"
+C0020538,Hypertensive disease,D006973,"Blood Pressure, High"
+C0020542,Pulmonary Hypertension,D006976,"Hypertension, Pulmonary"
+C0020550,Hyperthyroidism,D006980,Hyperthyroid
+C0020557,Hypertriglyceridemia,D015228,Hypertriglyceridemia
+C0017155,"Gastritis, Hypertrophic",D005758,"Disease, Menetrier"
+C0020592,Hypnotics and Sedatives,D006993,Hypnotics and Sedatives
+C0020598,Hypocalcemia,D006996,Hypocalcemia
+C0020625,Hyponatremia,D007010,Hyponatremia
+C0020649,Hypotension,D007022,"Blood Pressure, Low"
+C0020651,"Hypotension, Orthostatic",D007024,"Hypotension, Orthostatic"
+C0030567,Parkinson Disease,D010300,Idiopathic Parkinson Disease
+C1800706,Idiopathic Pulmonary Fibrosis,D054990,Cryptogenic Fibrosing Alveolitides
+C0021053,Immune System Diseases,D007154,"Disease, Immune"
+C0021361,Female infertility,D007247,Female Infertility
+C0021364,Male infertility,D007248,"Infertility, Male"
+C0021368,Inflammation,D007249,Inflammation
+C0021400,Influenza,D007251,"Flu, Human"
+C0021603,Sleep Initiation and Maintenance Disorders,D007319,DIMS (Disorders of Initiating and Maintaining Sleep)
+C0021775,Intermittent Claudication,D007383,"Claudication, Intermittent"
+C0021832,"Intestinal Diseases, Parasitic",D007411,"Disease, Parasitic Intestinal"
+C0243001,Abdominal Abscess,D018784,Abdominal Abscess
+C1112209,Intraabdominal Infections,D059413,"Infection, Intra-Abdominal"
+C0276653,Invasive Pulmonary Aspergillosis,D055744,"Aspergillosis, Invasive Pulmonary"
+C0282193,Iron Overload,D019190,Iron Overload
+C0376520,Dietary Iron,D019266,Dietary Iron
+C0022104,Irritable Bowel Syndrome,D043183,"Colitides, Mucous"
+C0023267,Fibroid Tumor,D007889,Fibroid
+C0238111,Lennox-Gastaut syndrome,D065768,Lennox Gastaut Syndrome
+C0023348,"Leprosy, Lepromatous",D015440,Lepromatous Leprosies
+C0023418,leukemia,D007938,Leucocythaemia
+C0023493,Adult T-Cell Lymphoma/Leukemia,D015459,ATLL
+C0023443,Hairy Cell Leukemia,D007943,Hairy Cell Leukemia
+C0023434,Chronic Lymphocytic Leukemia,D015451,B Cell Chronic Lymphocytic Leukemia
+C0023448,Lymphoid leukemia,D007945,"Leukemia, Lymphocytic"
+C0023473,"Myeloid Leukemia, Chronic",D015464,Chronic Granulocytic Leukemia
+C0023470,Myeloid Leukemia,D007951,Granulocytic Leukemia
+C0023530,Leukopenia,D007970,Leukocytopenia
+C0030756,Lice Infestations,D010373,"Infestation, Lice"
+C0023895,Liver diseases,D008107,"Disease, Liver"
+C0024031,Low Back Pain,D017116,"Ache, Low Back"
+C0024141,"Lupus Erythematosus, Systemic",D008180,Lupus Erythematosus Disseminatus
+C0024305,"Lymphoma, Non-Hodgkin",D008228,Diffuse Small Cleaved Cell Lymphoma
+C0024530,Malaria,D008288,"Fever, Marsh"
+C0024535,"Malaria, Falciparum",D016778,"Malaria, Falciparum"
+C0024895,"Mastitis, Bovine",D008414,Bovine Mastitides
+C2242987,Benign Mastocytoma,D034801,Benign Mastocytoma
+C0025202,melanoma,D008545,Malignant Melanoma
+C0025289,Meningitis,D008581,Meningitides
+C0025292,"Meningitis, Haemophilus",D008583,Haemophilus Meningitides
+C0025320,Menopause,D008593,"Change of Life, Female"
+C0025329,Menstrual cycle,D008597,"Cycle, Menstrual"
+C0004936,Mental disorders,D001523,"Disorder, Mental"
+C0025427,Mercury Poisoning,D008630,Mercury Poisoning
+C1265292,Methicillin-Resistant Staphylococcus aureus,D055624,MRSA
+C0149931,Migraine Disorders,D008881,"Disorder, Migraine"
+C0338480,Common Migraine,D020326,Common Migraine
+C0006132,Moraxella (Branhamella) catarrhalis,D001936,Branhamella catarrhalis
+C0026603,Motion Sickness,D009041,Motion Sickness
+C0026650,Movement Disorders,D009069,Dyskinesia Syndrome
+C0026764,Multiple Myeloma,D009101,"Cell Myeloma, Plasma"
+C0751967,"Multiple Sclerosis, Relapsing-Remitting",D020529,"Multiple Sclerosis, Relapsing Remitting"
+C0026820,Muscle Contraction,D009119,"Contraction, Muscle"
+C0026836,Muscle relaxation phase,D009126,Muscle Relaxation
+C0037763,Spasm,D013035,Muscle Spasm
+C0026838,Muscle Spasticity,D009128,Muscle Spasticity
+C0026848,Myopathy,D009135,Muscle Disorder
+C0949741,Musculoskeletal Manipulations,D026201,"Manipulations, Musculoskeletal"
+C0026858,Musculoskeletal Pain,D059352,Musculoskeletal Pain
+C0026896,Myasthenia Gravis,D009157,Myasthenia Gravis
+C0026926,Mycobacterium tuberculosis,D009169,Mycobacterium tuberculosis
+C0026946,Mycoses,D009181,"Disease, Fungal"
+C0026961,Mydriasis,D015878,Mydriasis
+C3463824,MYELODYSPLASTIC SYNDROME,D009190,Dysmyelopoietic Syndrome
+C0027051,Myocardial Infarction,D009203,Cardiovascular Stroke
+C0270853,Juvenile Myoclonic Epilepsy,D020190,Adolescent Myoclonic Epilepsies
+C0027404,Narcolepsy,D009290,Gelineau Syndrome
+C0027429,Nasal obstruction present finding,D015508,"Airway Obstruction, Nasal"
+C0027497,Nausea,D009325,Nausea
+C0007859,Neck Pain,D019547,"Ache, Neck"
+C4316899,Cystinosis,D003554,Cystine Diatheses
+C0027796,Neuralgia,D009437,Neuralgia
+C0032768,Postherpetic neuralgia,D051474,"Neuralgia, Postherpetic"
+C0027804,Neurasthenia,D009440,Neurasthenia
+C0027819,Neuroblastoma,D009447,Neuroblastoma
+C0005697,Neurogenic Urinary Bladder,D001750,"Bladder Disorder, Neurogenic"
+C0028432,Nose Diseases,D009668,"Disease, Nasal"
+C0028754,Obesity,D009765,Obesity
+C0028768,Obsessive-Compulsive Disorder,D009771,Anankastic Personalities
+C0022865,Obstetric Labor Complications,D007744,"Complication, Labor"
+C0028840,Ocular Hypertension,D009798,"Hypertension, Ocular"
+C0015403,Eye Infections,D015817,Eye Infection
+C0040261,Onychomycosis,D014009,"Fungus, Nail"
+C0027412,Opioid-Related Disorders,D009293,"Disorder, Opioid-Related"
+C0029408,Degenerative polyarthritis,D010003,"Arthritides, Degenerative"
+C0029456,Osteoporosis,D010024,Osteoporoses
+C0029878,Otitis Externa,D010032,"Externa, Otitis"
+C0029882,Otitis Media,D010033,"Inflammation, Middle Ear"
+C0919267,ovarian neoplasm,D010051,"Neoplasm, Ovarian"
+C0878773,Overactive Bladder,D053201,"Bladder, Overactive"
+C0030193,Pain,D010146,Pain
+C0037650,Somatoform Disorder,D013001,"Disorder, Somatoform"
+C0030201,"Pain, Postoperative",D010149,"Pain, Postoperative"
+C0030297,Pancreatic Neoplasm,D010190,"Neoplasm, Pancreas"
+C0030305,Pancreatitis,D010195,Pancreatitides
+C1456784,Paranoia,D010259,"Disorder, Paranoid"
+C0030499,Parasitic Diseases,D010272,"Disease, Parasitic"
+C0030568,"Parkinson Disease, Postencephalitic",D010301,"Economo-Type Parkinsonism, Postencephalitic"
+C0014547,"Epilepsies, Partial",D004828,"Disorders, Focal Seizure"
+C0030920,Peptic Ulcer,D010437,Gastroduodenal Ulcer
+C0031037,Periarthritis,D010489,Periarthritides
+C1704436,Peripheral Arterial Diseases,D058729,"Arterial Disease, Peripheral"
+C0079774,Peripheral T-Cell Lymphoma,D016411,"Lymphoma, Peripheral T-Cell"
+C0085096,Peripheral Vascular Diseases,D016491,"Angiopathies, Peripheral"
+C0042571,Vertigo,D014717,"Sensation, Spinning"
+C0031154,Peritonitis,D010538,Peritonitis
+C0002892,"Anemia, Pernicious",D000752,Addison Anemia
+C0031350,Pharyngitis,D010612,Pharyngitides
+C0031511,Pheochromocytoma,D010673,Pheochromocytoma
+C0349231,Phobic anxiety disorder,D010698,"Disorder, Phobic"
+C0549567,Pigmentation Disorders,D010859,"Disorder, Pigmentation"
+C0032002,Pituitary Diseases,D010900,"Disease, Pituitary"
+C0032285,Pneumonia,D011014,Pneumonia
+C0004626,"Pneumonia, Bacterial",D018410,Bacterial Pneumonia
+C1701940,"Pneumonia, Ventilator-Associated",D053717,"Pneumonia, Ventilator Associated"
+C0032463,Polycythemia Vera,D011087,"Disease, Osler-Vaquez"
+C0206159,Postmenopause,D017698,"Period, Post-menopausal"
+C0032787,Postoperative Complications,D011183,"Complication, Postoperative"
+C0032788,Postoperative Hemorrhage,D019106,"Blood Loss, Postoperative"
+C0520909,Postoperative Nausea and Vomiting,D020250,"Nausea and Vomiting, Postoperative"
+C1961099,Precursor T-Cell Lymphoblastic Leukemia-Lymphoma,D054218,Acute T-Cell Leukemia
+C0032961,Pregnancy,D011247,Gestation
+C0032962,Pregnancy Complications,D011248,"Complication, Pregnancy"
+C0032995,Unwanted pregnancy,D011275,"Pregnancies, Unwanted"
+C0022876,Premature Obstetric Labor,D007752,"Labor, Premature"
+C0085215,"Ovarian Failure, Premature",D016649,"Insufficiency, Primary Ovarian"
+C2937421,Prostatic Hyperplasia,D011470,"Hyperplasia, Prostatic"
+C0033578,Prostatic Neoplasms,D011471,"Neoplasm, Prostate"
+C3658267,"Prostatic Neoplasms, Castration-Resistant",D064129,Androgen Independent Prostatic Neoplasms
+C0033581,prostatitis,D011472,Prostatitides
+C0033774,Pruritus,D011537,Itching
+C0033860,Psoriasis,D011565,Psoriases
+C3887612,Psychomotor Agitation,D011595,"Agitation, Psychomotor"
+C0033975,Psychotic Disorders,D011618,"Disorder, Psychotic"
+C0340543,Familial primary pulmonary hypertension,D065627,Familial Primary Pulmonary Hypertension
+C0034074,Pulmonary Infarction,D054060,"Infarction, Pulmonary"
+C0034186,Pyelonephritis,D011704,Pyelonephritides
+C1565489,Renal Insufficiency,D051437,"Insufficiency, Kidney"
+C0035204,Respiration Disorders,D012120,"Disorder, Respiration"
+C0035229,Respiratory Insufficiency,D012131,Respiratory Insufficiency
+C0035242,Respiratory Tract Diseases,D012140,"Disease, Respiratory Tract"
+C0035243,Respiratory Tract Infections,D012141,"Infection, Respiratory Tract"
+C0035258,Restless Legs Syndrome,D012148,"Disease, Willis Ekbom"
+C0035412,Rhabdomyosarcoma,D012208,Rhabdomyosarcoma
+C0035435,Rheumatism,D012216,"Disease, Rheumatic"
+C0035455,Rhinitis,D012220,"Catarrh, Nasal"
+C0035457,"Rhinitis, Allergic, Perennial",D012221,"Rhinitis, Allergic, Nonseasonal"
+C0035579,Rickets,D012279,Rachitides
+C0035854,Rosacea,D012393,Acne Rosacea
+C0036220,Kaposi Sarcoma,D012514,Kaposi Sarcoma
+C0036262,Scabies <infestation>,D012532,Scabies
+C0036271,Scalp Dermatoses,D012536,"Dermatoses, Scalp"
+C0036319,Schistosoma mansoni,D012550,Schistosoma mansoni
+C0036323,Schistosomiasis,D012552,Bilharziases
+C0036341,Schizophrenia,D012559,Dementia Praecox
+C0036572,Seizures,D012640,Seizure
+C0243026,Sepsis,D018805,Sepsis
+C0036974,Shock,D012769,Circulatory Collapse
+C0036983,Septic Shock,D012772,Septic Shock
+C0021847,Intestinal Pseudo-Obstruction,D007418,Chronic Idiopathic Intestinal Pseudo-Obstruction
+C0037199,Sinusitis,D012852,"Infection, Sinus"
+C1527336,Sjogren's Syndrome,D012859,Sjogren Syndrome
+C0037286,Skin Neoplasms,D012878,"Neoplasm, Skin"
+C0162627,"Skin Diseases, Bacterial",D017192,Bacterial Skin Disease
+C0162817,"Skin Diseases, Eczematous",D017443,"Disease, Eczematous Skin"
+C0037278,"Skin Diseases, Infectious",D012874,"Disease, Infectious Skin"
+C0037316,Sleep Deprivation,D012892,"Deprivation, Sleep"
+C0752299,Sleep Wake Transition Disorders,D020922,Sleep Wake Transition Disorders
+C0752287,"Sleep Disorders, Intrinsic",D020919,Intrinsic Sleep Disorder
+C0037369,Smoking,D012907,Smoking
+C0149778,Soft Tissue Infections,D018461,"Infection, Soft Tissue"
+C0038160,Staphylococcal Infections,D013203,"Infections, Staphylococcal"
+C0038166,Staphylococcal Skin Infections,D013207,"Disease, Staphylococcal Skin"
+C1257809,"Steroid Metabolism, Inborn Errors",D043202,Congenital Errors of Steroid Metabolism
+C0038356,Stomach Neoplasms,D013274,Gastric Neoplasm
+C0038358,Gastric ulcer,D013276,Gastric Ulcer
+C0038395,Streptococcal Infections,D013290,"Infection, Streptococcal"
+C0038454,Cerebrovascular accident,D020521,Apoplexy
+C0038525,Subarachnoid Hemorrhage,D013345,"Hemorrhage, Subarachnoid"
+C0039231,Tachycardia,D013610,Tachycardia
+C0039236,"Tachycardia, Paroxysmal",D013614,Paroxysmal Tachycardia
+C0042514,"Tachycardia, Ventricular",D017180,"Tachycardia, Ventricular"
+C0039590,Testicular Neoplasms,D013736,"Neoplasm, Testicular"
+C0040034,Thrombocytopenia,D013921,Thrombocytopenia
+C0040038,Thromboembolism,D013923,Thromboembolism
+C0040046,Thrombophlebitis,D013924,Thrombophlebitides
+C0040100,Thymoma,D013945,Thymoma
+C0040136,Thyroid Neoplasm,D013964,"Neoplasm, Thyroid"
+C0040262,Tinea Versicolor,D014010,Pityriasis Versicolor
+C0040425,Tonsillitis,D014069,Tonsillitides
+C0040460,Toothache,D014098,Odontalgia
+C0040517,Gilles de la Tourette syndrome,D005879,Chronic Motor and Vocal Tic Disorder
+C0040558,Toxoplasmosis,D014123,"Infection, Toxoplasma gondii"
+C0040954,Infection by Trichuris trichiura,D014257,"Infection, Trichuris"
+C0041296,Tuberculosis,D014376,"Infection, Mycobacterium tuberculosis"
+C0206526,"Tuberculosis, Multidrug-Resistant",D018088,MDR Tuberculosis
+C0041327,"Tuberculosis, Pulmonary",D014397,"Consumption, Pulmonary"
+C0268483,Tyrosinemias,D020176,Hereditary Tyrosinemia
+C0009324,Ulcerative Colitis,D003093,Colitis Gravis
+C0042024,Urinary Incontinence,D014549,"Incontinence, Urinary"
+C0042029,Urinary tract infection,D014552,"Infection, Urinary Tract"
+C0042109,Urticaria,D014581,Hives
+C0042138,Uterine Neoplasms,D014594,"Neoplasm, Uterine"
+C0007860,Uterine Cervicitis,D002575,Cervicitides
+C0042134,Uterine hemorrhage,D014592,"Bleeding, Uterine"
+C0042135,Uterine Inertia,D014593,"Atony, Uterine"
+C0042165,Anterior uveitis,D014606,Anterior Uveitides
+C0042267,Vaginitis,D014627,Vaginitides
+C0040923,Trichomonas Vaginitis,D014247,Human Trichomoniases
+C0014849,Esophageal and Gastric Varices,D004932,Esophageal and Gastric Varices
+C0042376,Vascular Headaches,D014653,"Cephalgia, Vascular"
+C0042487,Venous Thrombosis,D020246,Phlebothromboses
+C0042963,Vomiting,D014839,Emesis
+C0022783,Vulvar Lichen Sclerosus,D007724,Kraurosis Vulvae
+C0700345,"Candidiasis, Vulvovaginal",D002181,"Candidiases, Genital"
+C3665596,Warts,D014860,Verruca
+C0043094,Weight Gain,D015430,"Gain, Weight"
+C1262477,Weight decreased,D015431,"Loss, Weight"
+C0043202,Wolff-Parkinson-White Syndrome,D014927,Anomalous Ventricular Excitation Syndrome
+C0018893,Helminths,D006376,Helminth
+C0038436,Post-Traumatic Stress Disorder,D013313,"Neuroses, Post Traumatic"

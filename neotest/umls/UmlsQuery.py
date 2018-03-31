@@ -4,83 +4,80 @@ from .Authentication import *
 import requests
 import json
 
+
 class UmlsQuery:
     def __init__(self, apikey):
         self.AuthClient = Authentication(apikey)
         self.tgt = self.AuthClient.gettgt()
-        
         self.version = 'current'
         self.base_uri = 'https://uts-ws.nlm.nih.gov/rest/'
-        
 
     def get_ticket(self):
         return(self.AuthClient.getst(self.tgt))
 
+    def send_query(self, endpoint, options={}):
+        if endpoint.startswith('https://'):
+            url = endpoint
+        else:
+            url = self.base_uri + endpoint
 
-    def mesh2cui(self, mesh_id):
-        content_endpoint = 'content/' + self.version + '/source/MSH/' + mesh_id + '/atoms/preferred'
-
-        ticket = self.get_ticket()
-        query = {'ticket':ticket}
-        r = requests.get(self.base_uri+content_endpoint,params=query)
-        r.encoding = 'utf-8'
-
-        if not r.ok:
-            return({})
-
-        items  = json.loads(r.text)
-        jsonData = items['result']
-
-        return({'cui':jsonData['concept'].rsplit('/', 1)[-1], 'name':jsonData['name']})
-
-
-    def search(self, query_string):
-        content_endpoint = "search/" + self.version
-        pageNumber=0
-
+        pageNumber = 0
         while True:
             ticket = self.get_ticket()
             pageNumber += 1
-            query = {'string':query_string,'ticket':ticket, 'pageNumber':pageNumber}
-            r = requests.get(self.base_uri+content_endpoint,params=query)
+            query = {'ticket': ticket, 'pageNumber': pageNumber}
+            query.update(options)
+            r = requests.get(url, params=query)
             r.encoding = 'utf-8'
 
             if not r.ok:
                 print(r.url)
                 print(r.status_code)
                 return({})
-
-            items  = json.loads(r.text)
+            items = json.loads(r.text)
             jsonData = items["result"]
-            
             return(jsonData)
 
-            # print("Results for page " + str(pageNumber)+"\n")
-            
-            # for result in jsonData["results"]:
-                
-            #     try:
-            #         print("ui: " + result["ui"])
-            #     except:
-            #         NameError
-            #     try:
-            #         print("uri: " + result["uri"])
-            #     except:
-            #         NameError
-            #     try:
-            #         print("name: " + result["name"])
-            #     except:
-            #         NameError
-            #     try:
-            #         print("Source Vocabulary: " + result["rootSource"])
-            #     except:
-            #         NameError
-              
-            #     print("\n")
-            
-            
-            # ##Either our search returned nothing, or we're at the end
-            # if jsonData["results"][0]["ui"] == "NONE":
-            #     break
-            # print("*********")
+    def get_atoms(self, cui, options={}):
+        endpoint = ('content/' + self.version + '/CUI/' + cui + '/atoms')
+        return(self.send_query(endpoint, options))
 
+    def mesh2cui(self, mesh_id):
+        content_endpoint = ('content/' + self.version + '/source/MSH/' +
+                            mesh_id + '/atoms/preferred')
+        ticket = self.get_ticket()
+        query = {'ticket': ticket}
+        r = requests.get(self.base_uri + content_endpoint, params=query)
+        r.encoding = 'utf-8'
+
+        if not r.ok:
+            return({})
+        items = json.loads(r.text)
+        jsonData = items['result']
+
+        return({'cui': jsonData['concept'].rsplit('/', 1)[-1],
+                'name': jsonData['name']})
+
+    def search(self, query_string, options={}):
+        endpoint = "search/" + self.version
+        query = {'string': query_string}
+        query.update(options)
+        return(self.send_query(endpoint, query))
+
+    def get_snomed_finding_site(self, snomed_id):
+        endpoint = ('content/' + self.version +
+                    '/source/SNOMEDCT_US/' + snomed_id + '/relations')
+        query = {'includeAdditionalRelationLabels': 'has_finding_site'}
+        return(self.send_query(endpoint, query))
+
+    def get_disease_location(self, disease_term):
+        result = self.search(disease_term,
+                             options={'sabs': 'SNOMEDCT_US',
+                                      'returnIdType': 'sourceUi'})
+        snomed_id = result['results'][0]['ui']
+        result = self.get_snomed_finding_site(snomed_id)
+        snomed_relation_url = result[0]['relatedId']
+        ui = snomed_relation_url.split('/')[-1]
+        result = self.search(ui, {'inputType': 'sourceUi',
+                             'searchType': 'exact', 'sabs': 'SNOMEDCT_US'})
+        return({'cui': result['results'][0]['ui'], 'name': result['results'][0]['name']})
