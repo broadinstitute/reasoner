@@ -1,6 +1,5 @@
 import pandas as pd
 import mysql.connector
-from neo4j.v1 import GraphDatabase
 from Config import Config
 
 
@@ -10,6 +9,8 @@ def db_select(db, sql):
     results = cursor.fetchall()
     return(results)
 
+
+outfile = "data/snomed_disease_finding_sites.csv"
 
 # Open database connection
 config = Config().config
@@ -37,4 +38,6 @@ sql = ("select distinct cui1 as location_cui, RELA as relation, "
        "limit 10;")
 
 result = db_select(db, sql)
-print(result)
+df = pd.DataFrame(result)
+
+df.to_csv(outfile)
