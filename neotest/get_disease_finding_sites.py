@@ -40,4 +40,4 @@ sql = ("select distinct cui1 as location_cui, RELA as relation, "
 result = db_select(db, sql)
 df = pd.DataFrame(result)
 
-df.to_csv(outfile)
+df.to_csv(outfile, index=False)
