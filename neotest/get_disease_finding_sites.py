@@ -34,8 +34,7 @@ sql = ("select distinct cui1 as location_cui, RELA as relation, "
        "and B.ispref = 'Y' "
        "and B.TS = 'P' "
        "and B.lat='ENG' "
-       "and B.stt = 'PF' "
-       "limit 10;")
+       "and B.stt = 'PF';")
 
 result = db_select(db, sql)
 df = pd.DataFrame(result)
