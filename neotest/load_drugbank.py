@@ -80,17 +80,18 @@ for drug in root.findall('drugbank:drug', ns):
             target_id = target.find('drugbank:id', ns).text
             target_name = target.find('drugbank:name', ns).text
         
-        for polypeptide in target.findall('drugbank:polypeptide', ns):
             target_synonyms = []
-            for syns in polypeptide.findall('drugbank:synonyms', ns):
-                for syn in syns:
-                    target_synonyms.append(syn.text)
             target_exids = {}
-            for exids in polypeptide.findall('drugbank:external-identifiers', ns):
-                for exid in exids:
-                    exid_res = exid.find('drugbank:resource', ns).text
-                    exid_id = exid.find('drugbank:identifier', ns).text
-                    target_exids[exid_res] = exid_id
+            for polypeptide in target.findall('drugbank:polypeptide', ns):
+                for syns in polypeptide.findall('drugbank:synonyms', ns):
+                    for syn in syns:
+                        target_synonyms.append(syn.text)
+                
+                for exids in polypeptide.findall('drugbank:external-identifiers', ns):
+                    for exid in exids:
+                        exid_res = exid.find('drugbank:resource', ns).text
+                        exid_id = exid.find('drugbank:identifier', ns).text
+                        target_exids[exid_res] = exid_id
 
             session.write_transaction(add_target, target_id, target_name, target_synonyms, target_exids, drug_id)
 
