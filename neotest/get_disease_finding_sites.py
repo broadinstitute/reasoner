@@ -6,12 +6,8 @@ from Config import Config
 
 def db_select(db, sql):
     cursor = db.cursor(dictionary=True)
-    try:
-        cursor.execute(sql)
-        results = cursor.fetchall()
-    except:
-        print("Error: unable to fetch data")
-
+    cursor.execute(sql)
+    results = cursor.fetchall()
     return(results)
 
 
