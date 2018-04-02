@@ -13,9 +13,9 @@ def db_select(db, sql):
 
 # Open database connection
 config = Config().config
-db = mysql.connector.connect(user=config['semmeddb']['user'], password=config['semmeddb']['password'],
-                              host=config['semmeddb']['host'],
-                              database=config['semmeddb']['database'])
+db = mysql.connector.connect(user=config['umls-db']['user'], password=config['umls-db']['password'],
+                              host=config['umls-db']['host'],
+                              database=config['umls-db']['database'])
 
 sql = ("select distinct cui1 as location_cui, RELA as relation, "
        "cui2 as disease_cui, A.str as location_str, B.str as disease_str, MRREL.sab as source "
