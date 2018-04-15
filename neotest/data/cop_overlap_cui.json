@@ -1,0 +1,422 @@
+[
+    {
+        "score": 0.0016638567,
+        "nodes": [
+            {
+                "id": "C0054670",
+                "name": "carbetocin",
+                "type": "Drug"
+            },
+            {
+                "id": "none",
+                "name": "unknown_target",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "none",
+                "name": "unknown_cell",
+                "type": "Cell"
+            },
+            {
+                "id": "C0032797",
+                "name": "Postpartum Hemorrhage",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0042135",
+                "name": "Uterine Inertia",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.203,
+        "nodes": [
+            {
+                "id": "C0007257",
+                "name": "Carmustine",
+                "type": "Drug"
+            },
+            {
+                "id": "C0966534",
+                "name": "5-(dimethylamino)-1-naphthalenesulfonyl-glycyl-seryl-argininamide",
+                "type": "Target"
+            },
+            {
+                "id": "C0242606",
+                "name": "Oxidative Stress",
+                "type": "Pathway"
+            },
+            {
+                "id": "C0085983",
+                "name": "Cell Line, Tumor",
+                "type": "Cell"
+            },
+            {
+                "id": "C0242656",
+                "name": "Disease Progression",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0026764",
+                "name": "Multiple Myeloma",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0045,
+        "nodes": [
+            {
+                "id": "C0011182",
+                "name": "Dehydrocholic Acid",
+                "type": "Drug"
+            },
+            {
+                "id": "C1259877",
+                "name": "protein kinase C kinase",
+                "type": "Target"
+            },
+            {
+                "id": "C0752321",
+                "name": "MAP Kinase Signaling System",
+                "type": "Pathway"
+            },
+            {
+                "id": "C0227525",
+                "name": "Hepatocyte",
+                "type": "Cell"
+            },
+            {
+                "id": "C0242656",
+                "name": "Disease Progression",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0008370",
+                "name": "Cholestasis",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0015292059,
+        "nodes": [
+            {
+                "id": "C0043606",
+                "name": "eperisone",
+                "type": "Drug"
+            },
+            {
+                "id": "none",
+                "name": "unknown_target",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "none",
+                "name": "unknown_cell",
+                "type": "Cell"
+            },
+            {
+                "id": "C0150055",
+                "name": "Chronic pain",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0007859",
+                "name": "Neck Pain",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.037360752000000004,
+        "nodes": [
+            {
+                "id": "C0014912",
+                "name": "Estradiol",
+                "type": "Drug"
+            },
+            {
+                "id": "C0258261",
+                "name": "MEC1 protein, S cerevisiae",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "C0023516",
+                "name": "Leukocytes",
+                "type": "Cell"
+            },
+            {
+                "id": "C0314657",
+                "name": "Genetic Predisposition to Disease",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0085215",
+                "name": "Ovarian Failure, Premature",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0017489333,
+        "nodes": [
+            {
+                "id": "C0016367",
+                "name": "Flupenthixol",
+                "type": "Drug"
+            },
+            {
+                "id": "C3659270",
+                "name": "DRD2 protein, human",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "none",
+                "name": "unknown_cell",
+                "type": "Cell"
+            },
+            {
+                "id": "C0314657",
+                "name": "Genetic Predisposition to Disease",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0036341",
+                "name": "Schizophrenia",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.1175,
+        "nodes": [
+            {
+                "id": "none",
+                "name": "jnj-38877605",
+                "type": "Drug"
+            },
+            {
+                "id": "C0206364",
+                "name": "Receptor Protein-Tyrosine Kinases",
+                "type": "Target"
+            },
+            {
+                "id": "C0752321",
+                "name": "MAP Kinase Signaling System",
+                "type": "Pathway"
+            },
+            {
+                "id": "C0085983",
+                "name": "Cell Line, Tumor",
+                "type": "Cell"
+            },
+            {
+                "id": "C0027626",
+                "name": "Neoplasm Invasiveness",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0009404",
+                "name": "Colorectal Neoplasms",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.005110189199999999,
+        "nodes": [
+            {
+                "id": "C0041014",
+                "name": "liothyronine",
+                "type": "Drug"
+            },
+            {
+                "id": "C0242988",
+                "name": "THRB gene",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "none",
+                "name": "unknown_cell",
+                "type": "Cell"
+            },
+            {
+                "id": "C0018800",
+                "name": "Cardiomegaly",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0020550",
+                "name": "Hyperthyroidism",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0358792597,
+        "nodes": [
+            {
+                "id": "C0027396",
+                "name": "Naproxen",
+                "type": "Drug"
+            },
+            {
+                "id": "C0387583",
+                "name": "cyclooxygenase 2",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "C0225369",
+                "name": "Chondrocyte",
+                "type": "Cell"
+            },
+            {
+                "id": "C0314657",
+                "name": "Genetic Predisposition to Disease",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0029408",
+                "name": "Degenerative polyarthritis",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0080601501,
+        "nodes": [
+            {
+                "id": "C0135981",
+                "name": "Peplomycin",
+                "type": "Drug"
+            },
+            {
+                "id": "none",
+                "name": "unknown_target",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "C0024432",
+                "name": "macrophage",
+                "type": "Cell"
+            },
+            {
+                "id": "C0027686",
+                "name": "Pathologic Neovascularization",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0037286",
+                "name": "Skin Neoplasms",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0015936,
+        "nodes": [
+            {
+                "id": "C2699073",
+                "name": "Revaprazan",
+                "type": "Drug"
+            },
+            {
+                "id": "C3657651",
+                "name": "ATP4a protein, Xenopus",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "none",
+                "name": "unknown_cell",
+                "type": "Cell"
+            },
+            {
+                "id": "C0314657",
+                "name": "Genetic Predisposition to Disease",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0017152",
+                "name": "Gastritis",
+                "type": "Disease"
+            }
+        ]
+    },
+    {
+        "score": 0.0012293833,
+        "nodes": [
+            {
+                "id": "C0016778",
+                "name": "Tegafur",
+                "type": "Drug"
+            },
+            {
+                "id": "none",
+                "name": "unknown_target",
+                "type": "Target"
+            },
+            {
+                "id": "none",
+                "name": "unknown_pathway",
+                "type": "Pathway"
+            },
+            {
+                "id": "none",
+                "name": "unknown_cell",
+                "type": "Cell"
+            },
+            {
+                "id": "C0027627",
+                "name": "Neoplasm Metastasis",
+                "type": "Symptom"
+            },
+            {
+                "id": "C0018671",
+                "name": "Head and Neck Neoplasms",
+                "type": "Disease"
+            }
+        ]
+    }
+]
