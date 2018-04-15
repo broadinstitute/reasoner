@@ -4,10 +4,9 @@ from Config import Config
 
 
 def add_disease(tx, cui, name, mesh_id):
-    tx.run("MERGE (disease:Disease {id: {cui}, name: {name}}) "
-           "MERGE (disease)-[:HAS_ID]->(:Identifier {id: {cui}, type: 'cui', resource: 'UMLS'}) "
-           "MERGE (disease)-[:HAS_ID]->(:Identifier {id: {mesh_id}, type: 'mesh_id', resource: 'MeSH'}) "
-           "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {name}, type: 'umls_concept'})",
+    tx.run("MERGE (disease:Disease {id: {cui}}) "
+           "SET disease.name =  {name} "
+           "SET disease.mesh_id = {mesh_id} "
            cui=cui, name=name, mesh_id=mesh_id)
 
 config = Config().config

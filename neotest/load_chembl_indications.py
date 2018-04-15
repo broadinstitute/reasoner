@@ -1,39 +1,23 @@
 import mysql.connector
 import xml.etree.ElementTree as etree
 from neo4j.v1 import GraphDatabase
+from umls.UmlsQuery import UmlsQuery
 from Config import Config
 
 
 def get_chembl_ids(session):
-    result = session.run("MATCH (:Drug)-[:HAS_ID]->(id:Identifier {resource: 'ChEMBL'}) "
-                "RETURN id.id as chembl_id")
+    result = session.run("MATCH (d:Drug) "
+                         "WHERE exists(d.chembl_id) "
+                         "RETURN d.chembl_id as chembl_id")
     return([record['chembl_id'] for record in result])
 
-def add_indication(tx, chembl_id, mesh_id, mesh_heading, efo_id, efo_term):
-    if mesh_id is not None and efo_id is not None:
-        tx.run("MATCH (drug:Drug)-[:HAS_ID]->(:Identifier {id: {chembl_id}, resource: 'ChEMBL'}) "
-               "MERGE (disease:Disease)-[:HAS_ID]->(mesh_id:Identifier {id: {mesh_id}, type: 'mesh_id', resource: 'MeSH'}) "
-               "SET mesh_id.term = {mesh_heading} "
-               "MERGE (drug)-[:HAS_INDICATION]->(disease) "
-               "MERGE (disease)-[:HAS_ID]->(:Identifier {id: {efo_id}, term: {efo_term}, type: 'efo_id', resource: 'EFO'}) "
-               "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {mesh_heading}, type: 'mesh_heading'}) "
-               "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {efo_term}, type: 'efo_term'})",
-               chembl_id=chembl_id, mesh_id=mesh_id, mesh_heading=mesh_heading.lower(), efo_id=efo_id, efo_term=efo_term.lower())
-    elif mesh_id is not None:
-        tx.run("MATCH (drug:Drug)-[:HAS_ID]->(:Identifier {id: {chembl_id}, resource: 'ChEMBL'}) "
-               "MERGE (disease:Disease)-[:HAS_ID]->(mesh_id:Identifier {id: {mesh_id}, type: 'mesh_id', resource: 'MeSH'}) "
-               "SET mesh_id.term = {mesh_heading} "
-               "MERGE (drug)-[:HAS_INDICATION]->(disease) "
-               "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {mesh_heading}, type: 'mesh_heading'})",
-               chembl_id=chembl_id, mesh_id=mesh_id, mesh_heading=mesh_heading.lower())
-    elif efo_id is not None:
-        tx.run(
-            "MATCH (drug:Drug)-[:HAS_ID]->(:Identifier {id: {chembl_id}, resource: 'ChEMBL'}) "
-            "MERGE (disease:Disease)-[:HAS_ID]->(efo_id:Identifier {id: {efo_id}, type: 'efo_id', resource: 'EFO'}) "
-            "SET efo_id.term = term: {efo_term} "
-            "MERGE (drug)-[:HAS_INDICATION]->(disease) "
-            "MERGE (disease)-[:HAS_SYNONYM]->(:Synonym {name: {efo_term}, type: 'efo_term'})",
-            chembl_id=chembl_id, efo_id=efo_id, efo_term=efo_term.lower())
+
+def add_indication(tx, chembl_id, disease_cui, disease_name):
+        tx.run("MATCH (drug:Drug {chembl_id: {chembl_id}}) "
+               "MERGE (disease:Disease {id: {disease_cui}}) "
+               "SET disease.name = {disease_name} "
+               "MERGE (drug)-[:HAS_INDICATION]->(disease)",
+               chembl_id=chembl_id, disease_cui=disease_cui, disease_name=disease_name)
 
 
 def get_indication(db, chembl_id):
@@ -59,10 +43,13 @@ def get_indication(db, chembl_id):
 
 
 config = Config().config
+apikey = config['umls']['apikey']
+uq = UmlsQuery(apikey)
 driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['user'], config['neo4j']['password']))
 db = mysql.connector.connect(user=config['chembl']['user'], password=config['chembl']['password'],
                               host=config['chembl']['host'],
                               database=config['chembl']['database'])
+
 
 with driver.session() as session:
     chembl_ids = get_chembl_ids(session)
@@ -71,7 +58,8 @@ with driver.session() as session:
         print(chembl_id)
         results = get_indication(db, chembl_id)
         for row in results:
-            session.write_transaction(add_indication, row['chembl_id'], row['mesh_id'], row['mesh_heading'], row['efo_id'], row['efo_term'])
+            disease = uq.mesh2cui(row['mesh_id'])
+            session.write_transaction(add_indication, row['chembl_id'], disease['cui'], disease['name'])
 
 # disconnect from server
 db.close()
