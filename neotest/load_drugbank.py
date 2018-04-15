@@ -68,6 +68,6 @@ with driver.session() as session:
                         target_exids[exid_res] = exid_id
 
             #session.write_transaction(add_target, target_id, target_name, target_synonyms, target_exids, drug_id)
-            session.write_transaction(add_target, target_id, target_name, target_exids['HGNC'], drug_id)
+            session.write_transaction(add_target, target_id, target_name, target_exids['HUGO Gene Nomenclature Committee (HGNC)'], drug_id)
 
 print("done")
