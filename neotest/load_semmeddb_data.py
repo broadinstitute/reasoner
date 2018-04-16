@@ -51,7 +51,7 @@ def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type
     sql_template = "SELECT SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE, COUNT(*) as COUNT FROM PREDICATION "
     
     # set origin
-    if from_role == 'object':
+    if origin_role == 'object':
         sql_template = sql_template + "WHERE OBJECT_CUI = '%s' AND SUBJECT_" % (origin,)
     else:
         sql_template = sql_template + "WHERE SUBJECT_CUI = '%s' AND OBJECT_" % (origin,)
@@ -75,7 +75,7 @@ def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type
         else:
             print("type not found: ", row['SUBJECT_SEMTYPE'], row['OBJECT_SEMTYPE'])
 
-        if from_role == 'object':
+        if origin_role == 'object':
             return_cuis.add(row['OBJECT_CUI'])
         else:
             return_cuis.add(row['SUBJECT_CUI'])
