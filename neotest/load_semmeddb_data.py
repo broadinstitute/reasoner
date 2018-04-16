@@ -62,13 +62,13 @@ def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type
     else:
         sql_template = sql_template + "SEMTYPE IN ('%s') " % ("','".join(type2sem[target]),)
 
-    sql = sql_template + "GROUP BY (SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE) LIMIT 100;"
+    sql = sql_template + "AND COUNT > 1 GROUP BY SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE LIMIT 300;"
 
     ## get results
     results = db_select(db, sql)
     return_cuis = set()
     for row in results:
-        if row['SUBJECT_SEMTYPE'] in typemap and row['OBJECT_SEMTYPE'] in typemap:
+        if row['SUBJECT_SEMTYPE'] in sem2type and row['OBJECT_SEMTYPE'] in sem2type:
             session.write_transaction(add_cui_connection, row['SUBJECT_CUI'], sem2type[row['SUBJECT_SEMTYPE']],
                                       row['SUBJECT_NAME'], row['OBJECT_CUI'], sem2type[row['OBJECT_SEMTYPE']],
                                       row['OBJECT_NAME'], row['PREDICATE'], row['COUNT'])
