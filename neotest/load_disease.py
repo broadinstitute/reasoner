@@ -6,7 +6,7 @@ from Config import Config
 def add_disease(tx, cui, name, mesh_id):
     tx.run("MERGE (disease:Disease {id: {cui}}) "
            "SET disease.name =  {name} "
-           "SET disease.mesh_id = {mesh_id} "
+           "SET disease.mesh_id = {mesh_id}",
            cui=cui, name=name, mesh_id=mesh_id)
 
 config = Config().config
