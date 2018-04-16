@@ -58,8 +58,8 @@ with driver.session() as session:
         print(chembl_id)
         results = get_indication(db, chembl_id)
         for row in results:
-            disease = uq.mesh2cui(row['mesh_id'])
-            session.write_transaction(add_indication, row['chembl_id'], disease['cui'], disease['name'])
+            for disease in uq.mesh2cui(row['mesh_id']):
+                session.write_transaction(add_indication, row['chembl_id'], disease['cui'], disease['name'])
 
 # disconnect from server
 db.close()
