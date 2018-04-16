@@ -3,6 +3,7 @@
 from .Authentication import *
 import requests
 import json
+from Config import Config
 
 
 class UmlsQuery:
@@ -11,6 +12,21 @@ class UmlsQuery:
         self.tgt = self.AuthClient.gettgt()
         self.version = 'current'
         self.base_uri = 'https://uts-ws.nlm.nih.gov/rest/'
+
+        # Open database connection
+        config = Config().config
+        self.db = mysql.connector.connect(user=config['umls']['user'], password=config['umls']['password'],
+                                     host=config['umls']['host'],
+                                     database=config['umls']['database'])
+
+    def db_select(self, sql):
+        cursor = self.db.cursor(dictionary=True)
+        try:
+            cursor.execute(sql)
+            results = cursor.fetchall()
+        except:
+            print("Error: unable to fetch data")
+        return(results)
 
     def get_ticket(self):
         return(self.AuthClient.getst(self.tgt))
@@ -43,20 +59,29 @@ class UmlsQuery:
         return(self.send_query(endpoint, options))
 
     def mesh2cui(self, mesh_id):
-        content_endpoint = ('content/' + self.version + '/source/MSH/' +
-                            mesh_id + '/atoms/preferred')
-        ticket = self.get_ticket()
-        query = {'ticket': ticket}
-        r = requests.get(self.base_uri + content_endpoint, params=query)
-        r.encoding = 'utf-8'
+        # content_endpoint = ('content/' + self.version + '/source/MSH/' +
+        #                     mesh_id + '/atoms/preferred')
+        # ticket = self.get_ticket()
+        # query = {'ticket': ticket}
+        # r = requests.get(self.base_uri + content_endpoint, params=query)
+        # r.encoding = 'utf-8'
 
-        if not r.ok:
-            return({})
-        items = json.loads(r.text)
-        jsonData = items['result']
+        # if not r.ok:
+        #     return({})
+        # items = json.loads(r.text)
+        # jsonData = items['result']
 
-        return({'cui': jsonData['concept'].rsplit('/', 1)[-1],
-                'name': jsonData['name']})
+        # return({'cui': jsonData['concept'].rsplit('/', 1)[-1],
+        #         'name': jsonData['name']})
+        sql = ("SELECT DISTINCT cui, str as name "
+               "FROM MRCONSO "
+               "WHERE SCUI = '%s' "
+               "AND SAB = 'MSH' "
+               "AND STT = 'PF';" % mesh_id)
+        result = self.db_select(sql)
+        return(result[0])
+
+
 
     def search(self, query_string, options={}):
         endpoint = "search/" + self.version
@@ -81,3 +106,6 @@ class UmlsQuery:
         result = self.search(ui, {'inputType': 'sourceUi',
                              'searchType': 'exact', 'sabs': 'SNOMEDCT_US'})
         return({'cui': result['results'][0]['ui'], 'name': result['results'][0]['name']})
+
+    def __del__(self):
+        self.db.close()
