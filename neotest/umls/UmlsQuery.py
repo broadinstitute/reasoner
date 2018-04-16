@@ -3,7 +3,7 @@
 from .Authentication import *
 import requests
 import json
-from Config import Config
+from ..Config import Config
 
 
 class UmlsQuery:
