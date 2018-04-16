@@ -1,4 +1,5 @@
 create index on :Drug(id);
+create index on :Drug(chembl_id);
 create index on :Drug(name);
 create index on :Target(id);
 create index on :Target(name);
