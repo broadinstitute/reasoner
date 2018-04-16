@@ -91,13 +91,11 @@ db = mysql.connector.connect(user=config['semmeddb']['user'], password=config['s
 
 driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['user'], config['neo4j']['password']))
 
-disease_file = './data/cop_disease_cui.csv'
-disease = pd.read_csv(disease_file)
 
 with driver.session() as session:
 
     print('disease:')
-    for index, row in disease.iterrows():
+    for index, row in get_cuis(session, 'Disease'):
         sql2neo(session, db, row['cui'], 'Symptom')
         sql2neo(session, db, row['cui'], 'Tissue')
         sql2neo(session, db, cui, 'Tissue', origin_role = 'object')
