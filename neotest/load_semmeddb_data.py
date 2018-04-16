@@ -32,13 +32,15 @@ def add_cui_connection(tx, origin_cui, origin_type, origin_name, target_cui, tar
 
 
 def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type = 'type'):
-    type2sem = {'Disease': ['dsyn'],
+    type2sem = {'Disease': ['dsyn', 'neop'],
                'Symptom': ['sosy'],
                'Tissue': ['tisu', 'bpoc', 'blor'],
                'Cell': ['cell'],
                'Pathway': ['moft', 'celf']}
 
     sem2type = {'dsyn': 'Disease',
+                'neop': 'Disease',
+                'fndg': 'Disease',
                 'sosy': 'Symptom',
                 'tisu': 'Tissue',
                 'bpoc': 'Tissue',
@@ -62,7 +64,7 @@ def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type
     else:
         sql_template = sql_template + "SEMTYPE IN ('%s') " % ("','".join(type2sem[target]),)
 
-    sql = sql_template + "AND COUNT > 1 GROUP BY SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE LIMIT 300;"
+    sql = sql_template + "GROUP BY SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE HAVING COUNT(*) > 1;"
 
     ## get results
     results = db_select(db, sql)
@@ -106,7 +108,7 @@ with driver.session() as session:
     print('pathway:')
     for cui in get_cuis(session, 'Pathway'):
         sql2neo(session, db, cui, 'Cell')
-        sql2neo(session, db, cui, 'Disease')
+        #sql2neo(session, db, cui, 'Disease') # careful! adds new diseases!
         
     print('symptom:')
     for symptom_cui in get_cuis(session, 'Symptom'):
