@@ -95,18 +95,18 @@ driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['us
 with driver.session() as session:
 
     print('disease:')
-    for index, row in get_cuis(session, 'Disease'):
-        sql2neo(session, db, row['cui'], 'Symptom')
-        sql2neo(session, db, row['cui'], 'Tissue')
+    for cui in get_cuis(session, 'Disease'):
+        sql2neo(session, db, cui, 'Symptom')
+        sql2neo(session, db, cui, 'Tissue')
         sql2neo(session, db, cui, 'Tissue', origin_role = 'object')
-        sql2neo(session, db, row['cui'], 'Cell')
-        sql2neo(session, db, row['cui'], 'Cell', origin_role = 'object')
-        sql2neo(session, db, row['cui'], 'Pathway')
+        sql2neo(session, db, cui, 'Cell')
+        sql2neo(session, db, cui, 'Cell', origin_role = 'object')
+        sql2neo(session, db, cui, 'Pathway')
 
     print('pathway:')
-    for index, row in get_cuis(session, 'Pathway'):
-        sql2neo(session, db, row['cui'], 'Cell')
-        sql2neo(session, db, row['cui'], 'Disease')
+    for cui in get_cuis(session, 'Pathway'):
+        sql2neo(session, db, cui, 'Cell')
+        sql2neo(session, db, cui, 'Disease')
         
     print('symptom:')
     for symptom_cui in get_cuis(session, 'Symptom'):
