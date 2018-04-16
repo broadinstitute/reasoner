@@ -60,7 +60,7 @@ def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type
     if target_id_type == 'cui':
         sql_template = base_sql + "CUI = '%s' " % (target,)
     else:
-        sql_template = sql_template + "SEMTYPE IN ('%s') " % ("','".join(type2sem[target])),)
+        sql_template = sql_template + "SEMTYPE IN ('%s') " % ("','".join(type2sem[target]),)
 
     sql = sql_template + "GROUP BY (SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE) LIMIT 100;"
 
