@@ -27,9 +27,7 @@ def get_graph(results):
 
 
 def get_cop(session, drug, disease):
-    result = session.run("""MATCH path = (dr:Drug)-[*..3]-(di:Disease)
-                         WHERE (dr)-[:HAS_SYNONYM]->(:Synonym {name: '%s'})
-                         AND (di)-[:HAS_SYNONYM]->(:Synonym {name:'%s'})
+    result = session.run("""MATCH path = (dr:Drug {name: '%s'})-[*..6]-(di:Disease {name:'%s'})
                          UNWIND nodes(path) as n
                          UNWIND relationships(path) as r
                          RETURN collect(distinct n) as nodes, collect(distinct r) as edges""" % (drug, disease.replace("'", "")))
@@ -47,22 +45,22 @@ cop_file = './data/cop_benchmark.csv'
 cop = pd.read_csv(cop_file)
 
 with driver.session() as session:
-    # for index, row in cop.iterrows():
-    #     result = get_cop(session,
-    #                      row['Drug'].lower().capitalize(),
-    #                      row['ConditionName'].lower().capitalize())
-    #     for record in result:
-    #         print(row['Drug'], row['ConditionName'], record)
+    for index, row in cop.iterrows():
+        result = get_cop(session,
+                         row['Drug'].lower().capitalize(),
+                         row['ConditionName'].lower().capitalize())
+        for record in result:
+            print(row['Drug'], row['ConditionName'], record)
 
 
-    result = get_cop(session,
-                     'Naproxen',
-                     'Osteoarthritis')
+    # result = get_cop(session,
+    #                  'Naproxen',
+    #                  'Osteoarthritis')
     
-    G = get_graph(result)
-    print(list(G.nodes(data=True)))
+    # G = get_graph(result)
+    # print(list(G.nodes(data=True)))
 
-    print(list(G.edges(data=True)))
+    # print(list(G.edges(data=True)))
 
 
 
