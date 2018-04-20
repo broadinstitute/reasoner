@@ -1,7 +1,7 @@
 import pandas as pd
 import json
-from umls.UmlsQuery import UmlsQuery
-from Config import Config
+from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.neo4j.Config import Config
 
 
 def get_umls_term(term, ntype):

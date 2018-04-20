@@ -1,8 +1,8 @@
 import mysql.connector
 import xml.etree.ElementTree as etree
 from neo4j.v1 import GraphDatabase
-from umls.UmlsQuery import UmlsQuery
-from Config import Config
+from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.neo4j.Config import Config
 
 
 def get_chembl_ids(session):

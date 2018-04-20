@@ -1,7 +1,7 @@
 import csv
 import xml.etree.ElementTree as etree
 #from neo4j.v1 import GraphDatabase
-#from Config import Config
+#from reasoner.neo4j.Config import Config
 
 # def add_drug(tx, id, name, chembl_id, mechanism):
 #     tx.run("MERGE (drug:Drug {id: {id}}) "

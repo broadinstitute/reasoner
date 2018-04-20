@@ -1,6 +1,6 @@
 import pandas as pd
-from umls.UmlsQuery import UmlsQuery
-from Config import Config
+from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.neo4j.Config import Config
 
 config = Config().config
 apikey = Config().config['umls']['apikey']

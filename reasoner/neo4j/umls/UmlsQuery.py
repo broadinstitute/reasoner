@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-from .Authentication import *
 import requests
 import json
 import mysql.connector
+from .Authentication import *
+from ..Config import Config
 
 
 class UmlsQuery:
@@ -14,9 +15,10 @@ class UmlsQuery:
         self.base_uri = 'https://uts-ws.nlm.nih.gov/rest/'
 
         # Open database connection
-        self.db = mysql.connector.connect(user='reasoner', password='reasoner',
-                                     host='localhost',
-                                     database='umls')
+        config = Config().config
+        self.db = mysql.connector.connect(user=config['umls-db']['user'], password=config['umls-db']['password'],
+                              host=config['umls-db']['host'],
+                              database=config['umls-db']['database'])
 
     def db_select(self, sql):
         cursor = self.db.cursor(dictionary=True)

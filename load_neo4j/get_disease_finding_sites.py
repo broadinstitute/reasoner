@@ -1,6 +1,6 @@
 import pandas as pd
 import mysql.connector
-from Config import Config
+from reasoner.neo4j.Config import Config
 
 
 def db_select(db, sql):

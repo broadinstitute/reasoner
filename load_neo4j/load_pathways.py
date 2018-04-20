@@ -1,6 +1,6 @@
 import csv
-from umls.UmlsQuery import UmlsQuery
-from Config import Config
+from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.neo4j.Config import Config
 
 def query_umls(uq, query_term):
     result = uq.search(query_term)
