@@ -5,7 +5,7 @@ dbfile = './data/drugbank.xml'
 outfile_drugs = './data/graph/drugs.csv'
 outfile_targets = './data/graph/targets.csv'
 
-drug_table = [["id", "name", "type", "chembl_id", "mechanism"]]
+drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics"]]
 target_table = [["id", "name", "hgnc_id", "uniprot_id", "drug_id"]]
 category_table = [["drug_id", "mesh_id"]]
 
@@ -38,7 +38,7 @@ for drug in root.findall('drugbank:drug', ns):
     drug_pharmacodynamics = drug.find('drugbank:pharmacodynamics', ns).text
 
     if 'ChEMBL' in drug_exids:
-        drug_table.append([drug_id, drug_name, drug_exids['ChEMBL'], drug_mechanism])
+        drug_table.append([drug_id, drug_name, drug_type, drug_exids['ChEMBL'], drug_mechanism, drug_pharmacodynamics])
     else:
         drug_table.append([drug_id, drug_name, None, drug_mechanism])
     
@@ -70,9 +70,9 @@ for drug in root.findall('drugbank:drug', ns):
 
         if 'UniProtKB' in target_exids:
             uniprot_id = target_exids['UniProtKB']
-            target_table.append([target_id, target_name, , drug_id])
-        else:
-            target_table.append([target_id, target_name, None, drug_id])
+
+        target_table.append([target_id, target_name, hgnc_id, uniprot_id, drug_id])
+
 
 
 with open(outfile_drugs, 'w') as f:  
