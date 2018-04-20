@@ -4,7 +4,6 @@ from .Authentication import *
 import requests
 import json
 import mysql.connector
-from ..Config import Config
 
 
 class UmlsQuery:
@@ -15,10 +14,9 @@ class UmlsQuery:
         self.base_uri = 'https://uts-ws.nlm.nih.gov/rest/'
 
         # Open database connection
-        config = Config().config
-        self.db = mysql.connector.connect(user=config['umls-db']['user'], password=config['umls-db']['password'],
-                                     host=config['umls-db']['host'],
-                                     database=config['umls-db']['database'])
+        self.db = mysql.connector.connect(user='reasoner', password='reasoner',
+                                     host='localhost',
+                                     database='umls')
 
     def db_select(self, sql):
         cursor = self.db.cursor(dictionary=True)
@@ -76,12 +74,13 @@ class UmlsQuery:
         #         'name': jsonData['name']})
         sql = ("SELECT DISTINCT cui, str as name "
                "FROM MRCONSO "
-               "WHERE SDUI = '%s' "
-               "AND SAB = 'MSH' "
-               "AND STT = 'PF';" % mesh_id)
+               "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'MSH') "
+               "AND ts = 'P' "
+               "AND stt = 'PF' "
+               "AND ispref = 'Y' "
+               "AND lat = 'ENG';"  % mesh_id)
         result = self.db_select(sql)
-        return(result[0])
-
+        return(result)
 
 
     def search(self, query_string, options={}):
