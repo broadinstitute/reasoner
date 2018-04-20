@@ -105,3 +105,11 @@ reasoner.psproj
 neotest/sandbox/
 neotest/config/config.yaml
 neotest/data/drugbank.xml
+load_neo4j/sandbox/import_rdf_test.py
+load_neo4j/sandbox/mysql_test.py
+load_neo4j/sandbox/path.test.queries.cypher
+load_neo4j/sandbox/test.sql.py
+load_neo4j/sandbox/py2neo_test.py
+load_neo4j/sandbox/test.umls.db.py
+load_neo4j/sandbox/test.umls.query.py
+reasoner/neo4j/config/config.yaml
