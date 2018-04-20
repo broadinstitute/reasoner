@@ -104,4 +104,5 @@ reasoner.psproj
 .DS_Store
 data/neo4j/drugbank.xml
 load_neo4j/sandbox/
+load_neo4j/semmed.log
 reasoner/neo4j/config/config.yaml
