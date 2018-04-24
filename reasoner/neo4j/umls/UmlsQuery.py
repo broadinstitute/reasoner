@@ -92,7 +92,7 @@ class UmlsQuery:
                "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
-               "AND lat = 'ENG';"  % mesh_id)
+               "AND lat = 'ENG';"  % go_id)
         result = self.db_select(sql)
         return(result)
 
