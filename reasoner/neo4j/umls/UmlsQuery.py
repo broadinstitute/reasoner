@@ -8,14 +8,14 @@ from ..Config import Config
 
 
 class UmlsQuery:
-    def __init__(self, apikey):
-        self.AuthClient = Authentication(apikey)
+    def __init__(self):
+        config = Config().config
+        self.AuthClient = Authentication(Config().config['umls']['apikey'])
         self.tgt = self.AuthClient.gettgt()
         self.version = 'current'
         self.base_uri = 'https://uts-ws.nlm.nih.gov/rest/'
 
         # Open database connection
-        config = Config().config
         self.db = mysql.connector.connect(user=config['umls-db']['user'], password=config['umls-db']['password'],
                               host=config['umls-db']['host'],
                               database=config['umls-db']['database'])
@@ -84,6 +84,17 @@ class UmlsQuery:
         result = self.db_select(sql)
         return(result)
 
+
+    def go2cui(self, go_id):
+        sql = ("SELECT DISTINCT cui, str as name "
+               "FROM MRCONSO "
+               "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'GO') "
+               "AND ts = 'P' "
+               "AND stt = 'PF' "
+               "AND ispref = 'Y' "
+               "AND lat = 'ENG';"  % mesh_id)
+        result = self.db_select(sql)
+        return(result)
 
     def search(self, query_string, options={}):
         endpoint = "search/" + self.version
