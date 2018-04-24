@@ -77,7 +77,6 @@ class UmlsQuery:
         sql = ("SELECT DISTINCT cui, str as name "
                "FROM MRCONSO "
                "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'MSH') "
-               "AND SAB = 'MSH' "
                "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
@@ -89,9 +88,8 @@ class UmlsQuery:
     def go2cui(self, go_id):
         sql = ("SELECT DISTINCT cui, str as name "
                "FROM MRCONSO "
-               "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'GO') "
-               "AND SAB = 'GO' "
-               "AND tty = 'PT' "
+               "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'GO' AND tty = 'PT') "
+               "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';"  % go_id)
