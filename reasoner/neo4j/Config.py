@@ -1,7 +1,8 @@
 import yaml
-
+import os
 
 class Config:
     def __init__(self):
-        with open("./config/config.yaml", 'r') as f:
+        configfile = os.path.join(os.path.dirname(__file__), 'config/config.yaml')
+        with open(configfile, 'r') as f:
             self.config = yaml.load(f)
