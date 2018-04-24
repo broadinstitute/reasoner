@@ -42,9 +42,10 @@ def get_indication(db, chembl_id):
     return(results)
 
 
+
+uq = UmlsQuery()
+
 config = Config().config
-apikey = config['umls']['apikey']
-uq = UmlsQuery(apikey)
 driver = GraphDatabase.driver(config['neo4j']['host'], auth=(config['neo4j']['user'], config['neo4j']['password']))
 db = mysql.connector.connect(user=config['chembl']['user'], password=config['chembl']['password'],
                               host=config['chembl']['host'],

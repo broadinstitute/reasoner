@@ -1,11 +1,7 @@
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
-from reasoner.neo4j.Config import Config
-
-config = Config().config
-apikey = config['umls']['apikey']
 
 
-uq = UmlsQuery(apikey)
+uq = UmlsQuery()
 #print(uq.get_disease_location('asthma'))
 
 result = uq.search('Rhinitis, Allergic', options={'sabs': 'MSH'})

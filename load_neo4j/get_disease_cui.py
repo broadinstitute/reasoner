@@ -1,9 +1,5 @@
 import pandas as pd
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
-from reasoner.neo4j.Config import Config
-
-config = Config().config
-apikey = Config().config['umls']['apikey']
 
 cop_file = './data/cop_list_full.csv'
 outfile = './data/cop_disease_cui.csv'
@@ -11,7 +7,7 @@ outfile = './data/cop_disease_cui.csv'
 cop = pd.read_csv(cop_file)
 unique_conditions = cop.Condition.unique()
 
-uq = UmlsQuery(apikey)
+uq = UmlsQuery()
 cuis = pd.DataFrame(columns=["cui", "name", "mesh_id", "mesh_term"])
 for term in unique_conditions:
     print(term)

@@ -1,6 +1,5 @@
 import csv
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
-from reasoner.neo4j.Config import Config
 
 def query_umls(uq, query_term):
     result = uq.search(query_term)
@@ -14,8 +13,6 @@ def query_umls(uq, query_term):
         return({'cui': cui, 'name': name})
 
 
-config = Config().config
-apikey = config['umls']['apikey']
 
 msigdb_file = './data/c2cp_c5mf_c5bp_v6.1.entrez.gmt'
 outfile_pathways = './data/graph/pathways.csv'
@@ -28,7 +25,7 @@ with open(msigdb_file) as f:
         parts = line.strip().split('\t')
         pathways.append({'name':parts[0], 'url':parts[1], 'entrez_ids':parts[2:]})
 
-uq = UmlsQuery(apikey)
+uq = UmlsQuery()
 cuis = [["cui", "umls_name", "msigdb_name"]]
 not_found = []
 pathway_targets = [["pathway_cui", "target_entrez_id"]]

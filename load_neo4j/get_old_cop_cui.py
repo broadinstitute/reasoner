@@ -1,8 +1,5 @@
 import pandas as pd
 import json
-from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
-from reasoner.neo4j.Config import Config
-
 
 def get_umls_term(term, ntype):
     result = uq.search(term, options={'sabs': 'MSH'})
@@ -13,17 +10,13 @@ def get_umls_term(term, ntype):
     else:
         return({'id': 'none', 'name': term, 'type': ntype})
 
-
-config = Config().config
-apikey = Config().config['umls']['apikey']
-
 cop_file = './data/cop_overlap.csv'
 outfile = './data/cop_overlap_cui.json'
 
 cop = pd.read_csv(cop_file)
 cop = cop.loc[cop['origin'] == 'prediction']
 
-uq = UmlsQuery(apikey)
+uq = UmlsQuery()
 paths = []
 
 cols = ['Drug', 'Target', 'Pathway', 'Cell', 'Symptom', 'Disease']
