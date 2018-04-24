@@ -92,7 +92,6 @@ class UmlsQuery:
                "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'GO') "
                "AND SAB = 'GO' "
                "AND tty = 'PT' "
-               "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';"  % go_id)
