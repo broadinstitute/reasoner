@@ -20,10 +20,13 @@ class UmlsQuery:
                               host=config['umls-db']['host'],
                               database=config['umls-db']['database'])
 
-    def db_select(self, sql):
+    def db_select(self, sql, data = None):
         cursor = self.db.cursor(dictionary=True)
         try:
-            cursor.execute(sql)
+            if data is None:
+                cursor.execute(sql)
+            else:
+                cursor.execute(sql, data)
             results = cursor.fetchall()
         except:
             print("Error: unable to fetch data")
@@ -128,12 +131,12 @@ class UmlsQuery:
     def cui2bestname(self, cui):
         sql = ("SELECT DISTINCT cui, str as name "
                "FROM MRCONSO "
-               "WHERE cui = '%s' "
+               "WHERE cui = %(cui) "
                "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
-               "AND lat = 'ENG';"  % cui)
-        result = self.db_select(sql)
+               "AND lat = 'ENG';")
+        result = self.db_select(sql, {'cui': cui})
         return(result)
 
     def search(self, query_string, options={}):
