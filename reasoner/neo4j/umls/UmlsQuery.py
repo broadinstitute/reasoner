@@ -117,6 +117,25 @@ class UmlsQuery:
         result = self.db_select(sql)
         return(result)
 
+    def meshterm2cui(self, term):
+        sql = ("SELECT DISTINCT CUI as cui, SDUI as mesh_id "
+               "FROM MRCONSO "
+               "WHERE SAB = 'MSH' "
+               "AND STR = '%s';" % term)
+        result = self.db_select(sql)
+        return(result)
+
+    def cui2bestname(self, cui):
+        sql = ("SELECT DISTINCT cui, str as name "
+               "FROM MRCONSO "
+               "WHERE cui = '%s' "
+               "AND ts = 'P' "
+               "AND stt = 'PF' "
+               "AND ispref = 'Y' "
+               "AND lat = 'ENG';"  % cui)
+        result = self.db_select(sql)
+        return(result)
+
     def search(self, query_string, options={}):
         endpoint = "search/" + self.version
         query = {'string': query_string}
