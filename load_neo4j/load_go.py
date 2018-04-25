@@ -2,7 +2,7 @@ import pandas
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
 
 go_file = "../data/neo4j/goa_human.csv"
-outfile = "../data/neo4j/graph/go_pathways.csv"
+outfile = "../data/neo4j/graph/pathways.csv"
 
 go = pandas.read_csv(go_file, low_memory = False)
 
