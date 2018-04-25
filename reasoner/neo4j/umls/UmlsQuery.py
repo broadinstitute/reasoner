@@ -96,6 +96,17 @@ class UmlsQuery:
         result = self.db_select(sql)
         return(result)
 
+    def drugbank2cui(self, drugbank_id):
+        sql = ("SELECT DISTINCT cui, str as name "
+               "FROM MRCONSO "
+               "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SCUI = '%s' AND SAB = 'DRUGBANK' AND tty = 'IN') "
+               "AND ts = 'P' "
+               "AND stt = 'PF' "
+               "AND ispref = 'Y' "
+               "AND lat = 'ENG';"  % go_id)
+        result = self.db_select(sql)
+        return(result)
+
     def search(self, query_string, options={}):
         endpoint = "search/" + self.version
         query = {'string': query_string}
