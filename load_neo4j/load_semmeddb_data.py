@@ -16,14 +16,14 @@ def db_select(db, sql):
 
 
 def get_cuis(session, node_type):
-    result = session.run("MATCH (n:%s) RETURN DISTINCT n.id as cui" % (node_type))
+    result = session.run("MATCH (n:%s) RETURN DISTINCT n.cui as cui" % (node_type))
     return([record['cui'] for record in result])
 
 
 def add_cui_connection(tx, origin_cui, origin_type, origin_name, target_cui, target_type, target_name, predicate, pred_count):
-    tx.run("MERGE (o:%s {id: {origin_cui}}) "
+    tx.run("MERGE (o:%s {cui: {origin_cui}}) "
            "SET o.name = {origin_name} "
-           "MERGE (t:%s {id: {target_cui}}) "
+           "MERGE (t:%s {cui: {target_cui}}) "
            "SET t.name = {target_name} "
            "MERGE (o)-[r:%s]->(t) "
            "SET r.count = {pred_count}" % (origin_type, target_type, predicate),
@@ -64,7 +64,7 @@ def sql2neo(session, db, origin, target, origin_role = 'subject', target_id_type
     else:
         sql_template = sql_template + "SEMTYPE IN ('%s') " % ("','".join(type2sem[target]),)
 
-    sql = sql_template + "GROUP BY SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE HAVING COUNT(*) > 1;"
+    sql = sql_template + "GROUP BY SUBJECT_CUI, SUBJECT_NAME, SUBJECT_SEMTYPE, PREDICATE, OBJECT_CUI, OBJECT_NAME, OBJECT_SEMTYPE HAVING COUNT(*) > 99;"
 
     ## get results
     results = db_select(db, sql)
