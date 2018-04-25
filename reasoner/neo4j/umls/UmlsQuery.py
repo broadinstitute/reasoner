@@ -107,6 +107,16 @@ class UmlsQuery:
         result = self.db_select(sql)
         return(result)
 
+    def cui2hpo(self, cui):
+        sql = ("SELECT DISTINCT SDUI as hpo_id "
+               "FROM MRCONSO "
+               "WHERE SAB = 'HPO' "
+               "AND CUI = '%s' "
+               "AND TTY = 'PT' "
+               "ORDER BY SDUI;" % cui)
+        result = self.db_select(sql)
+        return(result)
+
     def search(self, query_string, options={}):
         endpoint = "search/" + self.version
         query = {'string': query_string}
