@@ -102,14 +102,8 @@ ENV/
 reasoner.psproj
 *.pickle
 .DS_Store
-data/neo4j/drugbank.xml
 load_neo4j/sandbox/
 load_neo4j/semmed.log
 reasoner/neo4j/config/config.yaml
 *.sublime-workspace
-data/neo4j/goa_human.gaf
-data/neo4j/goa_human.csv
-data/neo4j/hp.owl
-data/neo4j/go.owl
-data/neo4j/doid.owl
-data/neo4j/chebi.owl
+data/
