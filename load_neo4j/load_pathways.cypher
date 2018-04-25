@@ -1,8 +1,8 @@
 LOAD CSV WITH HEADERS FROM 'file:///pathways.csv' AS line
-MERGE (pathway:Pathway {id: line.cui})
-SET pathway.name = line.umls_name;
-
-LOAD CSV WITH HEADERS FROM 'file:///pathway_targets.csv' AS line
-MATCH (pathway:Pathway {id: line.pathway_cui})
-MATCH (target:Target {entrez_id: line.target_entrez_id})
-MERGE (target)-[:PART_OF]->(pathway);
+MATCH (target:Target {uniprot_id: line.db_object_id})
+MERGE (pathway:Pathway {go_id: line.go_id})
+SET pathway.name = line.name
+SET pathway.type = line.aspect
+FOREACH(x IN CASE WHEN line.cui IS NULL THEN [] ELSE [1] END | SET pathway.cui = line.cui)
+MERGE (target)-[r:PART_OF]->(pathway);
+SET r.evidence = r.evidence_code
