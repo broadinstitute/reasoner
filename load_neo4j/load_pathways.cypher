@@ -5,4 +5,4 @@ SET pathway.name = line.name
 SET pathway.type = line.aspect
 FOREACH(x IN CASE WHEN line.cui IS NULL THEN [] ELSE [1] END | SET pathway.cui = line.cui)
 MERGE (target)-[r:PART_OF]->(pathway)
-SET r.evidence = r.evidence_code;
+SET r.evidence = line.evidence_code;
