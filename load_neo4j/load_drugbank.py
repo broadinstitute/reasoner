@@ -1,9 +1,10 @@
 import csv
 import xml.etree.ElementTree as etree
 
-dbfile = './data/drugbank.xml'
-outfile_drugs = './data/drugbank_drugs.csv'
-outfile_targets = './data/graph/targets.csv'
+dbfile = './data/neo4j/drugbank.xml'
+outfile_drugs = './data/neo4j/graph/drugs.csv'
+outfile_targets = './data/neo4j/graph/targets.csv'
+outfile_categories = './data/neo4j/graph/drug_categories.csv'
 
 drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics"]]
 target_table = [["id", "name", "hgnc_id", "uniprot_id", "drug_id"]]
@@ -41,10 +42,13 @@ for drug in root.findall('drugbank:drug', ns):
         drug_table.append([drug_id, drug_name, drug_type, drug_exids['ChEMBL'], drug_mechanism, drug_pharmacodynamics])
     else:
         drug_table.append([drug_id, drug_name, None, drug_mechanism])
-    
+
+
     for category in drug.findall('drugbank:categories/drugbank:category', ns):
-        for mesh_id in category.find('drugbank:mesh-id', ns):
+        mesh_id = category.find('drugbank:mesh-id', ns).text
+        if mesh_id is not None:
             category_table.append([drug_id, mesh_id])
+
 
     for target in drug.findall('drugbank:targets/drugbank:target', ns):
         target_id = target.find('drugbank:id', ns).text
