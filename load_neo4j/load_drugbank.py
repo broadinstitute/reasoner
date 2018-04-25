@@ -2,7 +2,7 @@ import csv
 import xml.etree.ElementTree as etree
 
 dbfile = './data/drugbank.xml'
-outfile_drugs = './data/graph/drugs.csv'
+outfile_drugs = './data/drugbank_drugs.csv'
 outfile_targets = './data/graph/targets.csv'
 
 drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics"]]

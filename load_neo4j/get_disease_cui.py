@@ -2,7 +2,7 @@ import pandas as pd
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
 
 cop_file = './data/cop_list_full.csv'
-outfile = './data/cop_disease_cui.csv'
+outfile = './data/graph/diseases.csv'
 
 cop = pd.read_csv(cop_file)
 unique_conditions = cop.Condition.unique()
