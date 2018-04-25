@@ -13,6 +13,10 @@ create index on :Pathway(go_id);
 create index on :Pathway(cui);
 create index on :Pathway(name);
 
+create index on :GoTerm(go_id);
+create index on :GoTerm(cui);
+create index on :GoTerm(name);
+
 create index on :Cell(cui);
 create index on :Cell(name);
 
