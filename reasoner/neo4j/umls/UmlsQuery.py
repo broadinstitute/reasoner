@@ -124,14 +124,14 @@ class UmlsQuery:
         sql = ("SELECT DISTINCT CUI as cui, SDUI as mesh_id "
                "FROM MRCONSO "
                "WHERE SAB = 'MSH' "
-               "AND STR = %(term);")
+               "AND STR = %(term)s;")
         result = self.db_select(sql, {'term': term})
         return(result)
 
     def cui2bestname(self, cui):
         sql = ("SELECT DISTINCT cui, str as name "
                "FROM MRCONSO "
-               "WHERE cui = %(cui) "
+               "WHERE cui = %(cui)s "
                "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
