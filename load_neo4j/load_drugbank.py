@@ -1,10 +1,10 @@
 import csv
 import xml.etree.ElementTree as etree
 
-dbfile = './data/neo4j/drugbank.xml'
-outfile_drugs = './data/neo4j/graph/drugs.csv'
-outfile_targets = './data/neo4j/graph/targets.csv'
-outfile_categories = './data/neo4j/graph/drug_categories.csv'
+dbfile = '../data/neo4j/drugbank.xml'
+outfile_drugs = '../data/neo4j/graph/drugs.csv'
+outfile_targets = '../data/neo4j/graph/targets.csv'
+outfile_categories = '../data/neo4j/graph/drug_categories.csv'
 
 drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics"]]
 target_table = [["id", "name", "hgnc_id", "uniprot_id", "drug_id"]]
