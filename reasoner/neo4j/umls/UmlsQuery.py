@@ -103,7 +103,7 @@ class UmlsQuery:
                "AND ts = 'P' "
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
-               "AND lat = 'ENG';"  % go_id)
+               "AND lat = 'ENG';"  % drugbank_id)
         result = self.db_select(sql)
         return(result)
 
