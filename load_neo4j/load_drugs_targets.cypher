@@ -4,7 +4,7 @@ SET drug.cui = line.cui
 SET drug.name = line.name
 SET drug.type = line.type
 FOREACH(x IN CASE WHEN line.chembl_id IS NULL THEN [] ELSE [1] END | SET drug.chembl_id = line.chembl_id)
-FOREACH(x IN CASE WHEN line.chebi_id IS NULL THEN [] ELSE [1] END | SET drug.chebi_id = line.chebi_id)
+FOREACH(x IN CASE WHEN line.chebi_id IS NULL THEN [] ELSE [1] END | SET drug.chebi_id = line.chebi_id SET drug:ChebiTerm)
 FOREACH(x IN CASE WHEN line.mechanism IS NULL THEN [] ELSE [1] END | SET drug.mechanism = line.mechanism)
 FOREACH(x IN CASE WHEN line.pharmacodynamics IS NULL THEN [] ELSE [1] END | SET drug.pharmacodynamics = line.pharmacodynamics);
 

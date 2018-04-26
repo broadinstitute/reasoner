@@ -37,4 +37,4 @@ drugbank2cui = pandas.DataFrame({'id': unique_dbids,
 drugs = drugs.drop(columns=['name'])
 drugs = drugs.join(drugbank2cui.set_index('id'), on='id')
 
-drugs.to_csv(outfile, index=False)
+drugs.to_csv(outfile, quoting=csv.QUOTE_ALL, index=False)
