@@ -9,7 +9,7 @@ outfile = '../data/neo4j/graph/drugs.csv'
 
 drugs = pandas.read_csv(drugs_file)
 chembl2chebi = pandas.read_csv(chembl2chebi_file,
-                               sep="\t", dtype={'chebi_id': 'int'})
+                               sep="\t", dtype={'chebi_id': 'str'})
 
 drugs = drugs.join(chembl2chebi.set_index('chembl_id'),
                    on='chembl_id')
