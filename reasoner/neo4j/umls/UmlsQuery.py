@@ -120,6 +120,17 @@ class UmlsQuery:
         result = self.db_select(sql)
         return(result)
 
+    def hpo2cui(self, hpo_id):
+        sql = ("SELECT DISTINCT cui, str as name "
+               "FROM MRCONSO "
+               "WHERE cui IN (SELECT DISTINCT cui FROM MRCONSO WHERE SDUI = '%s' AND SAB = 'HPO' AND tty = 'PT') "
+               "AND ts = 'P' "
+               "AND stt = 'PF' "
+               "AND ispref = 'Y' "
+               "AND lat = 'ENG';"  % hpo_id)
+        result = self.db_select(sql)
+        return(result)
+
     def meshterm2cui(self, term):
         sql = ("SELECT DISTINCT CUI as cui, SDUI as mesh_id "
                "FROM MRCONSO "
