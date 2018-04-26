@@ -28,3 +28,9 @@ create index on :Symptom(name);
 
 create index on :Disease(cui);
 create index on :Disease(name);
+create index on :Disease(hpo_id);
+create index on :Disease(mesh_id);
+
+create index on :HpoTerm(hpo_id);
+create index on :HpoTerm(cui);
+create index on :HpoTerm(name);
