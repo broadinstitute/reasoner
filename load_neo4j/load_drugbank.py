@@ -69,7 +69,7 @@ for drug in root.findall('drugbank:drug', ns):
     if 'ChEMBL' in drug_exids:
         drug_chembl_id = drug_exids['ChEMBL']
         if drug_chembl_id in chembl2chebi:
-            drug_chebi_id = chembl2chebi[drug_chembl_id]
+            drug_chebi_id = 'CHEBI:' + chembl2chebi[drug_chembl_id]
 
     # get umls cui and name
     drug_cui = ''
