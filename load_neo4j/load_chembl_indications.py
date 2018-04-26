@@ -14,7 +14,7 @@ def get_chembl_ids(session):
 
 def add_indication(tx, chembl_id, disease_cui, disease_name):
         tx.run("MATCH (drug:Drug {chembl_id: {chembl_id}}) "
-               "MATCH (disease:Disease {id: {disease_cui}}) "
+               "MATCH (disease:Disease {cui: {disease_cui}}) "
                "SET disease.name = {disease_name} "
                "MERGE (drug)-[:HAS_INDICATION]->(disease)",
                chembl_id=chembl_id, disease_cui=disease_cui, disease_name=disease_name)
