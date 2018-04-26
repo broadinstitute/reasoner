@@ -1,17 +1,34 @@
 import csv
+import pandas
 import xml.etree.ElementTree as etree
+from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+
 
 def xstr(s):
     if s is None:
         return ''
     return str(s)
 
+
 dbfile = '../data/neo4j/drugbank.xml'
+chembl2chebi_file = '../data/neo4j/chembl2chebi.tsv'
+
 outfile_drugs = '../data/neo4j/graph/drugs.csv'
 outfile_targets = '../data/neo4j/graph/targets.csv'
 outfile_categories = '../data/neo4j/graph/drug_categories.csv'
 
-drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics"]]
+
+# prepare chebi dict
+chembl2chebi_df = pandas.read_csv(chembl2chebi_file,
+                                  sep="\t", dtype={'chebi_id': 'str'})
+chembl2chebi = {}
+for index, row in chembl2chebi_df.iterrows():
+    chembl2chebi[row['chembl_id']] = row['chebi_id']
+
+
+uq = UmlsQuery()
+
+drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics", "chebi_id", "cui", "umls_name"]]
 target_table = [["id", "name", "hgnc_id", "uniprot_id", "drug_id"]]
 category_table = [["drug_id", "mesh_id"]]
 
@@ -28,11 +45,13 @@ for drug in root.findall('drugbank:drug', ns):
         if did.get('primary') is not None:
             drug_id = did.text
 
+    # get synonyms
     drug_synonyms = []
     for syns in drug.findall('drugbank:synonyms', ns):
         for syn in syns:
             drug_synonyms.append(syn.text)
 
+    # get external ids
     drug_exids = {}
     for exids in drug.findall('drugbank:external-identifiers', ns):
         for exid in exids:
@@ -40,14 +59,33 @@ for drug in root.findall('drugbank:drug', ns):
             exid_id = exid.find('drugbank:identifier', ns).text
             drug_exids[exid_res] = exid_id
 
+    # get mechanism and pharmacodynamics
     drug_mechanism = drug.find('drugbank:mechanism-of-action', ns).text
     drug_pharmacodynamics = drug.find('drugbank:pharmacodynamics', ns).text
 
+    # add chembl and chebi ids
     drug_chembl_id = ''
+    drug_chebi_id = ''
     if 'ChEMBL' in drug_exids:
         drug_chembl_id = drug_exids['ChEMBL']
-    
-    drug_table.append([xstr(drug_id), xstr(drug_name), xstr(drug_type), xstr(drug_chembl_id), xstr(drug_mechanism), xstr(drug_pharmacodynamics)])
+        drug_chebi_id = chembl2chebi(drug_chembl_id)
+
+    # get umls cui and name
+    drug_cui = ''
+    drug_umls_name = ''
+    result = uq.drugbank2cui(drug_id)
+    if len(result) > 1:
+        print(result)
+        raise ValueError
+    if len(result) == 1:
+        drug_cui = result[0]['cui']
+        drug_umls_name = result[0]['name']
+
+    # add new drug to list
+    drug_table.append([xstr(drug_id), xstr(drug_name),
+                       xstr(drug_type), xstr(drug_chembl_id),
+                       xstr(drug_mechanism), xstr(drug_pharmacodynamics),
+                       xstr(drug_chebi_id), xstr(drug_cui), xstr(drug_umls_name)])
 
 
     for category in drug.findall('drugbank:categories/drugbank:category', ns):
