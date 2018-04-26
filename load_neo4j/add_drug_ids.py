@@ -1,5 +1,4 @@
 import pandas
-import csv
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
 
 drugs_file = '../data/neo4j/drugbank_drugs.csv'
@@ -38,4 +37,4 @@ drugbank2cui = pandas.DataFrame({'id': unique_dbids,
 drugs = drugs.drop(columns=['name'])
 drugs = drugs.join(drugbank2cui.set_index('id'), on='id')
 
-drugs.to_csv(outfile, quoting=csv.QUOTE_ALL, index=False)
+drugs.to_csv(outfile, index=False)
