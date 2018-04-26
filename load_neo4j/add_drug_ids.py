@@ -1,4 +1,5 @@
 import pandas
+import csv
 from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
 
 drugs_file = '../data/neo4j/drugbank_drugs.csv'
