@@ -1,6 +1,11 @@
 import csv
 import xml.etree.ElementTree as etree
 
+def xstr(s):
+    if s is None:
+        return ''
+    return str(s)
+
 dbfile = '../data/neo4j/drugbank.xml'
 outfile_drugs = '../data/neo4j/graph/drugs.csv'
 outfile_targets = '../data/neo4j/graph/targets.csv'
@@ -38,10 +43,11 @@ for drug in root.findall('drugbank:drug', ns):
     drug_mechanism = drug.find('drugbank:mechanism-of-action', ns).text
     drug_pharmacodynamics = drug.find('drugbank:pharmacodynamics', ns).text
 
+    drug_chembl_id = ''
     if 'ChEMBL' in drug_exids:
-        drug_table.append([drug_id, drug_name, drug_type, drug_exids['ChEMBL'], drug_mechanism, drug_pharmacodynamics])
-    else:
-        drug_table.append([drug_id, drug_name, None, drug_mechanism])
+        drug_chembl_id = drug_exids['ChEMBL']
+    
+    drug_table.append([xstr(drug_id), xstr(drug_name), xstr(drug_type), xstr(drug_chembl_id), xstr(drug_mechanism), xstr(drug_pharmacodynamics)])
 
 
     for category in drug.findall('drugbank:categories/drugbank:category', ns):
@@ -75,7 +81,7 @@ for drug in root.findall('drugbank:drug', ns):
         if 'UniProtKB' in target_exids:
             uniprot_id = target_exids['UniProtKB']
 
-        target_table.append([target_id, target_name, hgnc_id, uniprot_id, drug_id])
+        target_table.append([xstr(target_id), xstr(target_name), xstr(hgnc_id), xstr(uniprot_id), xstr(drug_id)])
 
 
 
