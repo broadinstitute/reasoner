@@ -32,7 +32,7 @@ def get_cuis(session):
                          "AND not n:Disease "
                          "AND exists(n.cui) "
                          "RETURN n.cui as cui, labels(n) as labels")
-    return({record['cui']: record['labels'] for record in result})
+    return({record['cui']: record['labels'][0] for record in result})
 
 
 # def get_connections(db, subject_cui, object_cui):
