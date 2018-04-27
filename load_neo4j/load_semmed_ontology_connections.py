@@ -59,7 +59,7 @@ def load_connections(session, subject_cui, subject_type, connections, typemap):
             print(subject_cui, subject_type, connection['object_cui'], typemap[connection['object_cui']],
                   connection['predicate'], connection['count'])
             session.write_transaction(add_cui_connection, subject_cui, subject_type,
-                                          connection['object_cui'], sem2type[connection['object_type']],
+                                          connection['object_cui'], typemap[connection['object_cui']],
                                           connection['predicate'], connection['count'])
 
 # Open database connection
