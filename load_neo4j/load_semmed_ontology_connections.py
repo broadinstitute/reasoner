@@ -14,12 +14,13 @@ def db_select(db, sql):
     results = cursor.fetchall()
     return(results)
 
-def add_cui_connection(tx, origin_cui, origin_type, target_cui, predicate, pred_count):
+def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_name, predicate, pred_count):
     tx.run("MERGE (o:%s {cui: {origin_cui}}) "
-           "MERGE ({cui: {target_cui}}) "
+           "MERGE (t {cui: {target_cui}}) "
+           "SET t.name = {target_name} "
            "MERGE (o)-[r:%s {source: 'semmeddb_iter2'}]->(t) "
            "SET r.count = {pred_count}" % (origin_type, predicate),
-           origin_cui=origin_cui, target_cui=target_cui, pred_count=pred_count)
+           origin_cui=origin_cui, target_cui=target_cui, target_name=target_name, pred_count=pred_count)
 
 def get_cuis(session):
     result = session.run("MATCH (n) "
@@ -46,7 +47,7 @@ def get_cuis(session):
 
 
 def get_connections(db, subject_cui):
-    sql = ("SELECT predicate, object_cui, object_semtype, COUNT(*) as count "
+    sql = ("SELECT predicate, object_cui, object_semtype, object_name, COUNT(*) as count "
            "FROM PREDICATION "
            "WHERE subject_cui = '%s' " 
            "GROUP BY predicate, object_cui, object_semtype "
@@ -58,7 +59,8 @@ def load_connections(session, subject_cui, subject_type, connections):
         print(subject_cui, subject_type, connection['object_cui'],
               connection['predicate'], connection['count'])
         session.write_transaction(add_cui_connection, subject_cui, subject_type,
-                                      connection['object_cui'], connection['predicate'], connection['count'])
+                                      connection['object_cui'], connection['object_name'],
+                                      connection['predicate'], connection['count'])
 
 # Open database connection
 config = Config().config
