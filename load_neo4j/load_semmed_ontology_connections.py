@@ -14,11 +14,11 @@ def db_select(db, sql):
     results = cursor.fetchall()
     return(results)
 
-def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_type, predicate, pred_count):
+def add_cui_connection(tx, origin_cui, origin_type, target_cui, predicate, pred_count):
     tx.run("MERGE (o:%s {cui: {origin_cui}}) "
-           "MERGE (t:%s {cui: {target_cui}}) "
+           "MERGE ({cui: {target_cui}}) "
            "MERGE (o)-[r:%s {source: 'semmeddb_iter2'}]->(t) "
-           "SET r.count = {pred_count}" % (origin_type, target_type, predicate),
+           "SET r.count = {pred_count}" % (origin_type, predicate),
            origin_cui=origin_cui, target_cui=target_cui, pred_count=pred_count)
 
 def get_cuis(session):
@@ -53,14 +53,12 @@ def get_connections(db, subject_cui):
            "HAVING COUNT(*) > 10;") % (subject_cui)
     return(db_select(db, sql))
 
-def load_connections(session, subject_cui, subject_type, connections, typemap):
+def load_connections(session, subject_cui, subject_type, connections):
     for connection in connections:
-        if connection['object_cui'] in typemap.keys():
-            print(subject_cui, subject_type, connection['object_cui'], typemap[connection['object_cui']],
-                  connection['predicate'], connection['count'])
-            session.write_transaction(add_cui_connection, subject_cui, subject_type,
-                                          connection['object_cui'], typemap[connection['object_cui']],
-                                          connection['predicate'], connection['count'])
+        print(subject_cui, subject_type, connection['object_cui'],
+              connection['predicate'], connection['count'])
+        session.write_transaction(add_cui_connection, subject_cui, subject_type,
+                                      connection['object_cui'], connection['predicate'], connection['count'])
 
 # Open database connection
 config = Config().config
@@ -75,4 +73,4 @@ with driver.session() as session:
     nodes = get_cuis(session)
     for subject_cui, subject_type in nodes.items():
         results = get_connections(db, subject_cui)
-        load_connections(session, subject_cui, subject_type, results, nodes)
+        load_connections(session, subject_cui, subject_type, results)
