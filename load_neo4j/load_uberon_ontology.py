@@ -22,7 +22,7 @@ def add_uberon_term(session, origin_uberon_id, target_uberon_id, target_name, pr
         session.run("MATCH (origin:UberonTerm {uberon_id: {origin_uberon_id}}) "
                "MERGE (target:UberonTerm {uberon_id: {target_uberon_id}}) "
                "SET target.name = {target_name} "
-               "MERGE (origin)-[:ISA {source: 'uberon'}]->(target);",
+               "MERGE (origin)-[:%s {source: 'uberon'}]->(target);" % predicate,
                origin_uberon_id=origin_uberon_id, target_uberon_id=target_uberon_id, target_name=target_name)
 
 map_file = "../data/neo4j/graph/umls2uberon.csv"
@@ -50,7 +50,8 @@ obo = onto.get_namespace("http://purl.obolibrary.org/obo/")
 # to_process = {x for x in to_process if x is not None}
 # processed = set()
 
-ontology_classes = [obo.UBERON_0001062] + [obo.UBERON_0001062.descendants()]
+ontology_classes = obo.UBERON_0001062.descendants()
+ontology_classes.add(obo.UBERON_0001062)
 
 uq = UmlsQuery()
 with driver.session() as session:
