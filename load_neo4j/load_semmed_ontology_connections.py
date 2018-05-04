@@ -1,15 +1,14 @@
-import pandas as pd
 import mysql.connector
 from neo4j.v1 import GraphDatabase
 from reasoner.neo4j.Config import Config
 
 def db_select(db, sql):
     cursor = db.cursor(dictionary=True)
-    # try:
-    #    cursor.execute(sql)
-    #    results = cursor.fetchall()
-    # except:
-    #     print("Error: unable to fetch data")
+    try:
+       cursor.execute(sql)
+       results = cursor.fetchall()
+    except:
+        print("Error: unable to fetch data")
     cursor.execute(sql)
     results = cursor.fetchall()
     return(results)
@@ -24,14 +23,7 @@ def add_cui_connection(tx, origin_cui, origin_type, target_cui, target_name, pre
 
 def get_cuis(session):
     result = session.run("MATCH (n) "
-                         "WHERE not n:Drug "
-                         "AND not n:Target "
-                         "AND not n:Pathway "
-                         "AND not n:Cell "
-                         "AND not n:Tissue "
-                         "AND not n:Symptom "
-                         "AND not n:Disease "
-                         "AND exists(n.cui) "
+                         "WHERE exists(n.cui) "
                          "RETURN n.cui as cui, labels(n) as labels")
     return({record['cui']: record['labels'][0] for record in result})
 

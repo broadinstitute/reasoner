@@ -43,7 +43,7 @@ with driver.session() as session:
         roles = [r for x in restrictions if isinstance(x.property(), obo.RO_0000087) for r in x.value().is_a]
         for role in roles:
             target_chebi_id = role.name.replace('_', ':')
-            add_chebi_role(session, current_class.name.replace('_', ':'), target_chebi_id, role.label)
+            add_chebi_role(session, current_class.name.replace('_', ':'), target_chebi_id, role.label[0])
             if role not in processed:
                 to_process.add(role)
         processed.add(current_class)

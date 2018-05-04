@@ -125,15 +125,15 @@ for drug in root.findall('drugbank:drug', ns):
 
 
 with open(outfile_drugs, 'w') as f:  
-   writer = csv.writer(f)
-   writer.writerows(drug_table)
+    writer = csv.writer(f)
+    writer.writerows(drug_table)
 
 with open(outfile_targets, 'w') as f:  
-   writer = csv.writer(f)
-   writer.writerows(target_table)
+    writer = csv.writer(f)
+    writer.writerows(target_table)
 
 with open(outfile_categories, 'w') as f:  
-   writer = csv.writer(f)
-   writer.writerows(category_table)
+    writer = csv.writer(f)
+    writer.writerows(category_table)
 
 print("done")
