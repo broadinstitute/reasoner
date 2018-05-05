@@ -10,20 +10,22 @@ from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
 #                          "RETURN term.uberon_id as uberon_id;")
 #     return(result)
 
-def add_uberon_term(session, origin_uberon_id, target_uberon_id, target_name, predicate, target_cui=None):
-    if target_cui is not None:
-        session.run("MATCH (origin:UberonTerm {uberon_id: {origin_uberon_id}}) "
-               "MERGE (target:UberonTerm {uberon_id: {target_uberon_id}}) "
-               "SET target.name = {target_name} "
-               "SET target.cui = {target_cui} "
-               "MERGE (origin)-[:%s {source: 'uberon'}]->(target);" % predicate,
-               origin_uberon_id=origin_uberon_id, target_uberon_id=target_uberon_id, target_cui=target_cui, target_name=target_name)
+def add_term(session, term_id, term_name, term_cui=None):
+    base_query = ("MERGE (term:UberonTerm {uberon_id: {term_id}}) "
+                  "SET term.name = {term_name}")
+    if term_cui is not None:
+        query = base_query + " SET term.cui = {term_cui};"
     else:
-        session.run("MATCH (origin:UberonTerm {uberon_id: {origin_uberon_id}}) "
-               "MERGE (target:UberonTerm {uberon_id: {target_uberon_id}}) "
-               "SET target.name = {target_name} "
-               "MERGE (origin)-[:%s {source: 'uberon'}]->(target);" % predicate,
-               origin_uberon_id=origin_uberon_id, target_uberon_id=target_uberon_id, target_name=target_name)
+        query = base_query + ";"
+    session.run(query, term_id=term_id, term_name=term_name, term_cui=term_cui)
+
+
+def add_relation(session, origin_id, target_id, predicate):
+    session.run("MATCH (origin:UberonTerm {uberon_id: {origin_id}}) "
+                "MATCH (target:UberonTerm {uberon_id: {target_id}}) "
+                "MERGE (origin)-[:%s {source: 'uberon'}]->(target);" % predicate,
+                origin_id=origin_id, target_id=target_id)
+
 
 map_file = "../data/neo4j/graph/umls2uberon.csv"
 id_map_df = pandas.read_csv(map_file)
@@ -55,26 +57,36 @@ ontology_classes.add(obo.UBERON_0001062)
 
 uq = UmlsQuery()
 with driver.session() as session:
+    # add terms
     for current_class in ontology_classes:
+        current_id = current_class.name.replace('_', ':')
+        if current_id in id_map:
+            print(current_id)
+            cui = id_map[current_id]
+            umls_result = uq.cui2bestname(cui)
+            if umls_result:
+                name = umls_result[0]['name']
+            else:
+                name = current_class.label
+        else:
+            cui = None
+            name = current_class.label
+        add_term(session, current_id, name, cui)
+    # add relations
+    for current_class in ontology_classes:
+        current_id = current_class.name.replace('_', ':')
         superclasses = [x for x in current_class.is_a
                         if not isinstance(x, owlready2.class_construct.And)]
         for superclass in superclasses:
-            if isinstance(superclass, owlready2.entity.Restriction) and isinstance(superclass.property(), obo.BFO_0000050):
-                target_uberon_id = superclass.value().name.replace('_', ':')
-                predicate = 'PART_OF'
+            if isinstance(superclass, owlready2.entity.Restriction):
+                if isinstance(superclass.property(), obo.BFO_0000050):
+                    target = superclass.value().is_a[0]
+                    target_id = target.name.replace('_', ':')
+                    predicate = 'PART_OF'
+                    print(target_id, 'part of')
+                    add_relation(session, current_id, target_id, predicate)
             else:
-                target_uberon_id = superclass.name.replace('_', ':')
+                target_id = superclass.name.replace('_', ':')
                 predicate = 'ISA'
-
-            if target_uberon_id in id_map:
-                cui = id_map[target_uberon_id]
-                name = uq.cui2bestname(cui)[0]['name']
-            else:
-                cui = None
-                name = superclass.label
-
-            add_uberon_term(session, current_class.name.replace('_', ':'),
-                        target_uberon_id,
-                        name,
-                        predicate,
-                        cui)
+                print(target_id, 'is a')
+                add_relation(session, current_id, target_id, predicate)
