@@ -34,3 +34,7 @@ create index on :Disease(mesh_id);
 create index on :HpoTerm(hpo_id);
 create index on :HpoTerm(cui);
 create index on :HpoTerm(name);
+
+create index on :UberonTerm(uberon_id);
+create index on :UberonTerm(cui);
+create index on :UberonTerm(name);
