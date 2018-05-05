@@ -40,6 +40,7 @@ def get_connections(db, subject_cui):
     sql = ("SELECT predicate, object_cui, object_semtype, object_name, COUNT(*) as count "
            "FROM PREDICATION "
            "WHERE subject_cui = '%s' "
+           "AND subject_cui != object_cui "
            "GROUP BY predicate, object_cui, object_semtype "
            "HAVING COUNT(*) > 10;") % (subject_cui)
     return(db_select(db, sql))
