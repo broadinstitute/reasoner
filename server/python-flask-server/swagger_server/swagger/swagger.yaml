@@ -16,9 +16,9 @@ tags:
   description: "Submit a query to the Indigo Question Answerer"
   externalDocs:
     description: "Documentation for the IQA query function"
-    url: "http://indigo.ncats.io/reasoner/docs.html"
+    url: "https://indigo.ncats.io/reasoner/docs.html"
 schemes:
-- "http"
+- "https"
 paths:
   /query:
     post:
@@ -103,7 +103,7 @@ definitions:
         description: "Entity type of this response"
       id:
         type: "string"
-        example: "http://indigo.ncats.io/reasoner/api/v1/response/1234"
+        example: "https://indigo.ncats.io/reasoner/api/v1/response/1234"
         description: "URI for this response"
       tool_version:
         type: "string"
@@ -158,7 +158,7 @@ definitions:
       datetime: "2018-05-09 12:34:45"
       tool_version: "IQA 0.1"
       terms: "{ 'disease': 'Heart failure' }"
-      context: "http://translator.ncats.io"
+      context: "https://translator.ncats.io"
       result_list:
       - result_graph:
           node_list:
@@ -252,7 +252,7 @@ definitions:
               id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
               type: "Monarch_BioLink_API_Relationship"
         confidence: 0.92339999999999999857891452847979962825775146484375
-        id: "http://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
+        id: "https://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
         text: "The genetic condition sickle cell anemia may provide protection from\
           \ cerebral malaria via genetic alterations of proteins HBB (P68871) and\
           \ HMOX1 (P09601)."
@@ -348,19 +348,19 @@ definitions:
               id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
               type: "Monarch_BioLink_API_Relationship"
         confidence: 0.92339999999999999857891452847979962825775146484375
-        id: "http://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
+        id: "https://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
         text: "The genetic condition sickle cell anemia may provide protection from\
           \ cerebral malaria via genetic alterations of proteins HBB (P68871) and\
           \ HMOX1 (P09601)."
       result_code: "OK"
-      id: "http://indigo.ncats.io/reasoner/api/v0/response/1234"
+      id: "https://indigo.ncats.io/reasoner/api/v0/response/1234"
       restated_question_text: "Which proteins are affected by sickle cell anemia?"
   Result:
     type: "object"
     properties:
       id:
         type: "string"
-        example: "http://indigo.ncats.io/reasoner/api/v0/1234/result/2345"
+        example: "https://indigo.ncats.io/reasoner/api/v0/1234/result/2345"
         description: "URI for this response"
       text:
         type: "string"
@@ -471,7 +471,7 @@ definitions:
             id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
             type: "Monarch_BioLink_API_Relationship"
       confidence: 0.92339999999999999857891452847979962825775146484375
-      id: "http://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
+      id: "https://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
       text: "The genetic condition sickle cell anemia may provide protection from\
         \ cerebral malaria via genetic alterations of proteins HBB (P68871) and HMOX1\
         \ (P09601)."
@@ -782,4 +782,4 @@ definitions:
       disease: "Heart failure"
 externalDocs:
   description: "Documentation for the IQA web service"
-  url: "http://indigo.ncats.io/reasoner/docs.html"
+  url: "https://indigo.ncats.io/reasoner/docs.html"
