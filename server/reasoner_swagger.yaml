@@ -46,45 +46,20 @@ paths:
           description: "Invalid status value"
       x-swagger-router-controller: "swagger_server.controllers.query_controller"
 definitions:
-  Question:
-    type: "object"
-    properties:
-      text:
-        type: "string"
-        example: "What is the clinical outcome pathway between treprostinil and heart failure?"
-        description: "Free text question"
-      language:
-        type: "string"
-        example: "English"
-        description: "Human language in which the question is posed"
-        enum:
-        - "English"
-    example:
-      language: "English"
-      text: "What is the clinical outcome pathway between treprostinil and heart failure?"
   Query:
     type: "object"
     properties:
-      original_question:
+      query_type:
         type: "string"
-        example: "What is the clinical outcome pathway between treprostinil and heart failure?"
-        description: "Original question as it was typed in by the user"
-      restated_question:
-        type: "string"
-        example: "(:Drug {name: 'treprostinil'})-[:COP]-(:Disease {name: 'Heart failure'})"
-        description: "Restatement of the question as understood by the translator"
-      message:
-        type: "string"
-        example: "Your question was understood."
-        description: "Response from the translation engine to the user"
+        example: "cop"
+        description: "The type of query to be answered"
       terms:
-        $ref: "#/definitions/Query_terms"
-    example:
-      original_question: "What is the clinical outcome pathway between treprostinil and heart failure?"
-      terms:
-        disease: "Heart failure"
-      restated_question: "(:Drug {name: 'treprostinil'})-[:COP]-(:Disease {name: 'Heart failure'})"
-      message: "Your question was understood."
+        type: object
+        additionalProperties:
+          type: string
+        example:
+          type: "cop"
+          terms: "{ drug: 'treprostinil', disease: 'Heart failure'}"
   Response:
     type: "object"
     properties:
@@ -113,22 +88,8 @@ definitions:
         example: "2018-05-09 12:34:45"
         description: "ISO standard datetime string for the time that this response\
           \ was generated"
-      original_question_text:
-        type: "string"
-        example: "What is the clinical outcome pathway between treprostinil and heart failure?"
-        description: "The original question text typed in by the user"
-      restated_question_text:
-        type: "string"
-        example: "(:Drug {name: 'treprostinil'})-[:COP]-(:Disease {name: 'Heart failure'})"
-        description: "A precise restatement of the question, as understood by the\
-          \ Translator, for which the answer applies. The user should verify that\
-          \ the restated question matches the intent of their original question (it\
-          \ might not)."
-      terms:
-        type: "object"
-        example: "{ 'disease': 'Heart failure' }"
-        description: "The is string of the query type id if one is known for the query/response"
-        properties: {}
+      query:
+        $ref: "#/definitions/Query"
       result_code:
         type: "string"
         example: "OK"
@@ -145,12 +106,11 @@ definitions:
           $ref: "#/definitions/Result"
     example:
       type: "medical_translator_query_result"
-      original_question_text: "What is the clinical outcome pathway between treprostinil and heart failure?"
       message: "1 answer found"
       schema_version: "0.5"
       datetime: "2018-05-09 12:34:45"
       tool_version: "IQA 0.1"
-      terms: "{ 'disease': 'Heart failure' }"
+      query: "{ type: 'cop', terms: { drug: 'treprostinil', disease: 'Heart failure'} }"
       context: "https://translator.ncats.io"
       result_list:
       - result_graph:
@@ -765,14 +725,6 @@ definitions:
       type: "PubMed_article"
       value: "0.5"
       url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
-  Query_terms:
-    properties:
-      disease:
-        type: "string"
-        example: "Heart failure"
-    description: "Dict of terms needed by the specific query type"
-    example:
-      disease: "Heart failure"
 externalDocs:
   description: "Documentation for the IQA web service"
   url: "https://indigo.ncats.io/reasoner/docs.html"

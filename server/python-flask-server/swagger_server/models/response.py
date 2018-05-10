@@ -6,6 +6,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
+from swagger_server.models.query import Query  # noqa: F401,E501
 from swagger_server.models.result import Result  # noqa: F401,E501
 from swagger_server import util
 
@@ -16,7 +17,7 @@ class Response(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, context: str=None, type: str=None, id: str=None, tool_version: str=None, schema_version: str=None, datetime: str=None, original_question_text: str=None, restated_question_text: str=None, terms: object=None, result_code: str=None, message: str=None, result_list: List[Result]=None):  # noqa: E501
+    def __init__(self, context: str=None, type: str=None, id: str=None, tool_version: str=None, schema_version: str=None, datetime: str=None, query: Query=None, result_code: str=None, message: str=None, result_list: List[Result]=None):  # noqa: E501
         """Response - a model defined in Swagger
 
         :param context: The context of this Response.  # noqa: E501
@@ -31,12 +32,8 @@ class Response(Model):
         :type schema_version: str
         :param datetime: The datetime of this Response.  # noqa: E501
         :type datetime: str
-        :param original_question_text: The original_question_text of this Response.  # noqa: E501
-        :type original_question_text: str
-        :param restated_question_text: The restated_question_text of this Response.  # noqa: E501
-        :type restated_question_text: str
-        :param terms: The terms of this Response.  # noqa: E501
-        :type terms: object
+        :param query: The query of this Response.  # noqa: E501
+        :type query: Query
         :param result_code: The result_code of this Response.  # noqa: E501
         :type result_code: str
         :param message: The message of this Response.  # noqa: E501
@@ -51,9 +48,7 @@ class Response(Model):
             'tool_version': str,
             'schema_version': str,
             'datetime': str,
-            'original_question_text': str,
-            'restated_question_text': str,
-            'terms': object,
+            'query': Query,
             'result_code': str,
             'message': str,
             'result_list': List[Result]
@@ -66,9 +61,7 @@ class Response(Model):
             'tool_version': 'tool_version',
             'schema_version': 'schema_version',
             'datetime': 'datetime',
-            'original_question_text': 'original_question_text',
-            'restated_question_text': 'restated_question_text',
-            'terms': 'terms',
+            'query': 'query',
             'result_code': 'result_code',
             'message': 'message',
             'result_list': 'result_list'
@@ -80,9 +73,7 @@ class Response(Model):
         self._tool_version = tool_version
         self._schema_version = schema_version
         self._datetime = datetime
-        self._original_question_text = original_question_text
-        self._restated_question_text = restated_question_text
-        self._terms = terms
+        self._query = query
         self._result_code = result_code
         self._message = message
         self._result_list = result_list
@@ -237,73 +228,25 @@ class Response(Model):
         self._datetime = datetime
 
     @property
-    def original_question_text(self) -> str:
-        """Gets the original_question_text of this Response.
+    def query(self) -> Query:
+        """Gets the query of this Response.
 
-        The original question text typed in by the user  # noqa: E501
 
-        :return: The original_question_text of this Response.
-        :rtype: str
+        :return: The query of this Response.
+        :rtype: Query
         """
-        return self._original_question_text
+        return self._query
 
-    @original_question_text.setter
-    def original_question_text(self, original_question_text: str):
-        """Sets the original_question_text of this Response.
+    @query.setter
+    def query(self, query: Query):
+        """Sets the query of this Response.
 
-        The original question text typed in by the user  # noqa: E501
 
-        :param original_question_text: The original_question_text of this Response.
-        :type original_question_text: str
+        :param query: The query of this Response.
+        :type query: Query
         """
 
-        self._original_question_text = original_question_text
-
-    @property
-    def restated_question_text(self) -> str:
-        """Gets the restated_question_text of this Response.
-
-        A precise restatement of the question, as understood by the Translator, for which the answer applies. The user should verify that the restated question matches the intent of their original question (it might not).  # noqa: E501
-
-        :return: The restated_question_text of this Response.
-        :rtype: str
-        """
-        return self._restated_question_text
-
-    @restated_question_text.setter
-    def restated_question_text(self, restated_question_text: str):
-        """Sets the restated_question_text of this Response.
-
-        A precise restatement of the question, as understood by the Translator, for which the answer applies. The user should verify that the restated question matches the intent of their original question (it might not).  # noqa: E501
-
-        :param restated_question_text: The restated_question_text of this Response.
-        :type restated_question_text: str
-        """
-
-        self._restated_question_text = restated_question_text
-
-    @property
-    def terms(self) -> object:
-        """Gets the terms of this Response.
-
-        The is string of the query type id if one is known for the query/response  # noqa: E501
-
-        :return: The terms of this Response.
-        :rtype: object
-        """
-        return self._terms
-
-    @terms.setter
-    def terms(self, terms: object):
-        """Sets the terms of this Response.
-
-        The is string of the query type id if one is known for the query/response  # noqa: E501
-
-        :param terms: The terms of this Response.
-        :type terms: object
-        """
-
-        self._terms = terms
+        self._query = query
 
     @property
     def result_code(self) -> str:
