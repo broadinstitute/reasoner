@@ -1,0 +1,778 @@
+swagger: "2.0"
+info:
+  description: "API for Indigo question answerer"
+  version: "0.1"
+  title: "IQA"
+  contact:
+    email: "mwawer@broadinstitute.org"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "indigo.ncats.io"
+basePath: "/reasoner/api/v0"
+tags:
+- name: "query"
+  description: "Submit a query to the Indigo Question Answerer"
+  externalDocs:
+    description: "Documentation for the IQA query function"
+    url: "http://indigo.ncats.io/reasoner/docs.html"
+schemes:
+- "http"
+paths:
+  /query:
+    post:
+      tags:
+      - "query"
+      summary: "Submit a query to the Indigo question answerer"
+      description: ""
+      operationId: "query"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Query information to be submitted"
+        required: true
+        schema:
+          $ref: "#/definitions/Query"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Response"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "swagger_server.controllers.query_controller"
+definitions:
+  Question:
+    type: "object"
+    properties:
+      text:
+        type: "string"
+        example: "What is the clinical outcome pathway between treprostinil and heart failure?"
+        description: "Free text question"
+      language:
+        type: "string"
+        example: "English"
+        description: "Human language in which the question is posed"
+        enum:
+        - "English"
+    example:
+      language: "English"
+      text: "What is the clinical outcome pathway between treprostinil and heart failure?"
+  Query:
+    type: "object"
+    properties:
+      original_question:
+        type: "string"
+        example: "What is the clinical outcome pathway between treprostinil and heart failure?"
+        description: "Original question as it was typed in by the user"
+      restated_question:
+        type: "string"
+        example: "(:Drug {name: 'treprostinil'})-[:COP]-(:Disease {name: 'Heart failure'})"
+        description: "Restatement of the question as understood by the translator"
+      message:
+        type: "string"
+        example: "Your question was understood."
+        description: "Response from the translation engine to the user"
+      terms:
+        $ref: "#/definitions/Query_terms"
+    example:
+      original_question: "What is the clinical outcome pathway between treprostinil and heart failure?"
+      terms:
+        disease: "Heart failure"
+      restated_question: "(:Drug {name: 'treprostinil'})-[:COP]-(:Disease {name: 'Heart failure'})"
+      message: "Your question was understood."
+  Response:
+    type: "object"
+    properties:
+      context:
+        type: "string"
+        example: "http://translator.ncats.io"
+        description: "JSON-LD context URI"
+      type:
+        type: "string"
+        example: "biomedical_translator_query_result"
+        description: "Entity type of this response"
+      id:
+        type: "string"
+        example: "http://indigo.ncats.io/reasoner/api/v1/response/1234"
+        description: "URI for this response"
+      tool_version:
+        type: "string"
+        example: "IQA 0.1"
+        description: "Version label of the tool that generated this response"
+      schema_version:
+        type: "string"
+        example: "0.5"
+        description: "Version label of this JSON-LD schema"
+      datetime:
+        type: "string"
+        example: "2018-05-09 12:34:45"
+        description: "ISO standard datetime string for the time that this response\
+          \ was generated"
+      original_question_text:
+        type: "string"
+        example: "What is the clinical outcome pathway between treprostinil and heart failure?"
+        description: "The original question text typed in by the user"
+      restated_question_text:
+        type: "string"
+        example: "(:Drug {name: 'treprostinil'})-[:COP]-(:Disease {name: 'Heart failure'})"
+        description: "A precise restatement of the question, as understood by the\
+          \ Translator, for which the answer applies. The user should verify that\
+          \ the restated question matches the intent of their original question (it\
+          \ might not)."
+      terms:
+        type: "object"
+        example: "{ 'disease': 'Heart failure' }"
+        description: "The is string of the query type id if one is known for the query/response"
+        properties: {}
+      result_code:
+        type: "string"
+        example: "OK"
+        description: "Set to OK for success, or some other short string to indicate\
+          \ and error (e.g., KGUnavailable, TermNotFound, etc.)"
+      message:
+        type: "string"
+        example: "1 answer found"
+        description: "Extended message denoting the success or mode of failure for\
+          \ the response"
+      result_list:
+        type: "array"
+        items:
+          $ref: "#/definitions/Result"
+    example:
+      type: "medical_translator_query_result"
+      original_question_text: "What is the clinical outcome pathway between treprostinil and heart failure?"
+      message: "1 answer found"
+      schema_version: "0.5"
+      datetime: "2018-05-09 12:34:45"
+      tool_version: "IQA 0.1"
+      terms: "{ 'disease': 'Heart failure' }"
+      context: "http://translator.ncats.io"
+      result_list:
+      - result_graph:
+          node_list:
+          - symbol: "HP"
+            node_attributes:
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            name: "Haptoglobin"
+            description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+            id: "https://www.uniprot.org/uniprot/P00738"
+            accession: "OMIM:603903"
+            type: "protein"
+          - symbol: "HP"
+            node_attributes:
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            name: "Haptoglobin"
+            description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+            id: "https://www.uniprot.org/uniprot/P00738"
+            accession: "OMIM:603903"
+            type: "protein"
+          edge_list:
+          - confidence: 0.99
+            target_id: "https://www.uniprot.org/uniprot/P00738"
+            source_id: "http://omim.org/entry/603903"
+            type: "affects"
+            origin_list:
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+          - confidence: 0.99
+            target_id: "https://www.uniprot.org/uniprot/P00738"
+            source_id: "http://omim.org/entry/603903"
+            type: "affects"
+            origin_list:
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+        confidence: 0.9234
+        id: "http://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
+        text: "The genetic condition sickle cell anemia may provide protection from\
+          \ cerebral malaria via genetic alterations of proteins HBB (P68871) and\
+          \ HMOX1 (P09601)."
+      - result_graph:
+          node_list:
+          - symbol: "HP"
+            node_attributes:
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            name: "Haptoglobin"
+            description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+            id: "https://www.uniprot.org/uniprot/P00738"
+            accession: "OMIM:603903"
+            type: "protein"
+          - symbol: "HP"
+            node_attributes:
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            - name: "Wikipedia article"
+              type: "article"
+              value: "7.23e-12"
+              url: "https://en.wikipedia.org/wiki/Malaria"
+            name: "Haptoglobin"
+            description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+            id: "https://www.uniprot.org/uniprot/P00738"
+            accession: "OMIM:603903"
+            type: "protein"
+          edge_list:
+          - confidence: 0.99
+            target_id: "https://www.uniprot.org/uniprot/P00738"
+            source_id: "http://omim.org/entry/603903"
+            type: "affects"
+            origin_list:
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+          - confidence: 0.99
+            target_id: "https://www.uniprot.org/uniprot/P00738"
+            source_id: "http://omim.org/entry/603903"
+            type: "affects"
+            origin_list:
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+            - attribute_list:
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+                type: "PubMed_article"
+                value: "0.5"
+                url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+              name: "Wikipedia article"
+              id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+              type: "Monarch_BioLink_API_Relationship"
+        confidence: 0.9234
+        id: "http://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
+        text: "The genetic condition sickle cell anemia may provide protection from\
+          \ cerebral malaria via genetic alterations of proteins HBB (P68871) and\
+          \ HMOX1 (P09601)."
+      result_code: "OK"
+      id: "http://indigo.ncats.io/reasoner/api/v0/response/1234"
+      restated_question_text: "Which proteins are affected by sickle cell anemia?"
+  Result:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "http://indigo.ncats.io/reasoner/api/v0/1234/result/2345"
+        description: "URI for this response"
+      text:
+        type: "string"
+        example: "The genetic condition sickle cell anemia may provide protection\
+          \ from cerebral malaria via genetic alterations of proteins HBB (P68871)\
+          \ and HMOX1 (P09601)."
+        description: "A free text description or comment from the reasoner about this\
+          \ answer"
+      confidence:
+        type: "number"
+        format: "float"
+        example: 0.9234
+        description: "Confidence metric for this result, a value 0.0 (no confidence)\
+          \ and 1.0 (highest confidence)"
+      result_graph:
+        $ref: "#/definitions/Result_graph"
+    description: "One of potentially several results or answers for a query"
+    example:
+      result_graph:
+        node_list:
+        - symbol: "HP"
+          node_attributes:
+          - name: "Wikipedia article"
+            type: "article"
+            value: "7.23e-12"
+            url: "https://en.wikipedia.org/wiki/Malaria"
+          - name: "Wikipedia article"
+            type: "article"
+            value: "7.23e-12"
+            url: "https://en.wikipedia.org/wiki/Malaria"
+          name: "Haptoglobin"
+          description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+          id: "https://www.uniprot.org/uniprot/P00738"
+          accession: "OMIM:603903"
+          type: "protein"
+        - symbol: "HP"
+          node_attributes:
+          - name: "Wikipedia article"
+            type: "article"
+            value: "7.23e-12"
+            url: "https://en.wikipedia.org/wiki/Malaria"
+          - name: "Wikipedia article"
+            type: "article"
+            value: "7.23e-12"
+            url: "https://en.wikipedia.org/wiki/Malaria"
+          name: "Haptoglobin"
+          description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+          id: "https://www.uniprot.org/uniprot/P00738"
+          accession: "OMIM:603903"
+          type: "protein"
+        edge_list:
+        - confidence: 0.99
+          target_id: "https://www.uniprot.org/uniprot/P00738"
+          source_id: "http://omim.org/entry/603903"
+          type: "affects"
+          origin_list:
+          - attribute_list:
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            name: "Wikipedia article"
+            id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+            type: "Monarch_BioLink_API_Relationship"
+          - attribute_list:
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            name: "Wikipedia article"
+            id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+            type: "Monarch_BioLink_API_Relationship"
+        - confidence: 0.99
+          target_id: "https://www.uniprot.org/uniprot/P00738"
+          source_id: "http://omim.org/entry/603903"
+          type: "affects"
+          origin_list:
+          - attribute_list:
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            name: "Wikipedia article"
+            id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+            type: "Monarch_BioLink_API_Relationship"
+          - attribute_list:
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+              type: "PubMed_article"
+              value: "0.5"
+              url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+            name: "Wikipedia article"
+            id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+            type: "Monarch_BioLink_API_Relationship"
+      confidence: 0.9234
+      id: "http://indigo.ncats.io/reasoner/api/v0/response/1234/result/2345"
+      text: "The genetic condition sickle cell anemia may provide protection from\
+        \ cerebral malaria via genetic alterations of proteins HBB (P68871) and HMOX1\
+        \ (P09601)."
+  Result_graph:
+    type: "object"
+    properties:
+      node_list:
+        type: "array"
+        items:
+          $ref: "#/definitions/Node"
+      edge_list:
+        type: "array"
+        items:
+          $ref: "#/definitions/Edge"
+    description: "A thought graph associated with this result. This will commonly\
+      \ be a linear path subgraph from one concept to another, but related items aside\
+      \ of the path may be included."
+    example:
+      node_list:
+      - symbol: "HP"
+        node_attributes:
+        - name: "Wikipedia article"
+          type: "article"
+          value: "7.23e-12"
+          url: "https://en.wikipedia.org/wiki/Malaria"
+        - name: "Wikipedia article"
+          type: "article"
+          value: "7.23e-12"
+          url: "https://en.wikipedia.org/wiki/Malaria"
+        name: "Haptoglobin"
+        description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+        id: "https://www.uniprot.org/uniprot/P00738"
+        accession: "OMIM:603903"
+        type: "protein"
+      - symbol: "HP"
+        node_attributes:
+        - name: "Wikipedia article"
+          type: "article"
+          value: "7.23e-12"
+          url: "https://en.wikipedia.org/wiki/Malaria"
+        - name: "Wikipedia article"
+          type: "article"
+          value: "7.23e-12"
+          url: "https://en.wikipedia.org/wiki/Malaria"
+        name: "Haptoglobin"
+        description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+        id: "https://www.uniprot.org/uniprot/P00738"
+        accession: "OMIM:603903"
+        type: "protein"
+      edge_list:
+      - confidence: 0.99
+        target_id: "https://www.uniprot.org/uniprot/P00738"
+        source_id: "http://omim.org/entry/603903"
+        type: "affects"
+        origin_list:
+        - attribute_list:
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          name: "Wikipedia article"
+          id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+          type: "Monarch_BioLink_API_Relationship"
+        - attribute_list:
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          name: "Wikipedia article"
+          id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+          type: "Monarch_BioLink_API_Relationship"
+      - confidence: 0.99
+        target_id: "https://www.uniprot.org/uniprot/P00738"
+        source_id: "http://omim.org/entry/603903"
+        type: "affects"
+        origin_list:
+        - attribute_list:
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          name: "Wikipedia article"
+          id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+          type: "Monarch_BioLink_API_Relationship"
+        - attribute_list:
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+            type: "PubMed_article"
+            value: "0.5"
+            url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+          name: "Wikipedia article"
+          id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+          type: "Monarch_BioLink_API_Relationship"
+  Node:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "UNIPROT:P00738"
+        description: "identifier for this response"
+      category:
+        type: "string"
+        example: "protein"
+        description: "Entity type of this node (e.g., protein, disease, etc.)"
+      name:
+        type: "string"
+        example: "Haptoglobin"
+        description: "Formal name of the entity"
+      uri:
+        type: "string"
+        example: "https://www.uniprot.org/uniprot/P00738"
+        description: "Full URI corresponding to the bioentity"
+      symbol:
+        type: "string"
+        example: "HP"
+        description: "Short abbreviation or symbol for this entity"
+      description:
+        type: "string"
+        example: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+        description: "One to three sentences of description/definition of this entity"
+      node_attributes:
+        type: "array"
+        description: "A list of arbitrary attributes for the node"
+        items:
+          $ref: "#/definitions/Node_attribute"
+    description: "A node in the thought subgraph"
+    example:
+      symbol: "HP"
+      node_attributes:
+      - name: "Wikipedia article"
+        type: "article"
+        value: "7.23e-12"
+        url: "https://en.wikipedia.org/wiki/Malaria"
+      - name: "Wikipedia article"
+        type: "article"
+        value: "7.23e-12"
+        url: "https://en.wikipedia.org/wiki/Malaria"
+      name: "Haptoglobin"
+      description: "Haptoglobin captures, and combines with free plasma hemoglobin..."
+      id: "https://www.uniprot.org/uniprot/P00738"
+      accession: "OMIM:603903"
+      type: "protein"
+  Node_attribute:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        example: "article"
+        description: "Entity type of this attribute"
+      name:
+        type: "string"
+        example: "Wikipedia article"
+        description: "Formal name of the attribute"
+      value:
+        type: "string"
+        example: "7.23e-12"
+        description: "Value of the attribute"
+      url:
+        type: "string"
+        example: "https://en.wikipedia.org/wiki/Malaria"
+        description: "A URL corresponding to this attribute"
+    description: "A generic attribute for a node"
+    example:
+      name: "Wikipedia article"
+      type: "article"
+      value: "7.23e-12"
+      url: "https://en.wikipedia.org/wiki/Malaria"
+  Edge:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        example: "affects"
+        description: "Entity type of this response"
+      source_id:
+        type: "string"
+        example: "http://omim.org/entry/603903"
+        description: "Corresponds to the @id of source node of this edge"
+      target_id:
+        type: "string"
+        example: "https://www.uniprot.org/uniprot/P00738"
+        description: "Corresponds to the @id of target node of this edge"
+      confidence:
+        type: "number"
+        format: "float"
+        example: 0.99
+        description: "Confidence metric for this edge, a value 0.0 (no confidence)\
+          \ and 1.0 (highest confidence)"
+      origin_list:
+        type: "array"
+        description: "A list of origins (sources) for this edge and attributes from\
+          \ those origins"
+        items:
+          $ref: "#/definitions/Source"
+    description: "An edge in the thought subgraph linking two nodes"
+    example:
+      confidence: 0.99
+      target_id: "https://www.uniprot.org/uniprot/P00738"
+      source_id: "http://omim.org/entry/603903"
+      type: "affects"
+      source_list:
+      - attribute_list:
+        - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+          type: "PubMed_article"
+          value: "0.5"
+          url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+        - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+          type: "PubMed_article"
+          value: "0.5"
+          url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+        name: "Wikipedia article"
+        id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+        type: "Monarch_BioLink_API_Relationship"
+      - attribute_list:
+        - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+          type: "PubMed_article"
+          value: "0.5"
+          url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+        - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+          type: "PubMed_article"
+          value: "0.5"
+          url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+        name: "Wikipedia article"
+        id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+        type: "Monarch_BioLink_API_Relationship"
+  Source:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+        description: "URI for the source of the edge"
+      type:
+        type: "string"
+        example: "Monarch_BioLink_API_Relationship"
+        description: "Entity type for the source"
+      name:
+        type: "string"
+        example: "Wikipedia article"
+        description: "Formal name of the piece evidence that yielded the edge"
+      attribute_list:
+        type: "array"
+        description: "A list of attributes for this edge from this source"
+        items:
+          $ref: "#/definitions/Edge_attribute"
+    description: "An source for this edge"
+    example:
+      attribute_list:
+      - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+        type: "PubMed_article"
+        value: "0.5"
+        url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+      - name: "Orthopaedic Manifestations of Sickle Cell Disease"
+        type: "PubMed_article"
+        value: "0.5"
+        url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+      name: "Wikipedia article"
+      id: "https://api.monarchinitiative.org/api/bioentity/disease/OMIM:603903/genes/"
+      type: "Monarch_BioLink_API_Relationship"
+  Edge_attribute:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        example: "PubMed_article"
+        description: "Entity type of this attribute"
+      name:
+        type: "string"
+        example: "Orthopaedic Manifestations of Sickle Cell Disease"
+        description: "Formal name of the attribute"
+      value:
+        type: "string"
+        example: "0.5"
+        description: "Value of the attribute. While all attributes should have a name,\
+          \ many will not have a value"
+      url:
+        type: "string"
+        example: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+        description: "A URL corresponding to this attribute"
+    description: "A generic attribute for an edge"
+    example:
+      name: "Orthopaedic Manifestations of Sickle Cell Disease"
+      type: "PubMed_article"
+      value: "0.5"
+      url: "https://www.ncbi.nlm.nih.gov/pubmed/29309293"
+  Query_terms:
+    properties:
+      disease:
+        type: "string"
+        example: "Heart failure"
+    description: "Dict of terms needed by the specific query type"
+    example:
+      disease: "Heart failure"
+externalDocs:
+  description: "Documentation for the IQA web service"
+  url: "http://indigo.ncats.io/reasoner/docs.html"
