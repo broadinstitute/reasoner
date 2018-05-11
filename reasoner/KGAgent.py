@@ -3,6 +3,16 @@ from .KnowledgeGraph import KnowledgeGraph
 class KGAgent:
     def __init__(self):
         self.kg = KnowledgeGraph()
+        self.result = None
+
+    def get_result(self):
+        return(self.result)
+
+    def get_graph(self):
+        if self.result.peek() is not None:
+            return(self.kg.get_graph(self.result))
+        else:
+            return(None)
 
     def cop_query(self, drug_cui, disease_cui):
         print('\n', drug_cui, disease_cui)
@@ -15,27 +25,37 @@ class KGAgent:
         if disease.peek() is None:
             print('Disease not found.')
 
-        result = self.cop_drug_category(drug_cui, disease_cui)
-        if result.peek() is not None:
-            for record in result:
-                print(record['cat'].properties['name'])
-                res = self.target_by_drug_category(drug_cui, record['cat'].properties['cui'])
-                for rec in res:
-                    print(rec)
-        else:
-            result = self.cop_targets(drug_cui, disease_cui)
-            for record in result:
-                print(record)
+        self.result = self.cop_drug_category(drug_cui, disease_cui)
 
-        result = self.cop_full(drug_cui, disease_cui)
-        print(len(list(result.records())))
+        #     for record in result:
+        #         print(record['cat'].properties['name'])
+        #         res = self.target_by_drug_category(drug_cui, record['cat'].properties['cui'])
+        #         for rec in res:
+        #             print(rec)
+        # else:
+        #     result = self.cop_targets(drug_cui, disease_cui)
+        #     for record in result:
+        #         print(record)
+
+        # result = self.cop_full(drug_cui, disease_cui)
+        # print(len(list(result.records())))
 
 
+
+    # def cop_drug_category(self, drug_cui, disease_cui):
+    #     result = self.kg.query("""
+    #              MATCH path = (dr:Drug {cui:{drug_cui}})-[:HAS_ROLE]->(cat:ChebiTerm)-[:TREATS]->(di:Disease {cui:{disease_cui}})
+    #              RETURN cat
+    #              """,
+    #              drug_cui=drug_cui, disease_cui=disease_cui)
+    #     return(result)
 
     def cop_drug_category(self, drug_cui, disease_cui):
         result = self.kg.query("""
                  MATCH path = (dr:Drug {cui:{drug_cui}})-[:HAS_ROLE]->(cat:ChebiTerm)-[:TREATS]->(di:Disease {cui:{disease_cui}})
-                 RETURN cat
+                 UNWIND nodes(path) as n
+                 UNWIND relationships(path) as r
+                 RETURN collect(distinct n) as nodes, collect(distinct r) as edges
                  """,
                  drug_cui=drug_cui, disease_cui=disease_cui)
         return(result)
@@ -67,7 +87,7 @@ class KGAgent:
 
     def cop_full(self, drug_cui, disease_cui):
         result = self.kg.query("""
-                 MATCH path = (dr:Drug {cui:{drug_cui}})--(ta:Target)--(p:Pathway)-[*1..3]-(di:Disease {cui:{disease_cui}})
+                 MATCH path = (dr:Drug {cui:{drug_cui}})--(ta:Target)--(p:Pathway)--(c:Cell)--(ti:Tissue)--(sy:Symptom)--(di:Disease {cui:{disease_cui}})
                  RETURN path
                  """,
                  drug_cui=drug_cui, disease_cui=disease_cui)
