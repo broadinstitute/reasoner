@@ -55,17 +55,17 @@ definitions:
         example: "cop"
         description: "The type of query to be answered"
       terms:
-        type: "object"
-        example:
-          type: "cop"
-          terms: "{ drug: 'treprostinil', disease: 'Heart failure'}"
+        type: object
         additionalProperties:
-          type: "string"
+          type: string
+        example:
+          drug: "treprostinil"
+          disease: "Heart failure"
     example:
-      terms:
-        type: "cop"
-        terms: "{ drug: 'treprostinil', disease: 'Heart failure'}"
-      query_type: "cop"
+      type: "cop"
+      terms: 
+        drug: "treprostinil"
+        disease: "Heart failure"
   Response:
     type: "object"
     properties:

@@ -58,8 +58,13 @@ definitions:
         additionalProperties:
           type: string
         example:
-          type: "cop"
-          terms: "{ drug: 'treprostinil', disease: 'Heart failure'}"
+          drug: "treprostinil"
+          disease: "Heart failure"
+    example:
+      query_type: "cop"
+      terms: 
+        drug: "treprostinil"
+        disease: "Heart failure"
   Response:
     type: "object"
     properties:
