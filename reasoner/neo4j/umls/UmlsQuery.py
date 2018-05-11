@@ -5,6 +5,7 @@ import json
 import mysql.connector
 from .Authentication import *
 from ..Config import Config
+from ..Dbtools.Dbtools import db_select
 
 
 class UmlsQuery:
@@ -16,21 +17,10 @@ class UmlsQuery:
         self.base_uri = 'https://uts-ws.nlm.nih.gov/rest/'
 
         # Open database connection
-        self.db = mysql.connector.connect(user=config['umls-db']['user'], password=config['umls-db']['password'],
-                              host=config['umls-db']['host'],
-                              database=config['umls-db']['database'])
-
-    def db_select(self, sql, data = None):
-        cursor = self.db.cursor(dictionary=True)
-        try:
-            if data is None:
-                cursor.execute(sql)
-            else:
-                cursor.execute(sql, data)
-            results = cursor.fetchall()
-        except:
-            print("Error: unable to fetch data")
-        return(results)
+        self.db = mysql.connector.connect(user=config['umls-db']['user'],
+                                          password=config['umls-db']['password'],
+                                          host=config['umls-db']['host'],
+                                          database=config['umls-db']['database'])
 
     def get_ticket(self):
         return(self.AuthClient.getst(self.tgt))
@@ -84,7 +74,7 @@ class UmlsQuery:
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';"  % mesh_id)
-        result = self.db_select(sql)
+        result = db_select(self.db, sql)
         return(result)
 
 
@@ -96,7 +86,7 @@ class UmlsQuery:
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';"  % go_id)
-        result = self.db_select(sql)
+        result = db_select(self.db, sql)
         return(result)
 
     def drugbank2cui(self, drugbank_id):
@@ -107,7 +97,7 @@ class UmlsQuery:
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';"  % drugbank_id)
-        result = self.db_select(sql)
+        result = db_select(self.db, sql)
         return(result)
 
     def cui2hpo(self, cui):
@@ -117,7 +107,7 @@ class UmlsQuery:
                "AND CUI = '%s' "
                "AND TTY = 'PT' "
                "ORDER BY SDUI;" % cui)
-        result = self.db_select(sql)
+        result = db_select(self.db, sql)
         return(result)
 
     def hpo2cui(self, hpo_id):
@@ -128,7 +118,7 @@ class UmlsQuery:
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';"  % hpo_id)
-        result = self.db_select(sql)
+        result = db_select(self.db, sql)
         return(result)
 
     def meshterm2cui(self, term):
@@ -136,7 +126,7 @@ class UmlsQuery:
                "FROM MRCONSO "
                "WHERE SAB = 'MSH' "
                "AND STR = %(term)s;")
-        result = self.db_select(sql, {'term': term})
+        result = db_select(self.db, sql, {'term': term})
         return(result)
 
     def cui2bestname(self, cui):
@@ -147,7 +137,7 @@ class UmlsQuery:
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';")
-        result = self.db_select(sql, {'cui': cui})
+        result = db_select(self.db, sql, {'cui': cui})
         return(result)
 
     def search(self, query_string, options={}):
