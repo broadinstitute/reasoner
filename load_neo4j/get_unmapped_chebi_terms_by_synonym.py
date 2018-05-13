@@ -1,7 +1,7 @@
 import csv
 import pandas
 from SPARQLWrapper import SPARQLWrapper, JSON
-from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 
 def sparql_query(sparql, chebi_id):
     sparql.setQuery("""

@@ -1,5 +1,5 @@
 import pandas as pd
-from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 
 disease_file = '../data/neo4j/graph/diseases.csv'
 diseases = pd.read_csv(disease_file)

@@ -3,7 +3,7 @@ import re
 import pandas as pd
 import networkx as nx
 from neo4j.v1 import GraphDatabase
-from reasoner.neo4j.Config import Config
+from reasoner.knowledge_graph.Config import Config
 
 
 

@@ -1,5 +1,5 @@
 from neo4j.v1 import GraphDatabase
-from reasoner.neo4j.Config import Config
+from reasoner.knowledge_graph.Config import Config
 
 
 def get_connection_count(session, a, b):

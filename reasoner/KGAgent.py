@@ -1,4 +1,4 @@
-from .KnowledgeGraph import KnowledgeGraph
+from .knowledge_graph.KnowledgeGraph import KnowledgeGraph
 
 class KGAgent:
     def __init__(self):

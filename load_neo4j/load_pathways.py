@@ -1,5 +1,5 @@
 import pandas
-from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 
 go_file = "../data/neo4j/goa_human.csv"
 outfile = "../data/neo4j/graph/pathways.csv"

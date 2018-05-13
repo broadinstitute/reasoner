@@ -1,6 +1,6 @@
 import mysql.connector
 from neo4j.v1 import GraphDatabase
-from reasoner.neo4j.Config import Config
+from reasoner.knowledge_graph.Config import Config
 
 
 def db_select(db, sql):

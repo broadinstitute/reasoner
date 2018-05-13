@@ -23,7 +23,7 @@ class ChemblTools:
         return(db_select(self.db, sql))
 
     def get_targets(self, chembl_id):
-        sql = ("SELECT md.chembl_id, md.pref_name as compound_name, "
+        sql = ("SELECT md.chembl_id, md.pref_name as compound_name, cs.component_id as component_id"
                "standard_value, standard_units, standard_flag, standard_type, "
                "accession, target_type, td.pref_name as target_name, component_type "
                "FROM molecule_dictionary md "

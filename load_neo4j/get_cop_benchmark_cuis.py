@@ -1,6 +1,6 @@
 import pandas
 import csv
-from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 
 cop_file = '../data/neo4j/cop_benchmark.csv'
 outfile = '../data/neo4j/cop_benchmark_input_cui.csv'

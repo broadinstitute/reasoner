@@ -140,6 +140,14 @@ class UmlsQuery:
         result = db_select(self.db, sql, {'cui': cui})
         return(result)
 
+    def get_semtype(self, cui):
+        sql = ("SELECT tui type_id, abr type_name "
+               "FROM MRSTY "
+               "LEFT JOIN SRDEF on SRDEF.ui=MRSTY.tui "
+               "WHERE cui = '%s';") % (cui)
+        return(db_select(self.db, sql))
+
+
     def search(self, query_string, options={}):
         endpoint = "search/" + self.version
         query = {'string': query_string}

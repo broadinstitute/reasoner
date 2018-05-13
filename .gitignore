@@ -104,6 +104,6 @@ reasoner.psproj
 .DS_Store
 load_neo4j/sandbox/
 load_neo4j/semmed.log
-reasoner/neo4j/config/config.yaml
+reasoner/knowledge_graph/config/config.yaml
 *.sublime-workspace
 data/

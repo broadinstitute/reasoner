@@ -1,6 +1,6 @@
 import csv
 import pandas
-from reasoner.neo4j.ChemSpiderTools import ChemSpiderTools
+from reasoner.knowledge_graph.ChemSpiderTools import ChemSpiderTools
 
 cop_file = '../data/neo4j/cop_benchmark_input_cui_curated.csv'
 outfile = '../data/neo4j/cop_chembl_ids.csv'
@@ -12,6 +12,7 @@ cpd_ids = [['drug_name', 'cui', 'chembl_id', 'chebi_id', 'drugbank_id']]
 for index,row in cop.iterrows():
     r = cst.search_name(row['drug_name'])
     if r is None:
+        cpd_ids.append([row['drug_name'], row['drug_cui'], '', '', ''])
         continue
     for record in r['results']:
         exids = cst.get_exids(record, ['ChEMBL', 'ChEBI', 'DrugBank'])

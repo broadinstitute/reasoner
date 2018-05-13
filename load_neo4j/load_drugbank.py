@@ -1,7 +1,7 @@
 import csv
 import pandas
 import xml.etree.ElementTree as etree
-from reasoner.neo4j.umls.UmlsQuery import UmlsQuery
+from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 
 
 def xstr(s):
