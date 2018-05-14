@@ -94,13 +94,13 @@ class KnowledgeGraph:
         return([record['cui'] for record in result])
 
     def add_drug(self, cui, chembl_id=None, chebi_id=None, drugbank_id=None):
-        cypher = "MERGE (n {cui: {cui}}) SET n :Drug"
+        cypher = "MERGE (n {cui: {cui}}) SET n:Drug"
         if chembl_id is not None:
-            cypher = cypher + " SET chembl_id = {chembl_id}"
+            cypher = cypher + " SET n.chembl_id = {chembl_id}"
         if chebi_id is not None:
-            cypher = cypher + " SET chebi_id = {chebi_id}"
+            cypher = cypher + " SET n.chebi_id = {chebi_id}"
         if drugbank_id is not None:
-            cypher = cypher + " SET drugbank_id = {drugbank_id}"
+            cypher = cypher + " SET n.drugbank_id = {drugbank_id}"
         self.query(cypher, chembl_id=chembl_id, chebi_id=chebi_id, drugbank_id=drugbank_id)
 
     def add_chembl_target(self, drug_chembl_id, target_uniprot_id, target_name,
