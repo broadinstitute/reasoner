@@ -66,7 +66,7 @@ class KnowledgeGraph:
             SET target.name = {target_name}
             MERGE (origin)-[:HAS_ROLE {source: 'chebi'}]->(target);
             """
-            self.query(cypher, origin_chebi_id=origin_chebi_id, target_chebi_id=target_chebi_id, target_name=target_name)
+        self.query(cypher, origin_chebi_id=origin_chebi_id, target_chebi_id=target_chebi_id, target_name=target_name)
 
     def add_indication(self, chembl_id, disease_cui, disease_name):
         cypher = """
@@ -106,7 +106,7 @@ class KnowledgeGraph:
     def add_chembl_target(self, drug_chembl_id, target_uniprot_id, target_name,
                           activity_value=None,
                           activity_type=None,
-                          activity_unit=None)
+                          activity_unit=None):
         cypher = """
             MATCH (drug:Drug {chembl_id: {drug_chembl_id}})
             MERGE (target:Target {uniprot_id: {target_uniprot_id}})
