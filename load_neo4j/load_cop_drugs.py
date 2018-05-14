@@ -34,6 +34,6 @@ for index, row in cop_drugs.iterrows():
             #       target['standard_value'], target['standard_type'], target['standard_units'],
             #       target['standard_flag'], target['typeyear'])
             kg.add_chembl_target(target['chembl_id'], target['accession'], target['target_name'],
-                  target['standard_value'], target['standard_type'], target['standard_units'])
+                  float(target['standard_value']), target['standard_type'], target['standard_units'])
     
     # kg.add_chebi_terms(self)
