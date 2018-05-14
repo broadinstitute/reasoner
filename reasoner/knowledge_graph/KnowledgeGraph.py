@@ -101,7 +101,7 @@ class KnowledgeGraph:
             cypher = cypher + " SET n.chebi_id = {chebi_id}"
         if drugbank_id is not None:
             cypher = cypher + " SET n.drugbank_id = {drugbank_id}"
-        self.query(cypher, chembl_id=chembl_id, chebi_id=chebi_id, drugbank_id=drugbank_id)
+        self.query(cypher, cui=cui, chembl_id=chembl_id, chebi_id=chebi_id, drugbank_id=drugbank_id)
 
     def add_chembl_target(self, drug_chembl_id, target_uniprot_id, target_name,
                           activity_value=None,
