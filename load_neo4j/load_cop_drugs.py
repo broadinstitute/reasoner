@@ -23,7 +23,7 @@ for index, row in cop_drugs.iterrows():
     else:
         drugbank_id = None
     # print(cui, chembl_id, chebi_id, drugbank_id)
-    kg.add_drug(self, cui, chembl_id, chebi_id, drugbank_id)
+    kg.add_drug(cui, chembl_id, chebi_id, drugbank_id)
     
     # add targets
     if chembl_id is not None:
@@ -33,7 +33,7 @@ for index, row in cop_drugs.iterrows():
             # print(target['chembl_id'], target['accession'], target['target_name'],
             #       target['standard_value'], target['standard_type'], target['standard_units'],
             #       target['standard_flag'], target['typeyear'])
-            kg.add_chembl_target(self, target['chembl_id'], target['accession'], target['target_name'],
+            kg.add_chembl_target(target['chembl_id'], target['accession'], target['target_name'],
                   target['standard_value'], target['standard_type'], target['standard_units'])
     
     # kg.add_chebi_terms(self)
