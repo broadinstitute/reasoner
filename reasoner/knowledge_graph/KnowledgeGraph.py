@@ -111,7 +111,7 @@ class KnowledgeGraph:
             MATCH (drug:Drug {chembl_id: {drug_chembl_id}})
             MERGE (target:Target {uniprot_id: {target_uniprot_id}})
             MERGE (drug)-[r:TARGETS]->(target)
-            SET target.name = {target_name};
+            SET target.name = {target_name}
             SET r.activity_value = {activity_value}
             SET r.activity_type = {activity_type}
             SET r.activity_unit = {activity_unit}
