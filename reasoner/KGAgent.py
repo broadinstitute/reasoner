@@ -41,8 +41,9 @@ class KGAgent:
         # print(len(list(result.records())))
 
 
-    def mvp_target_query(self, drug_cui):
-        self.result = self.drug2target(drug_cui)
+    def mvp_target_query(self, drug_chembl_id):
+        drug_chembl_id = drug_chembl_id.replace("CHEMBL:", "")
+        self.result = self.drug2target(drug_chembl_id)
 
 
 
@@ -97,10 +98,10 @@ class KGAgent:
                  drug_cui=drug_cui, disease_cui=disease_cui)
         return(result)
 
-    def drug2target(self, drug_cui):
+    def drug2target(self, drug_chembl_id):
         result = self.kg.query("""
-                 MATCH path = (dr:Drug {cui:{drug_cui}})--(ta:Target)
+                 MATCH path = (dr:Drug {chembl_id:{drug_chembl_id}})--(ta:Target)
                  RETURN path
                  """,
-                 drug_cui=drug_cui)
+                 drug_chembl_id=drug_chembl_id)
         return(result)
