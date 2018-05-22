@@ -29,9 +29,9 @@ def query(body):  # noqa: E501
 
         agent = KGAgent()
         
-        if body.type == 'cop':
+        if body.query_type == 'cop':
             agent.cop_query(body.terms['drug'], body.terms['disease'])
-        elif body.type == 'mvp-pathway':
+        elif body.query_type == 'mvp-pathway':
             agent.mvp_target_query(body.terms['drug'])
 
         graph = agent.get_graph()
