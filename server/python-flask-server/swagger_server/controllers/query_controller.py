@@ -44,6 +44,8 @@ def query(body):  # noqa: E501
         edges = []
         for edge in graph.edges(data=True):
             edge_attributes = {key: value for key, value in edge[2].items() if key not in ['type', 'source']}
+            if 'source' not in edge[2]:
+                edge[2]['source'] = "NA"
             edges.append(Edge(type = edge[2]['type'], source_id = edge[0], target_id = edge[1], origin_list = [Source(name = edge[2]['source'], attribute_list = edge_attributes)]))
 
         rg = ResultGraph(node_list = nodes, edge_list = edges)
