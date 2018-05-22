@@ -28,7 +28,12 @@ def query(body):  # noqa: E501
         body = Query.from_dict(connexion.request.get_json())  # noqa: E501
 
         agent = KGAgent()
-        agent.cop_query(body.terms['drug'], body.terms['disease'])
+        
+        if body.type == 'cop':
+            agent.cop_query(body.terms['drug'], body.terms['disease'])
+        elif body.type == 'mvp-pathway':
+            agent.mvp_target_query(body.terms['drug'])
+
         graph = agent.get_graph()
 
         nodes = []

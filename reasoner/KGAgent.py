@@ -41,6 +41,10 @@ class KGAgent:
         # print(len(list(result.records())))
 
 
+    def mvp_target_query(self, drug_cui):
+        self.result = self.drug2target(drug_cui)
+
+
 
     # def cop_drug_category(self, drug_cui, disease_cui):
     #     result = self.kg.query("""
@@ -91,4 +95,12 @@ class KGAgent:
                  RETURN path
                  """,
                  drug_cui=drug_cui, disease_cui=disease_cui)
+        return(result)
+
+    def drug2target(self, drug_cui):
+        result = self.kg.query("""
+                 MATCH path = (dr:Drug {cui:{drug_cui}})--(ta:Target)
+                 RETURN path
+                 """,
+                 drug_cui=drug_cui)
         return(result)
