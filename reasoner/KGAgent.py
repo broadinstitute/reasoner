@@ -101,7 +101,9 @@ class KGAgent:
     def drug2target(self, drug_chembl_id):
         result = self.kg.query("""
                  MATCH path = (dr:Drug {chembl_id:{drug_chembl_id}})--(ta:Target)
-                 RETURN path
+                 UNWIND nodes(path) as n
+                 UNWIND relationships(path) as r
+                 RETURN collect(distinct n) as nodes, collect(distinct r) as edges
                  """,
                  drug_chembl_id=drug_chembl_id)
         return(result)
