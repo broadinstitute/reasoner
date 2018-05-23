@@ -17,7 +17,7 @@ def resultGraph(graph):
                                          value=value)
                            for key, value in node[1].items()
                            if key not in ['labels', 'name']]
-        nodes.append(Node(id=node[0],
+        nodes.append(Node(id=str(node[0]),
                           type=', '.join(node[1]['labels']),
                           name=node[1]['name'],
                           node_attributes=node_attributes))
@@ -31,8 +31,8 @@ def resultGraph(graph):
         if 'source' not in edge[2]:
             edge[2]['source'] = "NA"
         edges.append(Edge(type=edge[2]['type'],
-                          source_id=edge[0],
-                          target_id=edge[1],
+                          source_id=str(edge[0]),
+                          target_id=str(edge[1]),
                           provided_by=edge[2]['source'],
                           attribute_list=edge_attributes))
 
