@@ -52,6 +52,5 @@ def query(body):  # noqa: E501
         rg = ResultGraph(node_list = nodes, edge_list = edges)
         r = Response(context = "translator_indigo_qa",
                      datetime = str(datetime.datetime.now()),
-                     query = body,
                      result_list = [Result(result_graph = rg)])
     return(r)
