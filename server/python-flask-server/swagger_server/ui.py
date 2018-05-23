@@ -61,13 +61,13 @@ def mvp_target_query(chemical_substance):
     neighbors = graph[start_node[0]]
     
     results = []
-    for neighbor,relation in neighbors.items():
-        rg = ResultGraph(node_list=[], edge_list=[])
+    for neighbor in neighbors:
+        subgraph = graph.subgraph([start_node, neighbor])
+        rg = resultGraph(subgraph)
         results.append(Result(result_graph=rg))
 
-    rg = resultGraph(graph)
     r = Response(context="translator_indigo_qa",
                  datetime=str(datetime.datetime.now()),
-                 result_list=[Result(result_graph=rg)])
+                 result_list=results)
     return(r)
 
