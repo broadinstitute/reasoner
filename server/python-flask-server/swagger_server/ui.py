@@ -55,10 +55,15 @@ def mvp_target_query(chemical_substance):
     agent = KGAgent()
     agent.mvp_target_query(chemical_substance)
     graph = agent.get_graph()
-    start_node = [n for n,d in graph.nodes(data=True) if d['chembl_id'] == chemical_substance]
-    print(start_node)
+    
+    chembl_id = chemical_substance.replace('CHEMBL:', '')
+    start_node = [n for n,d in graph.nodes(data=True) if 'chembl_id' in d and d['chembl_id'] == chembl_id]
     neighbors = graph[start_node[0]]
-    print(neighbors)
+    
+    results = []
+    for neighbor,relation in neighbors.items():
+        rg = ResultGraph(node_list=[], edge_list=[])
+        results.append(Result(result_graph=rg))
 
     rg = resultGraph(graph)
     r = Response(context="translator_indigo_qa",
