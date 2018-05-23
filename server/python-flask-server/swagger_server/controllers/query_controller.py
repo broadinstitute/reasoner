@@ -45,7 +45,7 @@ def query(body):  # noqa: E501
             edge_attributes = {key: value for key, value in edge[2].items() if key not in ['type', 'source']}
             if 'source' not in edge[2]:
                 edge[2]['source'] = "NA"
-            edges.append(Edge(type = edge[2]['type'], source_id = edge[0], target_id = edge[1], provided_by = name = edge[2]['source'], attribute_list = edge_attributes))
+            edges.append(Edge(type = edge[2]['type'], source_id = edge[0], target_id = edge[1], provided_by = edge[2]['source'], attribute_list = edge_attributes))
 
         rg = ResultGraph(node_list = nodes, edge_list = edges)
         r = Response(context = "translator_indigo_qa",
