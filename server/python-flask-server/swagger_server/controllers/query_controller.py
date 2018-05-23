@@ -29,9 +29,9 @@ def query(body):  # noqa: E501
         agent = KGAgent()
 
         if body.query_type_id == 'Q2':
-            agent.cop_query(body.terms['chemical_substance'], body.terms['disease'])
+            agent.cop_query(body.terms.chemical_substance, body.terms.disease)
         elif body.query_type_id == 'Q3':
-            agent.mvp_target_query(body.terms['chemical_substance'])
+            agent.mvp_target_query(body.terms.chemical_substance)
 
         graph = agent.get_graph()
 
