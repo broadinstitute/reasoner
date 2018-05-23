@@ -18,10 +18,10 @@ REQUIRES = ["connexion"]
 setup(
     name=NAME,
     version=VERSION,
-    description="IQA",
-    author_email="mwawer@broadinstitute.org",
+    description="OpenAPI for NCATS Biomedical Translator Reasoners",
+    author_email="edeutsch@systemsbiology.org",
     url="",
-    keywords=["Swagger", "IQA"],
+    keywords=["Swagger", "OpenAPI for NCATS Biomedical Translator Reasoners"],
     install_requires=REQUIRES,
     packages=find_packages(),
     package_data={'': ['swagger/swagger.yaml']},
@@ -29,7 +29,7 @@ setup(
     entry_points={
         'console_scripts': ['swagger_server=swagger_server.__main__:main']},
     long_description="""\
-    API for Indigo question answerer
+    OpenAPI for NCATS Biomedical Translator Reasoners
     """
 )
 
