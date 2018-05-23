@@ -28,11 +28,11 @@ def query(body):  # noqa: E501
         body = Query.from_dict(connexion.request.get_json())  # noqa: E501
 
         agent = KGAgent()
-        
-        if body.query_type == 'cop':
-            agent.cop_query(body.terms['drug'], body.terms['disease'])
-        elif body.query_type == 'mvp-pathway':
-            agent.mvp_target_query(body.terms['drug'])
+
+        if body.query_type_id == 'Q2':
+            agent.cop_query(body.terms['chemical_substance'], body.terms['disease'])
+        elif body.query_type_id == 'Q3':
+            agent.mvp_target_query(body.terms['chemical_substance'])
 
         graph = agent.get_graph()
 
