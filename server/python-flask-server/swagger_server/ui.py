@@ -39,10 +39,7 @@ def resultGraph(graph):
     rg = ResultGraph(node_list=nodes, edge_list=edges)
     return(rg)
 
-
-def cop_query(drug, disease):
-    agent = KGAgent()
-    agent.cop_query(drug, disease)
+def getDefaultResponse(agent):
     graph = agent.get_graph()
     rg = resultGraph(graph)
     r = Response(context="translator_indigo_qa",
@@ -50,6 +47,10 @@ def cop_query(drug, disease):
                  result_list=[Result(result_graph=rg)])
     return(r)
 
+def cop_query(drug, disease):
+    agent = KGAgent()
+    agent.cop_query(drug, disease)
+    return(getDefaultResponse(agent))
 
 def mvp_target_query(chemical_substance):
     agent = KGAgent()
@@ -71,3 +72,29 @@ def mvp_target_query(chemical_substance):
                  result_list=results)
     return(r)
 
+
+def conditionToSymptoms(condition):
+    return(None)
+
+def genesToPathways(genes):
+    return(None)
+
+def pathwayToGenes(pathway):
+    agent = KGAgent()
+    agent.pathwayToGenes(pathway)
+    return(getDefaultResponse(agent))
+
+def geneToCompound(gene):
+    agent = KGAgent()
+    agent.geneToCompound(gene)
+    return(getDefaultResponse(agent))
+
+def compoundToIndication(chemical_substance):
+    agent = KGAgent()
+    agent.compoundToIndication(chemical_substance)
+    return(getDefaultResponse(agent))
+
+def compoundToPharmClass(chemical_substance):
+    agent = KGAgent()
+    agent.compoundToPharmClass(chemical_substance)
+    return(getDefaultResponse(agent))

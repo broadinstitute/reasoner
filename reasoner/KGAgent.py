@@ -107,3 +107,39 @@ class KGAgent:
                  """,
                  drug_chembl_id=drug_chembl_id)
         return(result)
+
+    def pathwayToGenes(self, pathway_go_id):
+        result = self.kg.query("""
+         MATCH path = (pa:Pathway {go_id:{pathway_go_id}})<-[:PART_OF]-(ta:Target)
+         UNWIND nodes(path) as n
+         UNWIND relationships(path) as r
+         RETURN collect(distinct n) as nodes, collect(distinct r) as edges
+         """,
+         pathway_go_id=pathway_go_id)
+
+    def geneToCompound(self, gene_hgnc_id):
+        self.result = self.kg.query("""
+         MATCH path = (ta:Target {hgnc_id:{gene_hgnc_id}})<-[:TARGETS]-(dr:Drug)
+         UNWIND nodes(path) as n
+         UNWIND relationships(path) as r
+         RETURN collect(distinct n) as nodes, collect(distinct r) as edges
+         """,
+         gene_hgnc_id=gene_hgnc_id)
+
+    def compoundToIndication(self, drug_chembl_id):
+        self.result = self.kg.query("""
+         MATCH path = (dr:Drug {chembl_id:{drug_chembl_id}})-[:HAS_INDICATION]->(di:Disease)
+         UNWIND nodes(path) as n
+         UNWIND relationships(path) as r
+         RETURN collect(distinct n) as nodes, collect(distinct r) as edges
+         """,
+         drug_chembl_id=drug_chembl_id)
+
+    def compoundToPharmClass(self, chemical_substance):
+        self.result = self.kg.query("""
+         MATCH path = (dr:Drug {chembl_id:{drug_chembl_id}})-[:HAS_ROLE]->(ct:ChebiTerm)
+         UNWIND nodes(path) as n
+         UNWIND relationships(path) as r
+         RETURN collect(distinct n) as nodes, collect(distinct r) as edges
+         """,
+         drug_chembl_id=drug_chembl_id)

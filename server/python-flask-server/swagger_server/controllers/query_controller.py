@@ -2,7 +2,7 @@ import connexion
 import six
 
 from swagger_server.models.query import Query  # noqa: E501
-from swagger_server.ui import cop_query, mvp_target_query
+from swagger_server.ui import cop_query, mvp_target_query, conditionToSymptoms, genesToPathways, pathwayToGenes, geneToCompound, compoundToIndication, compoundToPharmClass
 
 
 def query(body):  # noqa: E501
@@ -22,5 +22,17 @@ def query(body):  # noqa: E501
             r = cop_query(body.terms.chemical_substance, body.terms.disease)
         elif body.query_type_id == 'Q3':
             r = mvp_target_query(body.terms.chemical_substance)
+        elif body.query_type_id == 'conditionToSymptoms':
+            r = conditionToSymptoms(body.terms.condition)
+        elif body.query_type_id == 'genesToPathways':
+            r = genesToPathways(body.terms.genes)
+        elif body.query_type_id == 'pathwayToGenes':
+            r = pathwayToGenes(body.terms.pathway)
+        elif body.query_type_id == 'geneToCompound':
+            r = geneToCompound(body.terms.gene)
+        elif body.query_type_id == 'compoundToIndication':
+            r = compoundToIndication(body.terms.chemical_substance)
+        elif body.query_type_id == 'compoundToPharmClass':
+            r = compoundToPharmClass(body.terms.chemical_substance)
 
     return(r)
