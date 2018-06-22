@@ -41,7 +41,7 @@ class QueryTerms(Model):
 
         self.attribute_map = {
             'disease': 'disease',
-            'gene': 'gene;',
+            'gene': 'gene',
             'pathway': 'pathway',
             'protein': 'protein',
             'anatomical_entity': 'anatomical_entity',
