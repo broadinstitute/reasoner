@@ -109,7 +109,7 @@ class KGAgent:
         return(result)
 
     def pathwayToGenes(self, pathway_go_id):
-        result = self.kg.query("""
+        self.result = self.kg.query("""
          MATCH path = (pa:Pathway {go_id:{pathway_go_id}})<-[:PART_OF]-(ta:Target)
          UNWIND nodes(path) as n
          UNWIND relationships(path) as r
