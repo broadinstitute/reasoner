@@ -15,7 +15,7 @@ class QueryTerms(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, disease: str=None, protein: str=None, anatomical_entity: str=None, chemical_substance: str=None, metabolite: str=None):  # noqa: E501
+    def __init__(self, disease: str=None, gene: str=None, pathway: str=None, protein: str=None, anatomical_entity: str=None, chemical_substance: str=None, metabolite: str=None):  # noqa: E501
         """QueryTerms - a model defined in Swagger
 
         :param disease: The disease of this QueryTerms.  # noqa: E501
@@ -31,6 +31,8 @@ class QueryTerms(Model):
         """
         self.swagger_types = {
             'disease': str,
+            'gene': str,
+            'pathway': str,
             'protein': str,
             'anatomical_entity': str,
             'chemical_substance': str,
@@ -39,6 +41,8 @@ class QueryTerms(Model):
 
         self.attribute_map = {
             'disease': 'disease',
+            'gene': str,
+            'pathway': str,
             'protein': 'protein',
             'anatomical_entity': 'anatomical_entity',
             'chemical_substance': 'chemical_substance',
@@ -46,6 +50,8 @@ class QueryTerms(Model):
         }
 
         self._disease = disease
+        self._gene = gene
+        self._pathway = pathway
         self._protein = protein
         self._anatomical_entity = anatomical_entity
         self._chemical_substance = chemical_substance
@@ -82,6 +88,49 @@ class QueryTerms(Model):
         """
 
         self._disease = disease
+
+    @property
+    def gene(self) -> str:
+        """Gets the gene of this QueryTerms.
+
+
+        :return: The gene of this QueryTerms.
+        :rtype: str
+        """
+        return self._gene
+
+    @gene.setter
+    def gene(self, gene: str):
+        """Sets the gene of this QueryTerms.
+
+
+        :param gene: The gene of this QueryTerms.
+        :type gene: str
+        """
+
+        self._gene = gene
+
+    @property
+    def pathway(self) -> str:
+        """Gets the pathway of this QueryTerms.
+
+
+        :return: The pathway of this QueryTerms.
+        :rtype: str
+        """
+        return self._pathway
+
+    @pathway.setter
+    def pathway(self, pathway: str):
+        """Sets the pathway of this QueryTerms.
+
+
+        :param pathway: The pathway of this QueryTerms.
+        :type pathway: str
+        """
+
+        self._pathway = pathway
+
 
     @property
     def protein(self) -> str:
