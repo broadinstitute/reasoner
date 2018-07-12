@@ -57,7 +57,7 @@ def mvp_target_query(chemical_substance):
     agent.mvp_target_query(chemical_substance)
     graph = agent.get_graph()
     
-    chembl_id = chemical_substance.replace('CHEMBL:', '')
+    chembl_id = chemical_substance
     start_node = [n for n,d in graph.nodes(data=True) if 'chembl_id' in d and d['chembl_id'] == chembl_id][0]
     neighbors = graph[start_node]
     
