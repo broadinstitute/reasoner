@@ -19,7 +19,7 @@ class ChemblTools:
                "FROM drug_indication AS di "
                "JOIN molecule_dictionary AS md "
                "ON md.molregno = di.molregno "
-               "WHERE chembl_id = %s") % chembl_id
+               "WHERE chembl_id = '%s'") % chembl_id
         return(db_select(self.db, sql))
 
     def get_targets(self, chembl_id):
