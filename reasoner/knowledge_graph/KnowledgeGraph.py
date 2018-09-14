@@ -1,5 +1,4 @@
 import copy
-import numpy as np
 import networkx as nx
 from neo4j.v1 import GraphDatabase
 from .Config import Config
@@ -78,7 +77,7 @@ class KnowledgeGraph:
         return([record['cui'] for record in result])
 
     def is_safe(self, x):
-        return x is not None and x != '' and not np.isnan(x)
+        return x is not None and x != ''
 
     # entity adders
     def add_drug(self, chembl_id, name, cui=None, chebi_id=None, drugbank_id=None, drug_type=None, mechanism=None, pharmacodynamics=None):
