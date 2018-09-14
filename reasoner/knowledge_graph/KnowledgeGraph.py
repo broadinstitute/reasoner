@@ -81,9 +81,8 @@ class KnowledgeGraph:
 
     # entity adders
     def add_drug(self, chembl_id, name, cui=None, chebi_id=None, drugbank_id=None, drug_type=None, mechanism=None, pharmacodynamics=None):
-        cypher = """MERGE (n {chembl_id: {chembl_id}})
+        cypher = """MERGE (n:Drug {chembl_id: {chembl_id}})
                     SET n.name = {name}
-                    SET n:Drug
                  """
         if self.is_safe(cui):
             cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
@@ -142,8 +141,7 @@ class KnowledgeGraph:
 
     def add_multiclass_term_by_cui(self, cui, name, term_type, id_type=None, alt_id=None):
         cypher = """
-            MERGE (n {cui: {cui}})
-            SET n:UmlsTerm
+            MERGE (n:UmlsTerm {cui: {cui}})
             SET n:%s
             ON CREATE SET n.name = {name}
             """ % term_type
