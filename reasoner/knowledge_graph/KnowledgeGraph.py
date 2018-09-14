@@ -51,7 +51,7 @@ class KnowledgeGraph:
             """
         return(self.query(cypher))
 
-    def get_drug_chembl_ids(self, session):
+    def get_drug_chembl_ids(self):
         cypher = """
             MATCH (d:Drug)
             WHERE exists(d.chembl_id)
