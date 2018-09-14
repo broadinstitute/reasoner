@@ -1,4 +1,5 @@
 import copy
+import numpy as np
 import networkx as nx
 from neo4j.v1 import GraphDatabase
 from .Config import Config
@@ -76,23 +77,26 @@ class KnowledgeGraph:
         result = self.query(cypher)
         return([record['cui'] for record in result])
 
+    def is_safe(self, x):
+        return x is not None and x != '' and not np.isnan(x)
+
     # entity adders
     def add_drug(self, chembl_id, name, cui=None, chebi_id=None, drugbank_id=None, drug_type=None, mechanism=None, pharmacodynamics=None):
         cypher = """MERGE (n {chembl_id: {chembl_id}})
                     SET n.name = {name}
                     SET n:Drug
                  """
-        if cui is not None:
+        if self.is_safe(cui):
             cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
-        if chebi_id is not None:
+        if self.is_safe(chebi_id):
             cypher = cypher + " SET n.chebi_id = {chebi_id}"
-        if drugbank_id is not None:
+        if self.is_safe(drugbank_id):
             cypher = cypher + " SET n.drugbank_id = {drugbank_id}"
-        if drug_type is not None:
+        if self.is_safe(drug_type):
             cypher = cypher + " SET n.drug_type = {drug_type}"
-        if mechanism is not None:
+        if self.is_safe(mechanism):
             cypher = cypher + " SET n.mechanism = {mechanism}"
-        if pharmacodynamics is not None:
+        if self.is_safe(pharmacodynamics):
             cypher = cypher + " SET n.pharmacodynamics = {pharmacodynamics}"
         self.query(cypher, chembl_id=chembl_id, name=name, cui=cui, chebi_id=chebi_id,
                    drugbank_id=drugbank_id, drug_type=drug_type, mechanism=mechanism, pharmacodynamics=pharmacodynamics)
@@ -119,9 +123,9 @@ class KnowledgeGraph:
             SET n.name =  {name}
             SET n:UmlsTerm
             """
-        if mesh_id is not None:
+        if self.is_safe(mesh_id):
             cypher = cypher + " SET n.mesh_id = {mesh_id}"
-        if hpo_id is not None:
+        if self.is_safe(hpo_id):
             cypher = cypher + " SET n.hpo_id = {hpo_id} SET n:HpoTerm;"
         self.query(cypher, cui=cui, name=name, mesh_id=mesh_id, hpo_id=hpo_id)
 
@@ -131,9 +135,9 @@ class KnowledgeGraph:
             SET n.name = {name}
             SET n:GoTerm
             """
-        if cui is not None:
+        if self.is_safe(cui):
             cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
-        if aspect is not None:
+        if self.is_safe(aspect):
             cypher = cypher + " SET n.aspect = {aspect}"
         self.query(cypher, go_id=go_id, cui=cui, aspect=aspect)
 
@@ -144,7 +148,7 @@ class KnowledgeGraph:
             SET n:%s
             ON CREATE SET n.name = {name}
             """ % term_type
-        if id_type is not None and alt_id is not None:
+        if self.is_safe(id_type) and self.is_safe(alt_id):
             cypher = cypher + " SET n.%s = {alt_id}" % id_type
         self.query(cypher, name=name, cui=cui, alt_id=alt_id)
 
