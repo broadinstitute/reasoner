@@ -154,11 +154,25 @@ class UmlsQuery:
         query.update(options)
         return(self.send_query(endpoint, query))
 
-    def get_snomed_finding_site(self, snomed_id):
-        endpoint = ('content/' + self.version +
-                    '/source/SNOMEDCT_US/' + snomed_id + '/relations')
-        query = {'includeAdditionalRelationLabels': 'has_finding_site'}
-        return(self.send_query(endpoint, query))
+    def get_snomed_finding_sites(self):
+        sql = ("select distinct cui1 as location_cui, RELA as relation, "
+               "cui2 as disease_cui, A.str as location_str, B.str as disease_str, MRREL.sab as source "
+               "from MRREL "
+               "inner join MRSTY "
+               "on MRREL.cui2 = MRSTY.cui "
+               "left join MRCONSO A on A.cui = MRREL.cui1 "
+               "left join MRCONSO B on B.cui = MRREL.cui2 "
+               "where tui = 'T047' "
+               "and RELA = 'has_finding_site' "
+               "and A.ispref = 'Y' "
+               "and A.TS = 'P' "
+               "and A.lat='ENG' "
+               "and A.stt = 'PF' "
+               "and B.ispref = 'Y' "
+               "and B.TS = 'P' "
+               "and B.lat='ENG' "
+               "and B.stt = 'PF';")
+        return(db_select(self.db, sql))
 
     def get_disease_location(self, disease_term):
         result = self.search(disease_term,

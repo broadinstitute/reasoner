@@ -16,6 +16,7 @@ class KnowledgeGraph:
             result = session.run(query, **kwargs)
         return(result)
 
+    # getters
     def get_graph(self, results):
         graph = nx.MultiDiGraph()
 
@@ -34,7 +35,7 @@ class KnowledgeGraph:
                                key=edge.type, **properties)
         return graph
 
-    def get_drugs(self):
+    def get_drug_chebi_ids(self):
         cypher = """
             MATCH (drug:Drug)
             WHERE exists(drug.chebi_id)
@@ -42,7 +43,7 @@ class KnowledgeGraph:
             """
         return(self.query(cypher))
 
-    def get_chebi_terms(self):
+    def get_nondrug_chebi_ids(self):
         cypher = """
             MATCH (term:ChebiTerm)
             WHERE not term:Drug
@@ -50,7 +51,7 @@ class KnowledgeGraph:
             """
         return(self.query(cypher))
 
-    def get_chembl_ids(session):
+    def get_drug_chembl_ids(self, session):
         cypher = """
             MATCH (d:Drug)
             WHERE exists(d.chembl_id)
@@ -58,24 +59,6 @@ class KnowledgeGraph:
             """
         result = self.query(cypher)
         return([record['chembl_id'] for record in result])
-
-    def add_chebi_role(self, origin_chebi_id, target_chebi_id, target_name):
-        cypher = """
-            MATCH (origin:ChebiTerm {chebi_id: {origin_chebi_id}})
-            MERGE (target:ChebiTerm {chebi_id: {target_chebi_id}})
-            SET target.name = {target_name}
-            MERGE (origin)-[:HAS_ROLE {source: 'chebi'}]->(target);
-            """
-        self.query(cypher, origin_chebi_id=origin_chebi_id, target_chebi_id=target_chebi_id, target_name=target_name)
-
-    def add_indication(self, chembl_id, disease_cui, disease_name):
-        cypher = """
-            MATCH (drug:Drug {chembl_id: {chembl_id}})
-            MATCH (disease:Disease {cui: {disease_cui}})
-            SET disease.name = {disease_name}
-            MERGE (drug)-[:HAS_INDICATION]->(disease)
-            """
-        self.query(cypher, chembl_id=chembl_id, disease_cui=disease_cui, disease_name=disease_name)
 
     def set_semtype(self, cui, semtype):
         cypher = """
@@ -93,28 +76,196 @@ class KnowledgeGraph:
         result = self.query(cypher)
         return([record['cui'] for record in result])
 
-    def add_drug(self, cui, chembl_id=None, chebi_id=None, drugbank_id=None):
-        cypher = "MERGE (n {cui: {cui}}) SET n:Drug"
-        if chembl_id is not None:
-            cypher = cypher + " SET n.chembl_id = {chembl_id}"
+    # entity adders
+    def add_drug(self, chembl_id, name, cui=None, chebi_id=None, drugbank_id=None, drug_type=None, mechanism=None, pharmacodynamics=None):
+        cypher = """MERGE (n {chembl_id: {chembl_id}})
+                    SET n.name = {name}
+                    SET n:Drug
+                 """
+        if cui is not None:
+            cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
         if chebi_id is not None:
             cypher = cypher + " SET n.chebi_id = {chebi_id}"
         if drugbank_id is not None:
             cypher = cypher + " SET n.drugbank_id = {drugbank_id}"
-        self.query(cypher, cui=cui, chembl_id=chembl_id, chebi_id=chebi_id, drugbank_id=drugbank_id)
+        if drug_type is not None:
+            cypher = cypher + " SET n.drug_type = {drug_type}"
+        if mechanism is not None:
+            cypher = cypher + " SET n.mechanism = {mechanism}"
+        if pharmacodynamics is not None:
+            cypher = cypher + " SET n.pharmacodynamics = {pharmacodynamics}"
+        self.query(cypher, chembl_id=chembl_id, name=name, cui=cui, chebi_id=chebi_id,
+                   drugbank_id=drugbank_id, drug_type=drug_type, mechanism=mechanism, pharmacodynamics=pharmacodynamics)
 
-    def add_chembl_target(self, drug_chembl_id, target_uniprot_id, target_name,
-                          activity_value=None,
-                          activity_type=None,
-                          activity_unit=None):
+    def add_protein(self, uniprot_id, name):
         cypher = """
-            MATCH (drug:Drug {chembl_id: {drug_chembl_id}})
-            MERGE (target:Target {uniprot_id: {target_uniprot_id}})
-            MERGE (drug)-[r:TARGETS]->(target)
-            SET target.name = {target_name}
-            SET r.activity_value = {activity_value}
-            SET r.activity_type = {activity_type}
-            SET r.activity_unit = {activity_unit}
+            MERGE (n:Protein {uniprot_id: {uniprot_id}})
+            SET n.name = {name}
             """
-        self.query(cypher, drug_chembl_id=drug_chembl_id, target_uniprot_id=target_uniprot_id, target_name=target_name,
+        self.query(cypher, uniprot_id=uniprot_id, name=name)
+
+    def add_gene(self, hgnc_id, hgnc_symbol, entrez_id, name):
+        cypher = """
+            MERGE (n:Gene {hgnc_id: {hgnc_id}})
+            SET n.hgnc_symbol = {hgnc_symbol}
+            SET n.entrez_id = {entrez_id}
+            SET n.name = {name}
+            """
+        self.query(cypher, hgnc_id=hgnc_id, hgnc_symbol=hgnc_symbol, entrez_id=entrez_id, name=name)
+
+    def add_disease(self, cui, name, mesh_id=None, hpo_id=None):
+        cypher = """
+            MERGE (n:Disease {cui: {cui}})
+            SET n.name =  {name}
+            SET n:UmlsTerm
+            """
+        if mesh_id is not None:
+            cypher = cypher + " SET n.mesh_id = {mesh_id}"
+        if hpo_id is not None:
+            cypher = cypher + " SET n.hpo_id = {hpo_id} SET n:HpoTerm;"
+        self.query(cypher, cui=cui, name=name, mesh_id=mesh_id, hpo_id=hpo_id)
+
+    def add_pathway(self, go_id, name, cui=None, aspect=None):
+        cypher = """
+            MERGE (n:Pathway {go_id: {go_id}})
+            SET n.name = {name}
+            SET n:GoTerm
+            """
+        if cui is not None:
+            cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
+        if aspect is not None:
+            cypher = cypher + " SET n.aspect = {aspect}"
+        self.query(cypher, go_id=go_id, cui=cui, aspect=aspect)
+
+    def add_multiclass_term_by_cui(self, cui, name, term_type, id_type=None, alt_id=None):
+        cypher = """
+            MERGE (n {cui: {cui}})
+            SET n:UmlsTerm
+            SET n:%s
+            ON CREATE SET n.name = {name}
+            """ % term_type
+        if id_type is not None and alt_id is not None:
+            cypher = cypher + " SET n.%s = {alt_id}" % id_type
+        self.query(cypher, name=name, cui=cui, alt_id=alt_id)
+
+    def add_generic_term(self, term_type, id_type, id, name):
+        cypher = """
+            MERGE (n:%s {%s: {id}})
+            SET n.name = {name}
+            """ % (term_type, id_type)
+        self.query(cypher, id=id, name=name)
+
+    def add_cl_term(self, cl_id, name, cui=None):
+        if cui is not None:
+            self.add_multiclass_term_by_cui(cui, name, 'ClTerm', 'cl_id', cl_id)
+        else:
+            self.add_generic_term('ClTerm', 'cl_id', cl_id, name)
+
+    def add_symp_term(self, symp_id, name, cui=None):
+        if cui is not None:
+            self.add_multiclass_term_by_cui(cui, name, 'SympTerm', 'symp_id', symp_id)
+        else:
+            self.add_generic_term('SympTerm', 'symp_id', symp_id, name)
+
+    def add_hpo_term(self, hpo_id, name, cui=None):
+        if cui is not None:
+            self.add_multiclass_term_by_cui(cui, name, 'HpoTerm', 'hpo_id', hpo_id)
+        else:
+            self.add_generic_term('HpoTerm', 'hpo_id', hpo_id, name)
+
+    def add_uberon_term(self, uberon_id, name, cui=None):
+        if cui is not None:
+            self.add_multiclass_term_by_cui(cui, name, 'UberonTerm', 'uberon_id', uberon_id)
+        else:
+            self.add_generic_term('UberonTerm', 'uberon_id', uberon_id, name)
+
+    def add_umls_term(self, cui, name, semtypes=[]):
+        cypher = """
+            MERGE (n:UmlsTerm {cui: {cui}})
+            SET n.name = {name}
+            """
+        for semtype in semtypes:
+            cypher = cypher + "SET n:" + semtype
+        self.query(cypher, cui=cui, name=name)
+
+
+
+# LOAD CSV WITH HEADERS FROM 'file:///umls2cellontology.csv' AS line
+# MATCH (term {cui: replace(line.umls_id, "UMLS:", "")})
+# SET term.cl_id = line.cl_id
+# SET term:ClTerm;
+
+# LOAD CSV WITH HEADERS FROM 'file:///umls2uberon.csv' AS line
+# MATCH (term {cui: replace(line.umls_id, "UMLS:", "")})
+# SET term.uberon_id = line.uberon_id
+# SET term:UberonTerm;
+
+# LOAD CSV WITH HEADERS FROM 'file:///umls2symptomontology.csv' AS line
+# MATCH (term {cui: replace(line.umls_id, "UMLS:", "")})
+# SET term.symp_id = line.symp_id
+# SET term:SympTerm;
+
+    # relation adders
+    def add_drug_target_relation(self,
+                   drug_chembl_id,
+                   target_type,
+                   target_id_type,
+                   target_id,
+                   activity_value=None,
+                   activity_type=None,
+                   activity_unit=None):
+        cypher = ("MATCH (drug:Drug {chembl_id: {drug_chembl_id}}) " +
+                  "MATCH (target:%s {%s: {%s}}) " % (target_type, target_id_type, target_id) +
+                  """SET target:Target
+                  MERGE (drug)-[r:TARGETS]->(target)
+                  SET r.activity_value = {activity_value}
+                  SET r.activity_type = {activity_type}
+                  SET r.activity_unit = {activity_unit}
+                  """)
+        self.query(cypher, drug_chembl_id=drug_chembl_id,
                    activity_value=activity_value, activity_type=activity_type, activity_unit=activity_unit)
+
+    def add_protein_pathway_relation(self, uniprot_id, go_id, evidence_code=None):
+        cypher = """
+            MATCH (start:Protein {uniprot_id: {uniprot_id}})
+            MATCH (end:Pathway {go_id: {go_id}})
+            MERGE (start)-[r:PART_OF]->(end)
+            """
+        if evidence_code is not None:
+            cypher = cypher + " SET r.evidence_code = {evidence_code}"
+        self.query(cypher, uniprot_id=uniprot_id, go_id=go_id, evidence_code=evidence_code)
+
+    def add_semmed_relation(self, predicate, start_cui, end_cui, count):
+        cypher = """
+            MATCH (start:UmlsTerm {cui: {start_cui}})
+            MATCH (end:UmlsTerm {cui: {end_cui}})
+            MERGE (start)-[r:%s {source: 'semmeddb'}]->(end)
+            SET r.count = {count};
+            """ % predicate
+        self.query(cypher, start_cui=start_cui, end_cui=end_cui, count=count)
+
+    def add_gene_product_relation(self, hgnc_id, uniprot_id):
+        self.add_generic_relation("PRODUCT_OF", uniprot_id, "Protein", "uniprot_id", hgnc_id, "Gene", "hgnc_id", "hgnc")
+
+    def add_indication_relation(self, chembl_id, disease_cui):
+        self.add_generic_relation("HAS_INDICATION", chembl_id, "Drug", "chembl_id", disease_cui, "Disease", "cui", "chembl")
+
+    def add_disease_finding_site_relation(self, disease_cui, disease_semtype, location_cui, location_semtype):
+        self.add_generic_relation("LOCATION_OF", disease_cui, disease_semtype, "cui", location_cui, location_semtype, "cui", "chembl")
+
+    def add_chebi_role_relation(self, start_chebi_id, end_chebi_id, target_name):
+        self.add_generic_relation("HAS_ROLE", start_chebi_id, "ChebiTerm", "chebi_id", end_chebi_id, "ChebiTerm", "chebi_id", "chebi")
+
+    def add_isa_relation(self, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
+        self.add_generic_relation("ISA", start_id, start_type, start_id_type, end_id, end_type, end_id_type, source)
+
+    def add_pert_of_relation(self, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
+        self.add_generic_relation("PART_OF", start_id, start_type, start_id_type, end_id, end_type, end_id_type, source)
+
+    def add_generic_relation(self, predicate, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
+        cypher = """
+            MATCH (start:%s {%s: {start_id}})
+            MATCH (end:%s {%s: {end_id}})
+            MERGE (start)-[:%s {source: {source}}]->(end);
+            """ % (start_type, start_id_type, end_type, end_id_type, predicate)
+        self.query(cypher, start_id=start_id, end_id=end_id, source=source)

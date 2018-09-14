@@ -10,21 +10,6 @@ def get_symp_terms(session):
                          "RETURN term.symp_id as symp_id;")
     return(result)
 
-def add_symp_term(session, origin_symp_id, target_symp_id, target_name, target_cui=None):
-    if target_cui is not None:
-        session.run("MATCH (origin:SympTerm {symp_id: {origin_symp_id}}) "
-               "MERGE (target:SympTerm {symp_id: {target_symp_id}}) "
-               "SET target.name = {target_name} "
-               "SET target.cui = {target_cui} "
-               "MERGE (origin)-[:ISA {source: 'symp'}]->(target);",
-               origin_symp_id=origin_symp_id, target_symp_id=target_symp_id, target_cui=target_cui, target_name=target_name)
-    else:
-        session.run("MATCH (origin:SympTerm {symp_id: {origin_symp_id}}) "
-               "MERGE (target:SympTerm {symp_id: {target_symp_id}}) "
-               "SET target.name = {target_name} "
-               "MERGE (origin)-[:ISA {source: 'symp'}]->(target);",
-               origin_symp_id=origin_symp_id, target_symp_id=target_symp_id, target_name=target_name)
-
 map_file = "../data/neo4j/graph/umls2symptomontology.csv"
 id_map_df = pandas.read_csv(map_file)
 id_map = {}
