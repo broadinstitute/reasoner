@@ -1,8 +1,8 @@
 import pandas as pd
 from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 
-cop_file = '../data/neo4j/cop_list_full.csv'
-outfile = '../data/neo4j/graph/diseases.csv'
+cop_file = '../data/cop/cop_list_full.csv'
+outfile = '../data/knowledge_graph/ready_to_load/diseases.csv'
 
 cop = pd.read_csv(cop_file)
 unique_diseases = cop.Condition.unique()
@@ -22,10 +22,10 @@ for term in unique_diseases:
             hpo_id = hpo_result[0]['hpo_id']
         else:
             hpo_id = ''
-        disease_data = disease_data.append({'cui': cui,
+        disease_data = disease_data.append({'cui': 'UMLS:' + cui,
                                             'name': name,
                                             'hpo_id': hpo_id,
-                                            'mesh_id': mesh_id},
+                                            'mesh_id': 'MESH:' + mesh_id},
                                            ignore_index=True)
 
 disease_data.to_csv(outfile, index=False)
