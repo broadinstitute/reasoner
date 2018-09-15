@@ -96,8 +96,11 @@ class KnowledgeGraph:
             cypher = cypher + " SET n.mechanism = {mechanism}"
         if self.is_safe(pharmacodynamics):
             cypher = cypher + " SET n.pharmacodynamics = {pharmacodynamics}"
-        self.query(cypher, chembl_id=chembl_id, name=name, cui=cui, chebi_id=chebi_id,
+        try:
+            self.query(cypher, chembl_id=chembl_id, name=name, cui=cui, chebi_id=chebi_id,
                    drugbank_id=drugbank_id, drug_type=drug_type, mechanism=mechanism, pharmacodynamics=pharmacodynamics)
+        except neo4j.exceptions.ConstraintError:
+            print(chembl_id, name, cui, chebi_id, drugbank_id)
 
     def add_protein(self, uniprot_id, name):
         cypher = """
