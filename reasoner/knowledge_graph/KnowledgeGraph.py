@@ -220,7 +220,7 @@ class KnowledgeGraph:
                    activity_type=None,
                    activity_unit=None):
         cypher = ("MATCH (drug:Drug {chembl_id: {drug_chembl_id}}) " +
-                  "MATCH (target:%s {%s: {%s}}) " % (target_type, target_id_type, target_id) +
+                  "MATCH (target:%s {%s: {target_id}}) " % (target_type, target_id_type) +
                   """SET target:Target
                   MERGE (drug)-[r:TARGETS]->(target)
                   SET r.activity_value = {activity_value}
@@ -228,7 +228,7 @@ class KnowledgeGraph:
                   SET r.activity_unit = {activity_unit}
                   """)
         self.query(cypher, drug_chembl_id=drug_chembl_id,
-                   activity_value=activity_value, activity_type=activity_type, activity_unit=activity_unit)
+                   activity_value=activity_value, activity_type=activity_type, activity_unit=activity_unit, target_id=target_id)
 
     def add_protein_pathway_relation(self, uniprot_id, go_id, evidence_code=None):
         cypher = """

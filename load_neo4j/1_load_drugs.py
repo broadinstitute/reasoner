@@ -8,4 +8,4 @@ kg = KnowledgeGraph()
 
 drugs.fillna('', inplace = True)
 for index, row in drugs.iterrows():
-    kg.add_drug(row['chembl_id'], row['name'], row['cui'], row['chebi_id'], row['drugbank_id'], row['type'], row['mechanism'], row['pharmacodynamics'])
+    kg.add_drug('CHEMBL:'+row['chembl_id'], row['name'], 'UMLS:'+row['cui'], row['chebi_id'], 'DRUGBANK:'+row['drugbank_id'], row['type'], row['mechanism'], row['pharmacodynamics'])

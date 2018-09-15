@@ -38,7 +38,7 @@ class ChemblTools:
                "AND standard_relation = '=' "
                "AND cs.tax_id = 9606 "
                "AND md.chembl_id = '%s' "
-               "GROUP BY accession;") % chembl_id
+               "GROUP BY accession;") % chembl_id.replace('CHEMBL:', '')
         return(db_select(self.db, sql))
 
 # "ORDER BY accession, standard_type DESC, docs.year DESC "
