@@ -87,7 +87,7 @@ for drug in root.findall('drugbank:drug', ns):
     if drug_chembl_id != '':
         drug_chembl_id = 'CHEMBL:' + drug_chembl_id
     if drug_cui != '':
-        drug_cui = 'UMLS:' + drug_chembl_id
+        drug_cui = 'UMLS:' + drug_cui
 
     # add new drug to list
     drug_table.append([xstr(drug_id), xstr(drug_name),
