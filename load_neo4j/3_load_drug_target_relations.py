@@ -14,6 +14,6 @@ for chembl_id in drugs:
                 target_type='Protein',
                 target_id_type='uniprot_id',
                 target_id='UNIPROT:' + target['accession'],
-                activity_value=target['standard_value'],
+                activity_value=float(target['standard_value']),
                 activity_type=target['standard_type'],
                 activity_unit=target['standard_units'])
