@@ -28,9 +28,9 @@ for index, row in chembl2chebi_df.iterrows():
 
 uq = UmlsQuery()
 
-drug_table = [["id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics", "chebi_id", "cui", "umls_name"]]
-target_table = [["id", "name", "hgnc_id", "uniprot_id", "drug_id"]]
-category_table = [["drug_id", "mesh_id"]]
+drug_table = [["drugbank_id", "name", "type", "chembl_id", "mechanism", "pharmacodynamics", "chebi_id", "cui", "umls_name"]]
+target_table = [["target_drugbank_id", "name", "hgnc_id", "uniprot_id", "drug_drugbank_id"]]
+category_table = [["drug_drugbank_id", "category_mesh_id"]]
 
 tree = etree.parse(dbfile)
 root = tree.getroot()
