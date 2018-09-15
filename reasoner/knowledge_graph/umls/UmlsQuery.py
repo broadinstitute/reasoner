@@ -5,7 +5,7 @@ import json
 import mysql.connector
 from .Authentication import *
 from ..Config import Config
-from ..Dbtools.Dbtools import db_select
+from ..Dbtools import db_select
 
 
 class UmlsQuery:
