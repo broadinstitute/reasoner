@@ -10,7 +10,7 @@ for chembl_id in drugs:
     for target in targets:
         if target['component_type'] == 'PROTEIN' and target['db_source'] == 'SWISS-PROT':
             kg.add_drug_target_relation(
-                drug_chembl_id=target['chembl_id'],
+                drug_chembl_id='CHEMBL:' + target['chembl_id'],
                 target_type='Protein',
                 target_id_type='uniprot_id',
                 target_id='UNIPROT:' + target['accession'],

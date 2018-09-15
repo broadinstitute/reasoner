@@ -10,12 +10,12 @@ def xstr(s):
     return str(s)
 
 
-dbfile = '../data/neo4j/drugbank.xml'
-chembl2chebi_file = '../data/neo4j/chembl2chebi.tsv'
+dbfile = '../data/knowledge_graph/primary/drugbank.xml'
+chembl2chebi_file = '../data/knowledge_graph/id_maps/chembl2chebi.tsv'
 
-outfile_drugs = '../data/neo4j/graph/drugs.csv'
-outfile_targets = '../data/neo4j/graph/targets.csv'
-outfile_categories = '../data/neo4j/graph/drug_categories.csv'
+outfile_drugs = '../data/knowledge_graph/ready_to_load/drugs.csv'
+outfile_targets = '../data/knowledge_graph/ready_to_load/targets.csv'
+outfile_categories = '../data/knowledge_graph/ready_to_load/drug_categories.csv'
 
 
 # prepare chebi dict
@@ -82,6 +82,13 @@ for drug in root.findall('drugbank:drug', ns):
         drug_cui = result[0]['cui']
         drug_umls_name = result[0]['name']
 
+    if drug_id != '':
+        drug_id = 'DRUGBANK:' + drug_id
+    if drug_chembl_id != '':
+        drug_chembl_id = 'CHEMBL:' + drug_chembl_id
+    if drug_cui != '':
+        drug_cui = 'UMLS:' + drug_chembl_id
+
     # add new drug to list
     drug_table.append([xstr(drug_id), xstr(drug_name),
                        xstr(drug_type), xstr(drug_chembl_id),
@@ -89,38 +96,38 @@ for drug in root.findall('drugbank:drug', ns):
                        xstr(drug_chebi_id), xstr(drug_cui), xstr(drug_umls_name)])
 
 
-    for category in drug.findall('drugbank:categories/drugbank:category', ns):
-        mesh_id = category.find('drugbank:mesh-id', ns).text
-        if mesh_id is not None:
-            category_table.append([drug_id, mesh_id])
+    # for category in drug.findall('drugbank:categories/drugbank:category', ns):
+    #     mesh_id = category.find('drugbank:mesh-id', ns).text
+    #     if mesh_id is not None:
+    #         category_table.append([drug_id, mesh_id])
 
 
-    for target in drug.findall('drugbank:targets/drugbank:target', ns):
-        target_id = target.find('drugbank:id', ns).text
-        target_name = target.find('drugbank:name', ns).text
+    # for target in drug.findall('drugbank:targets/drugbank:target', ns):
+    #     target_id = target.find('drugbank:id', ns).text
+    #     target_name = target.find('drugbank:name', ns).text
     
-        target_synonyms = []
-        target_exids = {}
-        for polypeptide in target.findall('drugbank:polypeptide', ns):
-            for syns in polypeptide.findall('drugbank:synonyms', ns):
-                for syn in syns:
-                    target_synonyms.append(syn.text)
+    #     target_synonyms = []
+    #     target_exids = {}
+    #     for polypeptide in target.findall('drugbank:polypeptide', ns):
+    #         for syns in polypeptide.findall('drugbank:synonyms', ns):
+    #             for syn in syns:
+    #                 target_synonyms.append(syn.text)
             
-            for exids in polypeptide.findall('drugbank:external-identifiers', ns):
-                for exid in exids:
-                    exid_res = exid.find('drugbank:resource', ns).text
-                    exid_id = exid.find('drugbank:identifier', ns).text
-                    target_exids[exid_res] = exid_id
+    #         for exids in polypeptide.findall('drugbank:external-identifiers', ns):
+    #             for exid in exids:
+    #                 exid_res = exid.find('drugbank:resource', ns).text
+    #                 exid_id = exid.find('drugbank:identifier', ns).text
+    #                 target_exids[exid_res] = exid_id
 
-        hgnc_id = None
-        uniprot_id = None
-        if 'HUGO Gene Nomenclature Committee (HGNC)' in target_exids:
-            hgnc_id = target_exids['HUGO Gene Nomenclature Committee (HGNC)']
+    #     hgnc_id = None
+    #     uniprot_id = None
+    #     if 'HUGO Gene Nomenclature Committee (HGNC)' in target_exids:
+    #         hgnc_id = target_exids['HUGO Gene Nomenclature Committee (HGNC)']
 
-        if 'UniProtKB' in target_exids:
-            uniprot_id = target_exids['UniProtKB']
+    #     if 'UniProtKB' in target_exids:
+    #         uniprot_id = target_exids['UniProtKB']
 
-        target_table.append([xstr(target_id), xstr(target_name), xstr(hgnc_id), xstr(uniprot_id), xstr(drug_id)])
+    #     target_table.append([xstr(target_id), xstr(target_name), xstr(hgnc_id), xstr(uniprot_id), xstr(drug_id)])
 
 
 
@@ -128,12 +135,12 @@ with open(outfile_drugs, 'w') as f:
     writer = csv.writer(f)
     writer.writerows(drug_table)
 
-with open(outfile_targets, 'w') as f:  
-    writer = csv.writer(f)
-    writer.writerows(target_table)
+# with open(outfile_targets, 'w') as f:  
+#     writer = csv.writer(f)
+#     writer.writerows(target_table)
 
-with open(outfile_categories, 'w') as f:  
-    writer = csv.writer(f)
-    writer.writerows(category_table)
+# with open(outfile_categories, 'w') as f:  
+#     writer = csv.writer(f)
+#     writer.writerows(category_table)
 
 print("done")
