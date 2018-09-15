@@ -1,6 +1,7 @@
 import copy
 import networkx as nx
 from neo4j.v1 import GraphDatabase
+import neo4j.exceptions
 from .Config import Config
 
 
