@@ -3,6 +3,7 @@ from reasoner.knowledge_graph.KnowledgeGraph import KnowledgeGraph
 
 disease_file = '../data/knowledge_graph/ready_to_load/diseases.csv'
 disease = pd.read_csv(disease_file)
+disease.fillna('', inplace = True)
 
 kg = KnowledgeGraph()
 for index, row in disease.iterrows():
