@@ -63,19 +63,27 @@ class KnowledgeGraph:
 
     def set_semtype(self, cui, semtype):
         cypher = """
-            MATCH (term {cui: {cui}})
+            MATCH (term:UmlsTerm {cui: {cui}})
             SET term:%s
             """ % (semtype)
         self.query(cypher, cui=cui)
 
     def get_cuis(self):
         cypher = """
-            MATCH (n)
+            MATCH (n:UmlsTerm)
             WHERE exists(n.cui)
             RETURN n.cui as cui
             """
         result = self.query(cypher)
         return([record['cui'] for record in result])
+
+    def get_cl_terms(self):
+        cypher = """
+            MATCH (term:ClTerm)
+            WHERE exists(term.cl_id)
+            RETURN term.cl_id as cl_id;"""
+        result = self.query(cypher)
+        return([record['cl_id'] for record in result])
 
     def is_safe(self, x):
         return x is not None and x != ''
@@ -258,8 +266,8 @@ class KnowledgeGraph:
     def add_indication_relation(self, chembl_id, disease_cui):
         self.add_generic_relation("HAS_INDICATION", chembl_id, "Drug", "chembl_id", disease_cui, "Disease", "cui", "chembl")
 
-    def add_disease_finding_site_relation(self, disease_cui, disease_semtype, location_cui, location_semtype):
-        self.add_generic_relation("LOCATION_OF", disease_cui, disease_semtype, "cui", location_cui, location_semtype, "cui", "chembl")
+    def add_disease_finding_site_relation(self, disease_cui, location_cui):
+        self.add_generic_relation("LOCATION_OF", disease_cui, 'UmlsTerm', "cui", location_cui, 'UmlsTerm', "cui", "snomed")
 
     def add_chebi_role_relation(self, start_chebi_id, end_chebi_id, target_name):
         self.add_generic_relation("HAS_ROLE", start_chebi_id, "ChebiTerm", "chebi_id", end_chebi_id, "ChebiTerm", "chebi_id", "chebi")
