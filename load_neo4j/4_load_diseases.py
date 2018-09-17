@@ -1,4 +1,4 @@
-import pandas
+import pandas as pd
 from reasoner.knowledge_graph.KnowledgeGraph import KnowledgeGraph
 
 disease_file = '../data/knowledge_graph/ready_to_load/diseases.csv'
