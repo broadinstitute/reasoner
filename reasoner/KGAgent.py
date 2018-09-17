@@ -42,7 +42,6 @@ class KGAgent:
 
 
     def mvp_target_query(self, drug_chembl_id):
-        drug_chembl_id = drug_chembl_id.replace("CHEMBL:", "")
         self.result = self.drug2target(drug_chembl_id)
 
 
