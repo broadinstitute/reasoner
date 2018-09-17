@@ -8,7 +8,7 @@ ct = ChemblTools()
 
 chembl_ids = kg.get_drug_chembl_ids()
 for chembl_id in chembl_ids:
-    indications = ct.get_indication(chembl_id)
+    indications = ct.get_indication(chembl_id.replace('CHEMBL:', ''))
     for row in indications:
         result = uq.mesh2cui(row['mesh_id'])
         if result:
