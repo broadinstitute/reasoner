@@ -129,7 +129,10 @@ class KnowledgeGraph:
             cypher = cypher + " SET n.mesh_id = {mesh_id}"
         if self.is_safe(hpo_id):
             cypher = cypher + " SET n.hpo_id = {hpo_id} SET n:HpoTerm;"
-        self.query(cypher, cui=cui, name=name, mesh_id=mesh_id, hpo_id=hpo_id)
+        try:
+            self.query(cypher, cui=cui, name=name, mesh_id=mesh_id, hpo_id=hpo_id)
+        except neo4j.exceptions.ConstraintError:
+            print(cui, name, mesh_id, hpo_id)
 
     def add_pathway(self, go_id, name, cui=None, aspect=None):
         cypher = """
