@@ -12,4 +12,4 @@ for chembl_id in chembl_ids:
     for row in indications:
         result = uq.mesh2cui(row['mesh_id'])
         if result:
-            kg.add_indication_relation(row['chembl_id'], result[0]['cui'])
+            kg.add_indication_relation(chembl_id, 'UMLS:' + result[0]['cui'])
