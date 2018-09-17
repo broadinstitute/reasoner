@@ -34,12 +34,12 @@ for term in unique_diseases:
 
 chembl_ids = kg.get_drug_chembl_ids()
 for chembl_id in chembl_ids:
-    indications = ct.get_indication(chembl_id)
+    indications = ct.get_indication(chembl_id.replace('CHEMBL:', ''))
     for row in indications:
-        result = uq.mesh2cui(row['mesh_id'])
+        mesh_id = row['mesh_id']
+        result = uq.mesh2cui(mesh_id)
         if result:
             cui = result[0]['cui']
-            mesh_id = result[0]['mesh_id']
             name = uq.cui2bestname(cui)[0]['name']
             hpo_result = uq.cui2hpo(cui)
             if hpo_result:
