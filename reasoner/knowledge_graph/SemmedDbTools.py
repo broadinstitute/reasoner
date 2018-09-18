@@ -15,15 +15,12 @@ class SemmedDbTools:
         self.db.close()
 
     def get_terms(self):
-        sql = ("SELECT DISTINCT SUBJECT_CUI as cui, SUBJECT_SEMTYPE as semtype, SUBJECT_NAME as name "
-               "FROM PREDICATION "
-               "UNION "
-               "SELECT DISTINCT OBJECT_CUI as cui, OBJECT_SEMTYPE as semtype, OBJECT_NAME as name "
-               "FROM PREDICATION")
+        sql = ("SELECT cui, semtype, name "
+               "FROM entities;")
         return(db_select(self.db, sql))
 
     def get_triples(self):
         sql = ("SELECT predicate, subject_cui, object_cui "
                "COUNT(*) as count "
-               "FROM PREDICATION")
+               "FROM PREDICATION;")
         return(db_select(self.db, sql))
