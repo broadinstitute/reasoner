@@ -23,5 +23,6 @@ class SemmedDbTools:
         sql = ("SELECT predicate, subject_cui, object_cui, COUNT(*) as count "
                "FROM PREDICATION "
                "INNER JOIN SEMTYPE_FILTERED "
-               "ON SEMTYPE_FILTERED.PREDICATION_ID = PREDICATION.PREDICATION_ID;")
+               "ON SEMTYPE_FILTERED.PREDICATION_ID = PREDICATION.PREDICATION_ID "
+               "GROUP BY predicate, subject_cui, object_cui;")
         return(db_select(self.db, sql))
