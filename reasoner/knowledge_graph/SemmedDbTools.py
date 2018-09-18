@@ -16,6 +16,7 @@ class SemmedDbTools:
 
     def get_terms(self):
         sql = ("SELECT DISTINCT SUBJECT_CUI as cui, SUBJECT_SEMTYPE as semtype, SUBJECT_NAME as name "
+               "FROM PREDICATION "
                "UNION "
                "SELECT DISTINCT OBJECT_CUI as cui, OBJECT_SEMTYPE as semtype, OBJECT_NAME as name "
                "FROM PREDICATION")
