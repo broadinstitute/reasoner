@@ -22,6 +22,6 @@ class SemmedDbTools:
     def get_triples(self):
         sql = ("SELECT predicate, subject_cui, object_cui, COUNT(*) as count "
                "FROM PREDICATION "
-               "INNER JOIN PRED_FILTERED "
-               "ON PRED_FILTERED.PREDICATION_ID = PREDICATION.PREDICATION_ID;")
+               "INNER JOIN SEMTYPE_FILTERED "
+               "ON SEMTYPE_FILTERED.PREDICATION_ID = PREDICATION.PREDICATION_ID;")
         return(db_select(self.db, sql))
