@@ -18,9 +18,12 @@ sem2type = {'dsyn': 'Disease',
 
 terms = sdb_tools.get_terms()
 for term in terms:
-    if term['semtype'] in sem2type:
-        kg.add_umls_term("UMLS:" + term['cui'], term['name'], (term['semtype'],sem2type[term['semtype']]))
-    kg.add_umls_term("UMLS:" + term['cui'], term['name'], (term['semtype'],))
+    semtypes = set(term['semtype'].split(','))
+    st_raw = semtypes.copy()
+    for st in st_raw:
+        if st in sem2type:
+            semtypes.add(sem2type[term['semtype']])
+    kg.add_umls_term("UMLS:" + term['cui'], term['name'], semtypes)
 
 triples = sdb_tools.get_triples()
 for triple in triples:
