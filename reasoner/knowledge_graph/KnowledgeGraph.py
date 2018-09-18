@@ -201,7 +201,7 @@ class KnowledgeGraph:
             SET n.name = {name}
             """
         for semtype in semtypes:
-            cypher = cypher + "SET n:" + semtype
+            cypher = cypher + " SET n:" + semtype
         self.query(cypher, cui=cui, name=name)
 
 
