@@ -19,12 +19,12 @@ sem2type = {'dsyn': 'Disease',
 terms = sdb_tools.get_terms()
 for term in terms:
     if term['semtype'] in sem2type:
-        kg.add_umls_term(term['cui'], term['name'], (term['semtype'],sem2type[term['semtype']]))
-    kg.add_umls_term(term['cui'], term['name'], (term['semtype'],))
+        kg.add_umls_term("UMLS:" + term['cui'], term['name'], (term['semtype'],sem2type[term['semtype']]))
+    kg.add_umls_term("UMLS:" + term['cui'], term['name'], (term['semtype'],))
 
 triples = sdb_tools.get_triples()
 for triple in triples:
     kg.add_semmed_relation(triple['predicate'],
-                           triple['subject_cui'],
-                           triple['object_cui'],
+                           "UMLS:" + triple['subject_cui'],
+                           "UMLS:" + triple['object_cui'],
                            triple['count'])
