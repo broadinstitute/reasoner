@@ -106,7 +106,7 @@ class UmlsQuery:
                "WHERE SAB = 'HPO' "
                "AND CUI = '%s' "
                "AND TTY = 'PT' "
-               "ORDER BY SDUI;" % cui)
+               "ORDER BY SDUI;" % cui.replace('UMLS:', ''))
         result = db_select(self.db, sql)
         return(result)
 
@@ -137,7 +137,7 @@ class UmlsQuery:
                "AND stt = 'PF' "
                "AND ispref = 'Y' "
                "AND lat = 'ENG';")
-        result = db_select(self.db, sql, {'cui': cui})
+        result = db_select(self.db, sql, {'cui': cui.replace('UMLS:', '')})
         return(result)
 
     def get_semtype(self, cui):
