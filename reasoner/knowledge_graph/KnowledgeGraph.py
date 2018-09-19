@@ -171,6 +171,12 @@ class KnowledgeGraph:
             """ % (term_type, id_type)
         self.query(cypher, id=id, name=name)
 
+    def add_chebi_term(self, chebi_id, name, cui=None):
+        if cui is not None:
+            self.add_multiclass_term_by_cui(cui, name, 'ChebiTerm', 'chebi_id', chebi_id)
+        else:
+            self.add_generic_term('ChebiTerm', 'chebi_id', chebi_id, name)
+
     def add_cl_term(self, cl_id, name, cui=None):
         if cui is not None:
             self.add_multiclass_term_by_cui(cui, name, 'ClTerm', 'cl_id', cl_id)
@@ -269,13 +275,13 @@ class KnowledgeGraph:
     def add_disease_finding_site_relation(self, disease_cui, location_cui):
         self.add_generic_relation("LOCATION_OF", disease_cui, 'UmlsTerm', "cui", location_cui, 'UmlsTerm', "cui", "snomed")
 
-    def add_chebi_role_relation(self, start_chebi_id, end_chebi_id, target_name):
-        self.add_generic_relation("HAS_ROLE", start_chebi_id, "ChebiTerm", "chebi_id", end_chebi_id, "ChebiTerm", "chebi_id", "chebi")
+    def add_has_role_relation(self, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
+        self.add_generic_relation("HAS_ROLE", start_id, start_type, start_id_type, end_id, end_type, end_id_type, source)
 
     def add_isa_relation(self, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
         self.add_generic_relation("ISA", start_id, start_type, start_id_type, end_id, end_type, end_id_type, source)
 
-    def add_pert_of_relation(self, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
+    def add_part_of_relation(self, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
         self.add_generic_relation("PART_OF", start_id, start_type, start_id_type, end_id, end_type, end_id_type, source)
 
     def add_generic_relation(self, predicate, start_id, start_type, start_id_type, end_id, end_type, end_id_type, source):
