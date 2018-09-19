@@ -18,10 +18,10 @@ uq = UmlsQuery()
 # add terms
 for current_class in ontology_classes:
     current_id = current_class.name.replace('_', ':')
-    umls_results = uq.hpo2cui(current_id)
+    umls_result = uq.hpo2cui(current_id)
     if umls_result:
         name = umls_result[0]['name']
-        cui = 'UMLS:' + umls_results[0]['cui']
+        cui = 'UMLS:' + umls_result[0]['cui']
     else:
         name = current_class.label
         cui = None
