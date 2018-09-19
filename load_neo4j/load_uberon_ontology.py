@@ -15,14 +15,6 @@ onto = owlready2.get_ontology("http://purl.obolibrary.org/obo/uberon.owl")
 onto.load()
 obo = onto.get_namespace("http://purl.obolibrary.org/obo/")
 
-# ## get all targets
-# with driver.session() as session:
-#     terms = get_uberon_terms(session)
-
-# ## loop over targets and get ancestors, then loop until full hierarchy is loaded
-# to_process = {obo[record['uberon_id'].replace(':', '_')] for record in terms}
-# to_process = {x for x in to_process if x is not None}
-# processed = set()
 
 ontology_classes = obo.UBERON_0001062.descendants()
 ontology_classes.add(obo.UBERON_0001062)
