@@ -35,3 +35,19 @@ AND sub.semtype = pred.SUBJECT_SEMTYPE
 INNER JOIN entities obj
 ON obj.cui = pred.OBJECT_CUI
 AND obj.semtype = pred.OBJECT_SEMTYPE;
+
+
+
+CREATE TABLE PRED_SUMMARY(
+    predicate varchar(50),
+    subject_cui varchar(255),
+    object_cui varchar(255),
+    count int(3) unsigned
+);
+
+INSERT INTO PRED_SUMMARY (predicate, subject_cui, object_cui, count)
+SELECT predicate, subject_cui, object_cui, COUNT(*) as count
+FROM PREDICATION
+INNER JOIN SEMTYPE_FILTERED
+ON SEMTYPE_FILTERED.PREDICATION_ID = PREDICATION.PREDICATION_ID
+GROUP BY predicate, subject_cui, object_cui;
