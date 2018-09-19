@@ -11,7 +11,7 @@ for index, row in id_map_df.iterrows():
 
 ## load ontology
 owlready2.onto_path.append("/data/owlready")
-onto = owlready2.get_ontology("file:////../data/knowledge_graph/primary/chebi.owl")
+onto = owlready2.get_ontology("file:../data/knowledge_graph/primary/chebi.owl")
 onto.load()
 obo = onto.get_namespace("http://purl.obolibrary.org/obo/")
 
