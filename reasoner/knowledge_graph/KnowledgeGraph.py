@@ -171,9 +171,9 @@ class KnowledgeGraph:
     def add_multiclass_term_by_cui(self, cui, name, term_type, id_type=None, alt_id=None):
         cypher = """
             MERGE (n:UmlsTerm {cui: {cui}})
-            SET n:%s
-            ON CREATE SET n.name = {name}
-            """ % term_type
+            ON MATCH SET n:%s
+            ON CREATE SET n.name = {name} SET n:%s
+            """ % (term_type, term_type)
         if self.is_safe(id_type) and self.is_safe(alt_id):
             cypher = cypher + " SET n.%s = {alt_id}" % id_type
         self.query(cypher, name=name, cui=cui, alt_id=alt_id)
