@@ -5,7 +5,7 @@ CREATE TABLE entities(
     INDEX (cui)
 );
 
-
+# TODO deal with ill-formatted cuis in semmeddb (separated by vertical bar | )
 INSERT INTO semmeddb.entities (cui, semtype, name)
 SELECT sdb.cui as cui, srdef.abr as semtype, sdb.name as name
 FROM

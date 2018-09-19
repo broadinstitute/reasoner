@@ -22,5 +22,6 @@ class SemmedDbTools:
     def get_triples(self):
         sql = ("SELECT predicate, subject_cui, object_cui, count "
                "FROM PRED_SUMMARY "
-               "WHERE count > 1;")
+               "WHERE count > 2 "
+               "AND subject_cui != object_cui;")
         return(db_select(self.db, sql))
