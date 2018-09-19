@@ -36,6 +36,20 @@ class KnowledgeGraph:
                                key=edge.type, **properties)
         return graph
 
+    def get_entities(self):
+        cypher = "call db.labels()"
+        return(self.query(cypher))
+
+    def get_predicates(self):
+        cypher = "call db.relationshipTypes()"
+        return(self.query(cypher))
+
+    def get_out_neighbors(self, node_id):
+        cypher = """MATCH (n)-[r]->(t)
+            WHERE ID(n) = {node_id}
+            RETURN TYPE(r) as predicate, ID(t) as node_id, LABELS(t) as labels"""
+        return(self.query(cypher, node_id=node_id))
+
     def get_drug_chebi_ids(self):
         cypher = """
             MATCH (drug:Drug)
@@ -176,6 +190,12 @@ class KnowledgeGraph:
             self.add_multiclass_term_by_cui(cui, name, 'ChebiTerm', 'chebi_id', chebi_id)
         else:
             self.add_generic_term('ChebiTerm', 'chebi_id', chebi_id, name)
+
+    def add_go_term(self, go_id, name, cui=None):
+        if cui is not None:
+            self.add_multiclass_term_by_cui(cui, name, 'GoTerm', 'go_id', go_id)
+        else:
+            self.add_generic_term('GoTerm', 'go_id', go_id, name)
 
     def add_cl_term(self, cl_id, name, cui=None):
         if cui is not None:
