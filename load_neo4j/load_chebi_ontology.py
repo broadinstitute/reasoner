@@ -44,8 +44,7 @@ for current_class in ontology_classes:
 # add relations
 for current_class in ontology_classes:
     current_id = current_class.name.replace('_', ':')
-    superclasses = [x for x in current_class.is_a
-                    if not isinstance(x, owlready2.entity.Restriction)]
+    superclasses = [x for x in current_class.is_a]
     for superclass in superclasses:
         if isinstance(superclass, owlready2.entity.Restriction):
             if isinstance(superclass.property(), obo.RO_0000087):
