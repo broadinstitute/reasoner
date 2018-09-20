@@ -3,7 +3,7 @@ import pandas
 from reasoner.knowledge_graph.umls.UmlsQuery import UmlsQuery
 from reasoner.knowledge_graph.KnowledgeGraph import KnowledgeGraph
 
-map_file = "../data/neo4j/graph/umls2symptomontology.csv"
+map_file = "../data/knowledge_graph/id_maps/umls2symptomontology.csv"
 id_map_df = pandas.read_csv(map_file)
 id_map = {}
 for index, row in id_map_df.iterrows():
