@@ -176,7 +176,10 @@ class KnowledgeGraph:
             """
         if self.is_safe(cui):
             cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
-        self.query(cypher, go_id=go_id, name=name, cui=cui)
+        try:
+            self.query(cypher, go_id=go_id, name=name, cui=cui)
+        except neo4j.exceptions.ConstraintError:
+            print(go_id, cui, name)
 
     def add_multiclass_term_by_cui(self, cui, name, term_type, id_type=None, alt_id=None):
         cypher = """
