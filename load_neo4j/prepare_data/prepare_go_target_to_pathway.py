@@ -9,6 +9,7 @@ outfile_protein2pathways = "../data/knowledge_graph/ready_to_load/protein_to_pat
 go = pandas.read_csv(go_file, low_memory=False)
 go = go[['db', 'db_object_id', 'go_id', 'evidence_code', 'aspect']]
 go = go[(go['db'] == 'UniProtKB')]
+go['uniprot_id'] = 'UNIPROT:' + go['db_object_id'].astype(str)
 go.to_csv(outfile_protein2pathways, index=False)
 
 # write pathways
@@ -24,7 +25,7 @@ for i, go_id in enumerate(unique_goids):
         print(result)
         raise ValueError
     if len(result) == 1:
-        cui_list[i] = result[0]['cui']
+        cui_list[i] = 'UMLS:' + result[0]['cui']
         name_list[i] = result[0]['name']
 
 go_terms = pandas.DataFrame({'go_id': unique_goids, 'cui': cui_list, 'name': name_list})
