@@ -8,7 +8,7 @@ kg = KnowledgeGraph()
 pathways = pd.read_csv(pathway_file)
 pathways.fillna('', inplace = True)
 for index, row in pathways.iterrows():
-        kg.add_pathway(row['go_id'], row['name'], row['cui'], row['aspect'])
+        kg.add_pathway(row['go_id'], row['name'], row['cui'])
 
 
 protein2pathway = pd.read_csv(protein2pathway_file)

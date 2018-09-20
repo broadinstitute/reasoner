@@ -169,16 +169,13 @@ class KnowledgeGraph:
         except neo4j.exceptions.ConstraintError:
             print(cui, name, mesh_id, hpo_id)
 
-    def add_pathway(self, go_id, name, cui=None, aspect=None):
+    def add_pathway(self, go_id, name, cui=None):
         cypher = """
-            MERGE (n:Pathway {go_id: {go_id}})
+            MERGE (n:GoTerm {go_id: {go_id}})
             SET n.name = {name}
-            SET n:GoTerm
             """
         if self.is_safe(cui):
             cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
-        if self.is_safe(aspect):
-            cypher = cypher + " SET n.aspect = {aspect}"
         self.query(cypher, go_id=go_id, cui=cui, aspect=aspect)
 
     def add_multiclass_term_by_cui(self, cui, name, term_type, id_type=None, alt_id=None):

@@ -9,7 +9,7 @@ outfile_protein2pathways = "../data/knowledge_graph/ready_to_load/protein_to_pat
 go = pandas.read_csv(go_file, low_memory=False)
 go = go[['db', 'db_object_id', 'go_id', 'evidence_code', 'aspect']]
 go = go[(go['db'] == 'UniProtKB')]
-go.to_csv(outfile_pathways, index=False)
+go.to_csv(outfile_protein2pathways, index=False)
 
 # write pathways
 uq = UmlsQuery()
@@ -28,4 +28,4 @@ for i, go_id in enumerate(unique_goids):
         name_list[i] = result[0]['name']
 
 go_terms = pandas.DataFrame({'go_id': unique_goids, 'cui': cui_list, 'name': name_list})
-go_terms.to_csv(outfile_protein2pathways, index=False)
+go_terms.to_csv(outfile_pathways, index=False)
