@@ -148,6 +148,7 @@ definitions:
       page_number: 1
       terms:
         anatomical_entity: "liver"
+        symptom: "UMLS:C0000737"
         disease: "malaria"
         metabolite: "ibuprofen"
         protein: "P12345"
@@ -939,6 +940,9 @@ definitions:
       disease:
         type: "string"
         example: "malaria"
+      symptom:
+        type: "string"
+        example: "UMLS:C0000737"
       protein:
         type: "string"
         example: "P12345"
@@ -954,6 +958,7 @@ definitions:
     description: "Dict of terms needed by the specific query type"
     example:
       anatomical_entity: "liver"
+      symptom: "UMLS:C0000737"
       disease: "malaria"
       metabolite: "ibuprofen"
       protein: "P12345"

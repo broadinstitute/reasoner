@@ -114,6 +114,9 @@ definitions:
           disease:
             type: "string"
             example: "malaria"
+          symptom:
+            type: "string"
+            example: "UMLS:C0000737"
           protein:
             type: "string"
             example: "P12345"

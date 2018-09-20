@@ -15,11 +15,13 @@ class QueryTerms(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, disease: str=None, gene: str=None, pathway: str=None, protein: str=None, anatomical_entity: str=None, chemical_substance: str=None, metabolite: str=None):  # noqa: E501
+    def __init__(self, disease: str=None, symptom: str=None, protein: str=None, anatomical_entity: str=None, chemical_substance: str=None, metabolite: str=None):  # noqa: E501
         """QueryTerms - a model defined in Swagger
 
         :param disease: The disease of this QueryTerms.  # noqa: E501
         :type disease: str
+        :param symptom: The symptom of this QueryTerms.  # noqa: E501
+        :type symptom: str
         :param protein: The protein of this QueryTerms.  # noqa: E501
         :type protein: str
         :param anatomical_entity: The anatomical_entity of this QueryTerms.  # noqa: E501
@@ -31,8 +33,7 @@ class QueryTerms(Model):
         """
         self.swagger_types = {
             'disease': str,
-            'gene': str,
-            'pathway': str,
+            'symptom': str,
             'protein': str,
             'anatomical_entity': str,
             'chemical_substance': str,
@@ -41,8 +42,7 @@ class QueryTerms(Model):
 
         self.attribute_map = {
             'disease': 'disease',
-            'gene': 'gene',
-            'pathway': 'pathway',
+            'symptom': 'symptom',
             'protein': 'protein',
             'anatomical_entity': 'anatomical_entity',
             'chemical_substance': 'chemical_substance',
@@ -50,8 +50,7 @@ class QueryTerms(Model):
         }
 
         self._disease = disease
-        self._gene = gene
-        self._pathway = pathway
+        self._symptom = symptom
         self._protein = protein
         self._anatomical_entity = anatomical_entity
         self._chemical_substance = chemical_substance
@@ -90,47 +89,25 @@ class QueryTerms(Model):
         self._disease = disease
 
     @property
-    def gene(self) -> str:
-        """Gets the gene of this QueryTerms.
+    def symptom(self) -> str:
+        """Gets the symptom of this QueryTerms.
 
 
-        :return: The gene of this QueryTerms.
+        :return: The symptom of this QueryTerms.
         :rtype: str
         """
-        return self._gene
+        return self._symptom
 
-    @gene.setter
-    def gene(self, gene: str):
-        """Sets the gene of this QueryTerms.
+    @symptom.setter
+    def symptom(self, symptom: str):
+        """Sets the symptom of this QueryTerms.
 
 
-        :param gene: The gene of this QueryTerms.
-        :type gene: str
+        :param symptom: The symptom of this QueryTerms.
+        :type symptom: str
         """
 
-        self._gene = gene
-
-    @property
-    def pathway(self) -> str:
-        """Gets the pathway of this QueryTerms.
-
-
-        :return: The pathway of this QueryTerms.
-        :rtype: str
-        """
-        return self._pathway
-
-    @pathway.setter
-    def pathway(self, pathway: str):
-        """Sets the pathway of this QueryTerms.
-
-
-        :param pathway: The pathway of this QueryTerms.
-        :type pathway: str
-        """
-
-        self._pathway = pathway
-
+        self._symptom = symptom
 
     @property
     def protein(self) -> str:
