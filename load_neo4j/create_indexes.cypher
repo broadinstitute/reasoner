@@ -9,6 +9,9 @@ create constraint on (n:Drug) ASSERT n.chebi_id is unique;
 create index on :Drug(name);
 
 
+//ChebiTerm
+create constraint on (n:ChebiTerm) ASSERT n.chebi_id is unique;
+
 // Gene
 create constraint on (n:Gene) ASSERT n.hgnc_id is unique;
 
@@ -55,6 +58,11 @@ create constraint on (n:Disease) ASSERT n.hpo_id is unique;
 create constraint on (n:Disease) ASSERT n.mesh_id is unique;
 create index on :Disease(name);
 
+// SympTerm
+create constraint on (n:SympTerm) ASSERT n.symp_id is unique;
+
+// ClTerm
+create constraint on (n:ClTerm) ASSERT n.cl_id is unique;
 
 
 // HpoTerm
