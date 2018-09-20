@@ -17,8 +17,13 @@ obo = onto.get_namespace("http://purl.obolibrary.org/obo/")
 
 
 ###
-ontology_classes = obo.CL_0000000.descendants()
+ontology_classes = obo.CL_0000003.descendants()
+ontology_classes = obo.CL_0001034.descendants()
+ontology_classes = obo.CL_0001061.descendants()
 ontology_classes.add(obo.CL_0000000)
+ontology_classes.add(obo.CL_0000003)
+ontology_classes.add(obo.CL_0001034)
+ontology_classes.add(obo.CL_0001061)
 
 kg = KnowledgeGraph()
 uq = UmlsQuery()
