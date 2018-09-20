@@ -40,6 +40,11 @@ class KnowledgeGraph:
         cypher = "call db.labels()"
         return(self.query(cypher))
 
+    def get_composite_entities(self):
+        cypher = "MATCH (n) RETURN count(distinct labels(n))"
+        result = self.query(cypher)
+        return(["_".join(item) for item in result])
+
     def get_predicates(self):
         cypher = "call db.relationshipTypes()"
         return(self.query(cypher))
@@ -49,6 +54,14 @@ class KnowledgeGraph:
             WHERE ID(n) = {node_id}
             RETURN TYPE(r) as predicate, ID(t) as node_id, LABELS(t) as labels"""
         return(self.query(cypher, node_id=node_id))
+
+    def has_edge(self, start_id, end_id, predicate):
+        cypher = """MATCH  (start), (end)
+            WHERE ID(start) = {start_id}
+            AND ID(end) = {end_id}
+            RETURN EXISTS( (start)-[:%s]->(end) )
+            """ % predicate
+        return(self.query(cypher, start_id=start_id, end_id=end_id))
 
     def get_drug_chebi_ids(self):
         cypher = """
@@ -108,9 +121,9 @@ class KnowledgeGraph:
                     SET n.name = {name}
                  """
         if self.is_safe(cui):
-            cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm "
+            cypher = cypher + " SET n.cui = {cui} SET n:UmlsTerm"
         if self.is_safe(chebi_id):
-            cypher = cypher + " SET n.chebi_id = {chebi_id}"
+            cypher = cypher + " SET n.chebi_id = {chebi_id} SET n:ChebiTerm"
         if self.is_safe(drugbank_id):
             cypher = cypher + " SET n.drugbank_id = {drugbank_id}"
         if self.is_safe(drug_type):
