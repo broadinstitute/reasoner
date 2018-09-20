@@ -24,6 +24,8 @@ def query(body):  # noqa: E501
             r = mvp_target_query(body.terms.chemical_substance)
         elif body.query_type_id == 'conditionToSymptoms':
             r = conditionToSymptoms(body.terms.condition)
+        elif body.query_type_id == 'symptomToConditions':
+            r = symptomToConditions(body.terms.symptom)
         elif body.query_type_id == 'genesToPathways':
             r = genesToPathways(body.terms.genes)
         elif body.query_type_id == 'pathwayToGenes':

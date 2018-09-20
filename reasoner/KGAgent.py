@@ -134,7 +134,7 @@ class KGAgent:
          """,
          drug_chembl_id=drug_chembl_id)
 
-    def compoundToPharmClass(self, chemical_substance):
+    def compoundToPharmClass(self, drug_chembl_id):
         self.result = self.kg.query("""
          MATCH path = (dr:Drug {chembl_id:{drug_chembl_id}})-[:HAS_ROLE]->(ct:ChebiTerm)
          UNWIND nodes(path) as n
@@ -142,3 +142,11 @@ class KGAgent:
          RETURN collect(distinct n) as nodes, collect(distinct r) as edges
          """,
          drug_chembl_id=drug_chembl_id)
+
+    def symptomToDisease(self, symptom_umls_id):
+        cypher = """
+            MATCH path = (sy:Symptom {cui:{umls_id}})-[:ASSOCIATED_WITH]->(di:Disease)
+            UNWIND nodes(path) as n
+            UNWIND relationships(path) as r
+            RETURN collect(distinct n) as nodes, collect(distinct r) as edges"""
+        self.result = self.kg.query(cypher, umls_id=symptom_umls_id)
