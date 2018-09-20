@@ -272,7 +272,7 @@ class KnowledgeGraph:
         cypher = ("MATCH (drug:Drug {chembl_id: {drug_chembl_id}}) " +
                   "MATCH (target:%s {%s: {target_id}}) " % (target_type, target_id_type) +
                   """SET target:Target
-                  MERGE (drug)-[r:TARGETS]->(target)
+                  MERGE (drug)-[r:TARGETS {source: 'chembl'}]->(target)
                   SET r.activity_value = {activity_value}
                   SET r.activity_type = {activity_type}
                   SET r.activity_unit = {activity_unit}
