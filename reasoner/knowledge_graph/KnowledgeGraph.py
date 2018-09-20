@@ -283,8 +283,8 @@ class KnowledgeGraph:
     def add_protein_pathway_relation(self, uniprot_id, go_id, evidence_code=None):
         cypher = """
             MATCH (start:Protein {uniprot_id: {uniprot_id}})
-            MATCH (end:Pathway {go_id: {go_id}})
-            MERGE (start)-[r:PART_OF]->(end)
+            MATCH (end:GoTerm {go_id: {go_id}})
+            MERGE (start)-[r:PART_OF {source: 'go'}]->(end)
             """
         if evidence_code is not None:
             cypher = cypher + " SET r.evidence_code = {evidence_code}"
