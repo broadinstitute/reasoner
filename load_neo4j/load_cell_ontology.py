@@ -48,7 +48,8 @@ for current_class in ontology_classes:
 for current_class in ontology_classes:
     current_id = current_class.name.replace('_', ':')
     superclasses = [x for x in current_class.is_a
-                    if not isinstance(x, owlready2.entity.Restriction)]
+                    if not (isinstance(x, owlready2.entity.Restriction) or
+                            isinstance(x, owlready2.class_construct.And))]
     for superclass in superclasses:
         target_id = superclass.name.replace('_', ':')
         kg.add_isa_relation(current_id, 'ClTerm', 'cl_id', target_id, 'ClTerm', 'cl_id', 'cell_ontology')
