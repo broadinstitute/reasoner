@@ -13,6 +13,7 @@ trials = 0
 while trials < 10:
     try:
         ontology_classes = obo.HP_0000001.descendants()
+        break
     except ValueError:
         trials = trials + 1
         continue
