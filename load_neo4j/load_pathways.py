@@ -15,4 +15,4 @@ protein2pathway = pd.read_csv(protein2pathway_file)
 protein2pathway.fillna('', inplace = True)
 for index, row in protein2pathway.iterrows():
     if row['db'] == 'UniProtKB':
-        kg.add_protein_pathway_relation(row['db_object_id'], row['go_id'], row['evidence_code'])
+        kg.add_protein_pathway_relation(row['uniprot_id'], row['go_id'], row['evidence_code'])
