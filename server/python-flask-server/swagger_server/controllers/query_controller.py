@@ -2,7 +2,7 @@ import connexion
 import six
 
 from swagger_server.models.query import Query  # noqa: E501
-from swagger_server.ui import cop_query, mvp_target_query, conditionToSymptoms, genesToPathways, pathwayToGenes, geneToCompound, compoundToIndication, compoundToPharmClass
+from swagger_server.ui import *
 
 
 def query(body):  # noqa: E501
