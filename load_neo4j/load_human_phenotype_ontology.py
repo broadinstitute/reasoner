@@ -9,18 +9,25 @@ onto.load()
 obo = onto.get_namespace("http://purl.obolibrary.org/obo/")
 
 ###
-ontology_classes = obo.HP_0031797.descendants()
-ontology_classes = obo.HP_0012823.descendants()
-ontology_classes = obo.HP_0040279.descendants()
-ontology_classes = obo.HP_0000005.descendants()
-ontology_classes = obo.UPHENO_0001002.descendants()
-ontology_classes.add(obo.HP_0000001)
-ontology_classes.add(obo.HP_0031797)
-ontology_classes.add(obo.HP_0012823)
-ontology_classes.add(obo.HP_0040279)
-ontology_classes.add(obo.HP_0000005)
-ontology_classes.add(obo.HP_0000118)
-ontology_classes.add(obo.UPHENO_0001002)
+trials = 0
+while trials < 10:
+    try:
+        ontology_classes = obo.HP_0000001.descendants()
+    except ValueError:
+        trials = trials + 1
+        continue
+
+# ontology_classes = obo.HP_0031797.descendants()
+# ontology_classes = obo.HP_0012823.descendants()
+# ontology_classes = obo.HP_0040279.descendants()
+# ontology_classes = obo.HP_0000005.descendants()
+# ontology_classes = obo.UPHENO_0001001.descendants()
+# ontology_classes.add(obo.HP_0000001)
+# ontology_classes.add(obo.HP_0031797)
+# ontology_classes.add(obo.HP_0012823)
+# ontology_classes.add(obo.HP_0040279)
+# ontology_classes.add(obo.HP_0000005)
+# ontology_classes.add(obo.UPHENO_0001001)
 
 
 kg = KnowledgeGraph()
