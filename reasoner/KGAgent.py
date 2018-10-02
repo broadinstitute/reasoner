@@ -118,7 +118,7 @@ class KGAgent:
 
     def geneToCompound(self, gene_hgnc_id):
         self.result = self.kg.query("""
-         MATCH path = (ta:Target {hgnc_id:{gene_hgnc_id}})<-[:TARGETS]-(dr:Drug)
+         MATCH path = (ge:Gene {hgnc_id:{gene_hgnc_id}})<-[:PRODUCT_OF]-(pr:Protein)<-[:TARGETS]-(dr:Drug)
          UNWIND nodes(path) as n
          UNWIND relationships(path) as r
          RETURN collect(distinct n) as nodes, collect(distinct r) as edges
