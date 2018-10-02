@@ -15,7 +15,7 @@ class QueryTerms(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, disease: str=None, symptom: str=None, protein: str=None, anatomical_entity: str=None, chemical_substance: str=None, metabolite: str=None):  # noqa: E501
+    def __init__(self, disease: str=None, symptom: str=None, protein: str=None, anatomical_entity: str=None, chemical_substance: str=None, metabolite: str=None, pathway: str=None, gene: str=None, cell: str=None):  # noqa: E501
         """QueryTerms - a model defined in Swagger
 
         :param disease: The disease of this QueryTerms.  # noqa: E501
@@ -30,6 +30,12 @@ class QueryTerms(Model):
         :type chemical_substance: str
         :param metabolite: The metabolite of this QueryTerms.  # noqa: E501
         :type metabolite: str
+        :param pathway: The pathway of this QueryTerms.  # noqa: E501
+        :type pathway: str
+        :param gene: The gene of this QueryTerms.  # noqa: E501
+        :type gene: str
+        :param cell: The cell of this QueryTerms.  # noqa: E501
+        :type cell: str
         """
         self.swagger_types = {
             'disease': str,
@@ -37,7 +43,10 @@ class QueryTerms(Model):
             'protein': str,
             'anatomical_entity': str,
             'chemical_substance': str,
-            'metabolite': str
+            'metabolite': str,
+            'pathway': str,
+            'gene': str,
+            'cell': str
         }
 
         self.attribute_map = {
@@ -46,7 +55,10 @@ class QueryTerms(Model):
             'protein': 'protein',
             'anatomical_entity': 'anatomical_entity',
             'chemical_substance': 'chemical_substance',
-            'metabolite': 'metabolite'
+            'metabolite': 'metabolite',
+            'pathway': 'pathway',
+            'gene': 'gene',
+            'cell': 'cell'
         }
 
         self._disease = disease
@@ -55,6 +67,9 @@ class QueryTerms(Model):
         self._anatomical_entity = anatomical_entity
         self._chemical_substance = chemical_substance
         self._metabolite = metabolite
+        self._pathway = pathway
+        self._gene = gene
+        self._cell = cell
 
     @classmethod
     def from_dict(cls, dikt) -> 'QueryTerms':
@@ -192,3 +207,66 @@ class QueryTerms(Model):
         """
 
         self._metabolite = metabolite
+
+    @property
+    def pathway(self) -> str:
+        """Gets the pathway of this QueryTerms.
+
+
+        :return: The pathway of this QueryTerms.
+        :rtype: str
+        """
+        return self._pathway
+
+    @pathway.setter
+    def pathway(self, pathway: str):
+        """Sets the pathway of this QueryTerms.
+
+
+        :param pathway: The pathway of this QueryTerms.
+        :type pathway: str
+        """
+
+        self._pathway = pathway
+
+    @property
+    def gene(self) -> str:
+        """Gets the gene of this QueryTerms.
+
+
+        :return: The gene of this QueryTerms.
+        :rtype: str
+        """
+        return self._gene
+
+    @gene.setter
+    def gene(self, gene: str):
+        """Sets the gene of this QueryTerms.
+
+
+        :param gene: The gene of this QueryTerms.
+        :type gene: str
+        """
+
+        self._gene = gene
+
+    @property
+    def cell(self) -> str:
+        """Gets the cell of this QueryTerms.
+
+
+        :return: The cell of this QueryTerms.
+        :rtype: str
+        """
+        return self._cell
+
+    @cell.setter
+    def cell(self, cell: str):
+        """Sets the cell of this QueryTerms.
+
+
+        :param cell: The cell of this QueryTerms.
+        :type cell: str
+        """
+
+        self._cell = cell

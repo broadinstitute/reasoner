@@ -113,22 +113,31 @@ definitions:
         properties:
           disease:
             type: "string"
-            example: "malaria"
+            example: "UMLS:C0005586"
           symptom:
             type: "string"
             example: "UMLS:C0000737"
           protein:
             type: "string"
-            example: "P12345"
+            example: "UNIPROT:P12345"
           anatomical_entity:
             type: "string"
-            example: "liver"
+            example: "UBERON:0000948"
           chemical_substance:
             type: "string"
-            example: "ibuprofen"
+            example: "CHEMBL:CHEMBL521"
           metabolite:
             type: "string"
-            example: "ibuprofen"
+            example: "n/a"
+          pathway:
+            type: "string"
+            example: "GO:0004888"
+          gene:
+            type: "string"
+            example: "HGNC:3535"
+          cell:
+            type: "string"
+            example: "CL:0000738"
         additionalProperties: true
       reasoner_ids:
         type: "array"

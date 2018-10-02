@@ -147,12 +147,15 @@ definitions:
       bypass_cache: "true"
       page_number: 1
       terms:
-        anatomical_entity: "liver"
+        anatomical_entity: "UBERON:0000948"
         symptom: "UMLS:C0000737"
-        disease: "malaria"
-        metabolite: "ibuprofen"
-        protein: "P12345"
-        chemical_substance: "ibuprofen"
+        disease: "UMLS:C0005586"
+        metabolite: "n/a"
+        gene: "HGNC:3535"
+        protein: "UNIPROT:P12345"
+        pathway: "GO:0004888"
+        cell: "CL:0000738"
+        chemical_substance: "CHEMBL:CHEMBL521"
       asynchronous: "False"
       known_query_type_id: "DEPRECATED"
       options: "coalesce=True,threshold=0.9"
@@ -939,27 +942,39 @@ definitions:
     properties:
       disease:
         type: "string"
-        example: "malaria"
+        example: "UMLS:C0005586"
       symptom:
         type: "string"
         example: "UMLS:C0000737"
       protein:
         type: "string"
-        example: "P12345"
+        example: "UNIPROT:P12345"
       anatomical_entity:
         type: "string"
-        example: "liver"
+        example: "UBERON:0000948"
       chemical_substance:
         type: "string"
-        example: "ibuprofen"
+        example: "CHEMBL:CHEMBL521"
       metabolite:
         type: "string"
-        example: "ibuprofen"
+        example: "n/a"
+      pathway:
+        type: "string"
+        example: "GO:0004888"
+      gene:
+        type: "string"
+        example: "HGNC:3535"
+      cell:
+        type: "string"
+        example: "CL:0000738"
     description: "Dict of terms needed by the specific query type"
     example:
-      anatomical_entity: "liver"
+      anatomical_entity: "UBERON:0000948"
       symptom: "UMLS:C0000737"
-      disease: "malaria"
-      metabolite: "ibuprofen"
-      protein: "P12345"
-      chemical_substance: "ibuprofen"
+      disease: "UMLS:C0005586"
+      metabolite: "n/a"
+      gene: "HGNC:3535"
+      protein: "UNIPROT:P12345"
+      pathway: "GO:0004888"
+      cell: "CL:0000738"
+      chemical_substance: "CHEMBL:CHEMBL521"
