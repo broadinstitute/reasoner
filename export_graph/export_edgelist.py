@@ -1,8 +1,6 @@
 import csv
 from reasoner.knowledge_graph.KnowledgeGraph import KnowledgeGraph
 
-np.random.seed(439572)
-
 outfile = 'data/knowledge_graph/export/edgelist.txt'
 
 kg = KnowledgeGraph()
