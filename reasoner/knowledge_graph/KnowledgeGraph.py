@@ -57,7 +57,7 @@ class KnowledgeGraph:
 
     def get_edgelist(self):
         cypher = "MATCH (n1)--(n2) RETURN DISTINCT ID(n1) as start, ID(n2) as end"
-        return(self.query(cypher, node_id=node_id))
+        return(self.query(cypher))
 
     def has_edge(self, start_id, end_id, predicate):
         cypher = """MATCH  (start), (end)
