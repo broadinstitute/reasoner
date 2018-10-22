@@ -23,5 +23,6 @@ class SemmedDbTools:
         sql = ("SELECT predicate, subject_cui, object_cui, count "
                "FROM PRED_SUMMARY "
                "WHERE count > 2 "
-               "AND subject_cui != object_cui;")
+               "AND subject_cui != object_cui"
+               "AND predicate NOT IN ('compared_with', 'higher_than', 'lower_than', 'different_from', 'NEG_higher_than', 'different_than');")
         return(db_select(self.db, sql))
