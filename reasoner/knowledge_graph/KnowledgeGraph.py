@@ -36,8 +36,13 @@ class KnowledgeGraph:
                                key=edge.type, **properties)
         return graph
 
-    def get_entities(self):
-        cypher = "call db.labels()"
+    def get_num_nodes(self):
+        cypher = "MATCH (n) return COUNT(*) as n"
+        result = self.query(cypher)
+        return([record['n'] for record in result][0])
+
+    def get_entity_ids(self):
+        cypher = "MATCH (n) return ID(n) as id"
         return(self.query(cypher))
 
     def get_composite_entities(self):
@@ -46,7 +51,7 @@ class KnowledgeGraph:
         return(["_".join(item) for item in result])
 
     def get_predicates(self):
-        cypher = "call db.relationshipTypes()"
+        cypher = "call db.relationshipTypes() YIELD relationshipType RETURN relationshipType as predicate"
         return(self.query(cypher))
 
     def get_out_neighbors(self, node_id):
