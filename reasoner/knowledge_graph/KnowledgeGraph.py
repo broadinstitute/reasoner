@@ -45,6 +45,10 @@ class KnowledgeGraph:
         cypher = "MATCH (n) return ID(n) as id"
         return(self.query(cypher))
 
+    def get_node_by_id(self, node_id):
+        cypher = "MATCH (n) WHERE ID(n) = {node_id} RETURN n as node"
+        return(self.query(cypher, node_id=node_id))
+
     def get_composite_entities(self):
         cypher = "MATCH (n) RETURN count(distinct labels(n))"
         result = self.query(cypher)
