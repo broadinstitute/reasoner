@@ -143,6 +143,14 @@ class KGAgent:
          """,
          drug_chembl_id=drug_chembl_id)
 
+    def diseaseToSymptom(self, disease_umls_id):
+        cypher = """
+            MATCH path = (di:Disease {cui:{umls_id}})<-[:ASSOCIATED_WITH]-(sy:Symptom)
+            UNWIND nodes(path) as n
+            UNWIND relationships(path) as r
+            RETURN collect(distinct n) as nodes, collect(distinct r) as edges"""
+        self.result = self.kg.query(cypher, umls_id=disease_umls_id)
+
     def symptomToDisease(self, symptom_umls_id):
         cypher = """
             MATCH path = (sy:Symptom {cui:{umls_id}})-[:ASSOCIATED_WITH]->(di:Disease)

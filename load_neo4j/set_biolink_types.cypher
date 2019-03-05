@@ -1,0 +1,12 @@
+MATCH (n:Drug) SET n.biolink_category = 'drug', n.biolink_label = 'bl_drug'
+MATCH (n:Gene) SET n.biolink_category = 'gene', n.biolink_label = 'bl_gene'
+MATCH (n:Protein) SET n.biolink_category = 'protein', n.biolink_label = 'bl_protein'
+MATCH (n:Disease) SET n.biolink_category = 'disease', n.biolink_label = 'bl_disease'
+MATCH (n:Pathway) SET n.biolink_category = 'pathway', n.biolink_label = 'bl_pathway'
+MATCH (n:Cell) SET n.biolink_category = 'cell', n.biolink_label = 'bl_cell'
+MATCH (n:Symptom) SET n.biolink_category = 'phenotypic feature', n.biolink_label = 'bl_phenotypic_feature'
+MATCH (n:Tissue) SET n.biolink_category = 'gross anatomical structure', n.biolink_label = 'bl_gross_anatomical_structure'
+MATCH (p:GoTerm {go_id:"GO:0008150"})<-[:ISA*1..12 {source: "go"}]-(n:GoTerm) SET n.biolink_category = 'biological process', n.biolink_label = 'bl_biological_process'
+MATCH (p:GoTerm {go_id:"GO:0005575"})<-[:ISA*1..12 {source: "go"}]-(n:GoTerm) SET n.biolink_category = 'cellular component', n.biolink_label = 'bl_cellular_component'
+MATCH (p:GoTerm {go_id:"GO:0003674"})<-[:ISA*1..12 {source: "go"}]-(n:GoTerm) SET n.biolink_category = 'molecular activity', n.biolink_label = 'bl_molecular_activity'
+
