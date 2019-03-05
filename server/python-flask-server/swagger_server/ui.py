@@ -73,9 +73,9 @@ def mvp_target_query(chemical_substance):
     return(r)
 
 
-def conditionToSymptoms(condition):
+def conditionToSymptoms(disease):
     agent = KGAgent()
-    agent.dieaseToSymptom(condition)
+    agent.dieaseToSymptom(disease)
     return(getDefaultResponse(agent))
 
 def symptomToConditions(symptom):
