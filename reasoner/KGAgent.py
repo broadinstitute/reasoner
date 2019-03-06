@@ -158,3 +158,18 @@ class KGAgent:
             UNWIND relationships(path) as r
             RETURN collect(distinct n) as nodes, collect(distinct r) as edges"""
         self.result = self.kg.query(cypher, umls_id=symptom_umls_id)
+
+    def conditionSymptomSimilarity(self, disease_umls_id):
+        cypher = """
+            MATCH (di:Disease {cui:{umls_id}})<-[r:ASSOCIATED_WITH]-(sy:Symptom)
+            WHERE r.count > 50
+            WITH collect(di) as query_disease, collect(r) as query_relations, collect(sy) as symptoms
+            CALL apoc.when(size(symptoms) < 1, 'RETURN null as result', 'MATCH (s)--(dii:Disease) WHERE ALL(s in symptoms WHERE (s)-[:ASSOCIATED_WITH]->(dii)) RETURN collect(dii) as result_disease, symptoms as symptoms, query_relations as query_relations', {symptoms:symptoms, query_relations:query_relations}) YIELD value
+            WITH value.result_disease as diseases, value.symptoms as symptoms
+            MATCH path = (s)-[:ASSOCIATED_WITH]->(d)
+            WHERE d in diseases
+            AND s in symptoms
+            UNWIND nodes(path) as n
+            UNWIND relationships(path) as r
+            RETURN collect(distinct n) as nodes, collect(distinct r) as edges"""
+        self.result = self.kg.query(cypher, umls_id=disease_umls_id)

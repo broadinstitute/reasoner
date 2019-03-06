@@ -83,6 +83,11 @@ def symptomToConditions(symptom):
     agent.symptomToDisease(symptom)
     return(getDefaultResponse(agent))
 
+def conditionSymptomSimilarity(disease):
+    agent = KGAgent()
+    agent.conditionSymptomSimilarity(disease)
+    return(getDefaultResponse(agent))
+
 def genesToPathways(genes):
     return(None)
 
