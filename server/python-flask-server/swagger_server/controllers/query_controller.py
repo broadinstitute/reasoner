@@ -27,7 +27,7 @@ def query(body):  # noqa: E501
         elif body.query_type_id == 'symptomToConditions':
             r = symptomToConditions(body.terms.symptom)
         elif body.query_type_id == 'conditionSymptomSimilarity':
-            r = conditionSymptomSimilarity(body.terms.symptom)
+            r = conditionSymptomSimilarity(body.terms.disease)
         elif body.query_type_id == 'genesToPathways':
             r = genesToPathways(body.terms.genes)
         elif body.query_type_id == 'pathwayToGenes':
