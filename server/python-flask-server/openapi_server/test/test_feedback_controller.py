@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from __future__ import absolute_import
+import unittest
 
 from flask import json
 from six import BytesIO
@@ -19,9 +20,13 @@ class TestFeedbackController(BaseTestCase):
 
         Request a list of all feedback provided thus far
         """
+        headers = { 
+            'Accept': 'application/json',
+        }
         response = self.client.open(
             '/feedback/all',
-            method='GET')
+            method='GET',
+            headers=headers)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -30,9 +35,13 @@ class TestFeedbackController(BaseTestCase):
 
         Request a list of allowable expertise levels
         """
+        headers = { 
+            'Accept': 'application/json',
+        }
         response = self.client.open(
             '/feedback/expertise_levels',
-            method='GET')
+            method='GET',
+            headers=headers)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
@@ -41,13 +50,16 @@ class TestFeedbackController(BaseTestCase):
 
         Request a list of allowable ratings
         """
+        headers = { 
+            'Accept': 'application/json',
+        }
         response = self.client.open(
             '/feedback/ratings',
-            method='GET')
+            method='GET',
+            headers=headers)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
 
 if __name__ == '__main__':
-    import unittest
     unittest.main()
