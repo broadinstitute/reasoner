@@ -6,7 +6,12 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_server.models.base_model_ import Model
+from openapi_server.models.message import Message
+from openapi_server.models.previous_message_processing_plan import PreviousMessageProcessingPlan
 from openapi_server import util
+
+from openapi_server.models.message import Message  # noqa: E501
+from openapi_server.models.previous_message_processing_plan import PreviousMessageProcessingPlan  # noqa: E501
 
 
 class Query(Model):
@@ -31,7 +36,7 @@ class Query(Model):
         :param reasoner_ids: The reasoner_ids of this Query.  # noqa: E501
         :type reasoner_ids: List[str]
         :param query_message: The query_message of this Query.  # noqa: E501
-        :type query_message: List[Message]
+        :type query_message: Message
         :param previous_message_processing_plan: The previous_message_processing_plan of this Query.  # noqa: E501
         :type previous_message_processing_plan: List[PreviousMessageProcessingPlan]
         """
@@ -42,7 +47,7 @@ class Query(Model):
             'page_size': int,
             'page_number': int,
             'reasoner_ids': List[str],
-            'query_message': List[Message],
+            'query_message': Message,
             'previous_message_processing_plan': List[PreviousMessageProcessingPlan]
         }
 
@@ -222,7 +227,7 @@ class Query(Model):
         Message object that represents the query to be answered  # noqa: E501
 
         :return: The query_message of this Query.
-        :rtype: List[Message]
+        :rtype: Message
         """
         return self._query_message
 
@@ -233,7 +238,7 @@ class Query(Model):
         Message object that represents the query to be answered  # noqa: E501
 
         :param query_message: The query_message of this Query.
-        :type query_message: List[Message]
+        :type query_message: Message
         """
 
         self._query_message = query_message

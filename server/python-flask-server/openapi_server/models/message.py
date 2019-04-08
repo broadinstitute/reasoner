@@ -6,7 +6,18 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_server.models.base_model_ import Model
+from openapi_server.models.knowledge_graph import KnowledgeGraph
+from openapi_server.models.message_terms import MessageTerms
+from openapi_server.models.query_graph import QueryGraph
+from openapi_server.models.remote_knowledge_graph import RemoteKnowledgeGraph
+from openapi_server.models.result import Result
 from openapi_server import util
+
+from openapi_server.models.knowledge_graph import KnowledgeGraph  # noqa: E501
+from openapi_server.models.message_terms import MessageTerms  # noqa: E501
+from openapi_server.models.query_graph import QueryGraph  # noqa: E501
+from openapi_server.models.remote_knowledge_graph import RemoteKnowledgeGraph  # noqa: E501
+from openapi_server.models.result import Result  # noqa: E501
 
 
 class Message(Model):
