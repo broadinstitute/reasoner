@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-import unittest
 
 from flask import json
 from six import BytesIO
@@ -19,14 +18,9 @@ class TestQueryController(BaseTestCase):
         Query reasoner via one of several inputs
         """
         request_body = None
-        headers = { 
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
         response = self.client.open(
             '/query',
             method='POST',
-            headers=headers,
             data=json.dumps(request_body),
             content_type='application/json')
         self.assert200(response,
@@ -34,4 +28,5 @@ class TestQueryController(BaseTestCase):
 
 
 if __name__ == '__main__':
+    import unittest
     unittest.main()
