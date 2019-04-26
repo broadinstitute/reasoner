@@ -15,26 +15,27 @@ def resultGraph(graph):
     nodes = []
     for node in graph.nodes(data=True):
         node_attributes = [NodeAttribute(name=key,
-                                         value=value)
+                                         value=str(value))
                            for key, value in node[1].items()
                            if key not in ['labels', 'name']]
         nodes.append(Node(id=str(node[0]),
-                          type=', '.join(node[1]['labels']),
-                          name=node[1]['name'],
+                          type=[str(label) for label in node[1]['labels']],
+                          name=str(node[1]['name']),
                           node_attributes=node_attributes))
 
     edges = []
     for edge in graph.edges(data=True):
         edge_attributes = [EdgeAttribute(name=key,
-                                         value=value)
+                                         value=str(value))
                            for key, value in edge[2].items()
-                           if key not in ['type', 'source']]
+                           if key not in ['type', 'source','id']]
         if 'source' not in edge[2]:
             edge[2]['source'] = "NA"
         edges.append(Edge(type=edge[2]['type'],
                           source_id=str(edge[0]),
                           target_id=str(edge[1]),
-                          provided_by=edge[2]['source'],
+                          provided_by=str(edge[2]['source']),
+                          id=str(edge[2]['id']),
                           edge_attributes=edge_attributes))
 
     rg = KnowledgeGraph(nodes=nodes, edges=edges)
