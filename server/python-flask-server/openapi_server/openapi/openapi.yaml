@@ -6,8 +6,9 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: '{{url}}'
   title: OpenAPI for NCATS Biomedical Translator Reasoners
-  version: 0.9.0
+  version: 0.9.1
 externalDocs:
   description: Documentation for the NCATS Biomedical Translator Reasoners web services
   url: https://github.com/NCATS-Tangerine/NCATS-ReasonerStdAPI
@@ -19,16 +20,6 @@ tags:
     description: Documentation for the reasoner query function
     url: http://reasonerhost.ncats.io/overview.html#query
   name: query
-- description: Request stored messages and feedback for messages
-  externalDocs:
-    description: Documentation for the reasoner message function
-    url: https://reasonerhost.ncats.io/overview.html#message
-  name: message
-- description: Request stored results and feedback for results
-  externalDocs:
-    description: Documentation for the reasoner result function
-    url: http://reasonerhost.ncats.io/overview.html#result
-  name: result
 paths:
   /query:
     post:
@@ -54,299 +45,8 @@ paths:
       - query
       x-swagger-router-controller: swagger_server.controllers.query_controller
       x-openapi-router-controller: openapi_server.controllers.query_controller
-  /feedback/ratings:
-    get:
-      operationId: get_feedback_ratings
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ratings'
-          description: successful operation
-      summary: Request a list of allowable ratings
-      tags:
-      - feedback
-      x-swagger-router-controller: swagger_server.controllers.feedback_controller
-      x-openapi-router-controller: openapi_server.controllers.feedback_controller
-  /feedback/expertise_levels:
-    get:
-      operationId: get_feedback_expertise_levels
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExpertiseLevels'
-          description: successful operation
-      summary: Request a list of allowable expertise levels
-      tags:
-      - feedback
-      x-swagger-router-controller: swagger_server.controllers.feedback_controller
-      x-openapi-router-controller: openapi_server.controllers.feedback_controller
-  /feedback/all:
-    get:
-      operationId: get_feedback_all
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Feedback'
-                type: array
-          description: successful operation
-      summary: Request a list of all feedback provided thus far
-      tags:
-      - feedback
-      x-swagger-router-controller: swagger_server.controllers.feedback_controller
-      x-openapi-router-controller: openapi_server.controllers.feedback_controller
-  /message/{message_id}:
-    get:
-      operationId: get_message
-      parameters:
-      - description: Integer identifier of the message to return
-        explode: false
-        in: path
-        name: message_id
-        required: true
-        schema:
-          format: int32
-          type: integer
-        style: simple
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Message'
-          description: successful operation
-        404:
-          description: Message_id not found
-      summary: Request stored messages and results from reasoner
-      tags:
-      - message
-      x-swagger-router-controller: swagger_server.controllers.message_controller
-      x-openapi-router-controller: openapi_server.controllers.message_controller
-  /message/{message_id}/feedback:
-    get:
-      operationId: get_message_feedback
-      parameters:
-      - description: Integer identifier of the message to return
-        explode: false
-        in: path
-        name: message_id
-        required: true
-        schema:
-          format: int32
-          type: integer
-        style: simple
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageFeedback'
-          description: successful operation
-        404:
-          description: Message_id not found
-      summary: Request stored feedback for this message from reasoner
-      tags:
-      - message
-      x-swagger-router-controller: swagger_server.controllers.message_controller
-      x-openapi-router-controller: openapi_server.controllers.message_controller
-  /result/{result_id}:
-    get:
-      operationId: get_result
-      parameters:
-      - description: Integer identifier of the result to return
-        explode: false
-        in: path
-        name: result_id
-        required: true
-        schema:
-          format: int32
-          type: integer
-        style: simple
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Result'
-          description: successful operation
-        404:
-          description: result_id not found
-      summary: Request stored result
-      tags:
-      - result
-      x-swagger-router-controller: swagger_server.controllers.result_controller
-      x-openapi-router-controller: openapi_server.controllers.result_controller
-  /result/{result_id}/feedback:
-    get:
-      operationId: get_result_feedback
-      parameters:
-      - description: Integer identifier of the result to return
-        explode: false
-        in: path
-        name: result_id
-        required: true
-        schema:
-          format: int32
-          type: integer
-        style: simple
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResultFeedback'
-          description: successful operation
-        404:
-          description: result_id not found
-      summary: Request stored feedback for this result
-      tags:
-      - result
-      x-swagger-router-controller: swagger_server.controllers.result_controller
-      x-openapi-router-controller: openapi_server.controllers.result_controller
-    post:
-      operationId: post_result_feedback
-      parameters:
-      - description: Integer identifier of the result to return
-        explode: false
-        in: path
-        name: result_id
-        required: true
-        schema:
-          format: int32
-          type: integer
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Feedback'
-        description: Comment information
-        required: true
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FeedbackResponse'
-          description: successful operation
-        400:
-          description: Invalid status value
-      summary: Store feedback for a particular result
-      tags:
-      - result
-      x-swagger-router-controller: swagger_server.controllers.result_controller
-      x-openapi-router-controller: openapi_server.controllers.result_controller
 components:
   schemas:
-    FeedbackResponse:
-      example:
-        detail: detail
-        title: title
-        type: type
-        status: 0
-      properties:
-        detail:
-          type: string
-        status:
-          format: int32
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-      type: object
-    Ratings:
-      example:
-        n_ratings: 1
-        ratings:
-        - score: 6.02745618307040320615897144307382404804229736328125
-          rating_id: 0
-          name: name
-          description: description
-          tag: tag
-        - score: 6.02745618307040320615897144307382404804229736328125
-          rating_id: 0
-          name: name
-          description: description
-          tag: tag
-      properties:
-        ratings:
-          items:
-            $ref: '#/components/schemas/Rating'
-          type: array
-        n_ratings:
-          format: int32
-          type: integer
-      type: object
-    Rating:
-      example:
-        score: 6.02745618307040320615897144307382404804229736328125
-        rating_id: 0
-        name: name
-        description: description
-        tag: tag
-      properties:
-        description:
-          type: string
-        rating_id:
-          format: int32
-          type: integer
-        name:
-          type: string
-        score:
-          type: number
-        tag:
-          type: string
-      type: object
-    ExpertiseLevels:
-      example:
-        n_expertise_levels: 1
-        expertise_levels:
-        - score: 6.02745618307040320615897144307382404804229736328125
-          expertise_level_id: 0
-          name: name
-          description: description
-          tag: tag
-        - score: 6.02745618307040320615897144307382404804229736328125
-          expertise_level_id: 0
-          name: name
-          description: description
-          tag: tag
-      properties:
-        expertise_levels:
-          items:
-            $ref: '#/components/schemas/ExpertiseLevel'
-          type: array
-        n_expertise_levels:
-          format: int32
-          type: integer
-      type: object
-    ExpertiseLevel:
-      example:
-        score: 6.02745618307040320615897144307382404804229736328125
-        expertise_level_id: 0
-        name: name
-        description: description
-        tag: tag
-      properties:
-        description:
-          type: string
-        expertise_level_id:
-          format: int32
-          type: integer
-        name:
-          type: string
-        score:
-          type: number
-        tag:
-          type: string
-      type: object
     Query:
       additionalProperties: true
       properties:
@@ -466,10 +166,15 @@ components:
         message_code: OK
         terms:
           anatomical_entity: liver
+          symptom: UMLS:C0000737
           disease: malaria
           metabolite: ibuprofen
+          gene: HGNC:3535
           protein: P12345
+          pathway: GO:0004888
+          cell: CL:0000738
           chemical_substance: ibuprofen
+          drug: ibuprofen
         context: https://rtx.ncats.io/ns/translator.jsonld
         reasoner_id: reasoner
         id: https://rtx.ncats.io/api/rtx/v1/message/123
@@ -1387,117 +1092,19 @@ components:
           example: https://www.ncbi.nlm.nih.gov/pubmed/29309293
           type: string
       type: object
-    Feedback:
-      description: A single unit of Feedback
-      example:
-        commenter_id: 1
-        datetime: 2018-05-08 12:00
-        rating_id: 1
-        result_id: https://rtx.ncats.io/api/rtx/v1/result/234
-        expertise_level_id: 1
-        comment: This is a great result because...
-        id: https://rtx.ncats.io/api/rtx/v1/result/234/feedback/56
-        commenter_full_name: John Smith
-      properties:
-        id:
-          description: URI for this feedback item
-          example: https://rtx.ncats.io/api/rtx/v1/result/234/feedback/56
-          type: string
-        result_id:
-          description: URI for the result that this feedback corresponds to
-          example: https://rtx.ncats.io/api/rtx/v1/result/234
-          type: string
-        expertise_level_id:
-          description: Integer identifier of the claimed expertise level
-          example: 1
-          format: int32
-          type: integer
-        rating_id:
-          description: Integer identifier of the applied rating
-          example: 1
-          format: int32
-          type: integer
-        commenter_id:
-          description: Integer identifier of the commenter
-          example: 1
-          format: int32
-          type: integer
-        commenter_full_name:
-          description: Full name of the commenter
-          example: John Smith
-          type: string
-        datetime:
-          description: Datetime when the feedback was provided
-          example: 2018-05-08 12:00
-          type: string
-        comment:
-          description: A free text comment about this result
-          example: This is a great result because...
-          type: string
-      type: object
-      x-body-name: feedback
-    ResultFeedback:
-      description: Feedback for one result
-      example:
-        feedback_list:
-        - commenter_id: 1
-          datetime: 2018-05-08 12:00
-          rating_id: 1
-          result_id: https://rtx.ncats.io/api/rtx/v1/result/234
-          expertise_level_id: 1
-          comment: This is a great result because...
-          id: https://rtx.ncats.io/api/rtx/v1/result/234/feedback/56
-          commenter_full_name: John Smith
-        - commenter_id: 1
-          datetime: 2018-05-08 12:00
-          rating_id: 1
-          result_id: https://rtx.ncats.io/api/rtx/v1/result/234
-          expertise_level_id: 1
-          comment: This is a great result because...
-          id: https://rtx.ncats.io/api/rtx/v1/result/234/feedback/56
-          commenter_full_name: John Smith
-      properties:
-        feedback_list:
-          description: List of feedback posts for this result
-          items:
-            $ref: '#/components/schemas/Feedback'
-          type: array
-      type: object
-    MessageFeedback:
-      description: Feedback for all the results corresponding to this message
-      example:
-        feedback_list:
-        - commenter_id: 1
-          datetime: 2018-05-08 12:00
-          rating_id: 1
-          result_id: https://rtx.ncats.io/api/rtx/v1/result/234
-          expertise_level_id: 1
-          comment: This is a great result because...
-          id: https://rtx.ncats.io/api/rtx/v1/result/234/feedback/56
-          commenter_full_name: John Smith
-        - commenter_id: 1
-          datetime: 2018-05-08 12:00
-          rating_id: 1
-          result_id: https://rtx.ncats.io/api/rtx/v1/result/234
-          expertise_level_id: 1
-          comment: This is a great result because...
-          id: https://rtx.ncats.io/api/rtx/v1/result/234/feedback/56
-          commenter_full_name: John Smith
-      properties:
-        feedback_list:
-          description: List of feedback posts for this entire message
-          items:
-            $ref: '#/components/schemas/Feedback'
-          type: array
-      type: object
     Message_terms:
       description: Dict of terms needed by the specific query type
       example:
         anatomical_entity: liver
+        symptom: UMLS:C0000737
         disease: malaria
         metabolite: ibuprofen
+        gene: HGNC:3535
         protein: P12345
+        pathway: GO:0004888
+        cell: CL:0000738
         chemical_substance: ibuprofen
+        drug: ibuprofen
       properties:
         disease:
           example: malaria
@@ -1513,4 +1120,19 @@ components:
           type: string
         metabolite:
           example: ibuprofen
+          type: string
+        symptom:
+          example: UMLS:C0000737
+          type: string
+        drug:
+          example: ibuprofen
+          type: string
+        pathway:
+          example: GO:0004888
+          type: string
+        gene:
+          example: HGNC:3535
+          type: string
+        cell:
+          example: CL:0000738
           type: string

@@ -15,7 +15,7 @@ class MessageTerms(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, disease=None, protein=None, anatomical_entity=None, chemical_substance=None, metabolite=None):  # noqa: E501
+    def __init__(self, disease=None, protein=None, anatomical_entity=None, chemical_substance=None, metabolite=None, symptom=None, drug=None, pathway=None, gene=None, cell=None):  # noqa: E501
         """MessageTerms - a model defined in OpenAPI
 
         :param disease: The disease of this MessageTerms.  # noqa: E501
@@ -28,13 +28,28 @@ class MessageTerms(Model):
         :type chemical_substance: str
         :param metabolite: The metabolite of this MessageTerms.  # noqa: E501
         :type metabolite: str
+        :param symptom: The symptom of this MessageTerms.  # noqa: E501
+        :type symptom: str
+        :param drug: The drug of this MessageTerms.  # noqa: E501
+        :type drug: str
+        :param pathway: The pathway of this MessageTerms.  # noqa: E501
+        :type pathway: str
+        :param gene: The gene of this MessageTerms.  # noqa: E501
+        :type gene: str
+        :param cell: The cell of this MessageTerms.  # noqa: E501
+        :type cell: str
         """
         self.openapi_types = {
             'disease': str,
             'protein': str,
             'anatomical_entity': str,
             'chemical_substance': str,
-            'metabolite': str
+            'metabolite': str,
+            'symptom': str,
+            'drug': str,
+            'pathway': str,
+            'gene': str,
+            'cell': str
         }
 
         self.attribute_map = {
@@ -42,7 +57,12 @@ class MessageTerms(Model):
             'protein': 'protein',
             'anatomical_entity': 'anatomical_entity',
             'chemical_substance': 'chemical_substance',
-            'metabolite': 'metabolite'
+            'metabolite': 'metabolite',
+            'symptom': 'symptom',
+            'drug': 'drug',
+            'pathway': 'pathway',
+            'gene': 'gene',
+            'cell': 'cell'
         }
 
         self._disease = disease
@@ -50,6 +70,11 @@ class MessageTerms(Model):
         self._anatomical_entity = anatomical_entity
         self._chemical_substance = chemical_substance
         self._metabolite = metabolite
+        self._symptom = symptom
+        self._drug = drug
+        self._pathway = pathway
+        self._gene = gene
+        self._cell = cell
 
     @classmethod
     def from_dict(cls, dikt) -> 'MessageTerms':
@@ -166,3 +191,108 @@ class MessageTerms(Model):
         """
 
         self._metabolite = metabolite
+
+    @property
+    def symptom(self):
+        """Gets the symptom of this MessageTerms.
+
+
+        :return: The symptom of this MessageTerms.
+        :rtype: str
+        """
+        return self._symptom
+
+    @symptom.setter
+    def symptom(self, symptom):
+        """Sets the symptom of this MessageTerms.
+
+
+        :param symptom: The symptom of this MessageTerms.
+        :type symptom: str
+        """
+
+        self._symptom = symptom
+
+    @property
+    def drug(self):
+        """Gets the drug of this MessageTerms.
+
+
+        :return: The drug of this MessageTerms.
+        :rtype: str
+        """
+        return self._drug
+
+    @drug.setter
+    def drug(self, drug):
+        """Sets the drug of this MessageTerms.
+
+
+        :param drug: The drug of this MessageTerms.
+        :type drug: str
+        """
+
+        self._drug = drug
+
+    @property
+    def pathway(self):
+        """Gets the pathway of this MessageTerms.
+
+
+        :return: The pathway of this MessageTerms.
+        :rtype: str
+        """
+        return self._pathway
+
+    @pathway.setter
+    def pathway(self, pathway):
+        """Sets the pathway of this MessageTerms.
+
+
+        :param pathway: The pathway of this MessageTerms.
+        :type pathway: str
+        """
+
+        self._pathway = pathway
+
+    @property
+    def gene(self):
+        """Gets the gene of this MessageTerms.
+
+
+        :return: The gene of this MessageTerms.
+        :rtype: str
+        """
+        return self._gene
+
+    @gene.setter
+    def gene(self, gene):
+        """Sets the gene of this MessageTerms.
+
+
+        :param gene: The gene of this MessageTerms.
+        :type gene: str
+        """
+
+        self._gene = gene
+
+    @property
+    def cell(self):
+        """Gets the cell of this MessageTerms.
+
+
+        :return: The cell of this MessageTerms.
+        :rtype: str
+        """
+        return self._cell
+
+    @cell.setter
+    def cell(self, cell):
+        """Sets the cell of this MessageTerms.
+
+
+        :param cell: The cell of this MessageTerms.
+        :type cell: str
+        """
+
+        self._cell = cell
