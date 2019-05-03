@@ -9,6 +9,7 @@ from openapi_server.models.node_attribute import NodeAttribute
 from openapi_server.models.edge_attribute import EdgeAttribute
 from openapi_server.models.knowledge_graph import KnowledgeGraph
 from openapi_server.models.result import Result
+from openapi_server.models.message_terms import MessageTerms
 
 
 def resultGraph(graph):
@@ -112,3 +113,116 @@ def compoundToPharmClass(chemical_substance):
     agent = KGAgent()
     agent.compoundToPharmClass(chemical_substance)
     return(getDefaultResponse(agent))
+
+def queryReasoner(query_type_id, terms):
+
+    r = 'wrong query_message.query_type_id \''+str(query_type_id)+'\''
+    if query_type_id == 'Q2':
+        r = cop_query(terms.chemical_substance, terms.disease)
+    elif query_type_id == 'Q3':
+        r = mvp_target_query(terms.chemical_substance)
+    elif query_type_id == 'conditionToSymptoms':
+        r = conditionToSymptoms(terms.disease)
+    elif query_type_id == 'symptomToConditions':
+        r = symptomToConditions(terms.symptom)
+    elif query_type_id == 'conditionSymptomSimilarity':
+        r = conditionSymptomSimilarity(terms.disease)
+    elif query_type_id == 'genesToPathways':
+        r = genesToPathways(terms.gene)
+    elif query_type_id == 'pathwayToGenes':
+        r = pathwayToGenes(terms.pathway)
+    elif query_type_id == 'geneToCompound':
+        r = geneToCompound(terms.gene)
+    elif query_type_id == 'compoundToIndication':
+        r = compoundToIndication(terms.chemical_substance)
+    elif query_type_id == 'compoundToPharmClass':
+        r = compoundToPharmClass(terms.chemical_substance)
+    else:
+        msg =  "query_message.query_type_id '"+str(query_type_id)+"' not implemented"
+        return( { "status": 501, "title": msg, "detail": msg, "type": "about:blank" }, 501 )
+
+    return r
+
+def knowledgeMap():
+    """
+        Knowledge-map format: list of:
+            ( subject=("biolink_type","?/*", "indigo_reasoner_type"),
+              predicate,
+              object =("biolink_type","?/*", "indigo_reasoner_type"),
+              "query_type_id"
+            )
+            "?" - map node to query_message.terms
+            "*" - wildcard
+    """
+    km = [
+        (("chemical_substance","?","chemical_substance"),"associated_with",("disease","?","disease"), "Q2"),
+        (("chemical_substance","?","chemical_substance"),"targets",("protein","*"), "Q3"),
+        (("phenotypic_feature","*"),"associated_with",("disease","?","disease"), "conditionToSymptoms"),
+        (("phenotypic_feature","?","symptom"),"associated_with",("disease","*"), "symptomToConditions"),
+        (("chemical_substance","*"),"targets",("gene","?","gene"), "geneToCompound"),
+        (("chemical_substance","?","chemical_substance"),"has_indication",("disease","*"), "compoundToIndication"),
+        (("chemical_substance","?","chemical_substance"),"has_role",("pharmacological_class","*"), "compoundToPharmClass")
+    ]
+    return km
+
+def node2tuple(node):
+    return (node.type, node.curie)
+
+def queryGraph2triples(query_graph):
+    nodes = {}
+    for node in query_graph.nodes:
+        nodes[node.node_id] = node
+    triples = []
+    for edge in query_graph.edges:
+        source_node = nodes[edge.source_id]
+        edge_type = edge.type
+        target_node = nodes[edge.target_id]
+        triple = (node2tuple(source_node), edge_type, node2tuple(target_node))
+        triples.append(triple)
+    return triples
+
+
+def match_triple(query_triples, km_triple):
+    terms = MessageTerms()
+    if len(query_triples)!= 1:
+        return None
+    query_triple = query_triples[0]
+
+    if km_triple[0][0] != query_triple[0][0]:
+        return None
+    if query_triple[1] != None and km_triple[1] != query_triple[1]:
+        return None
+    if km_triple[2][0] != query_triple[2][0]:
+        return None
+
+    if km_triple[0][1] == '?' and  query_triple[0][1] == None:
+        return None
+    if km_triple[0][1] == '*' and  query_triple[0][1] != None:
+        return None
+    if km_triple[0][1] == '?' and  query_triple[0][1] != None:
+        setattr(terms, '_'+km_triple[0][2], query_triple[0][1])
+
+    if km_triple[2][1] == '?' and  query_triple[2][1] == None:
+        return None
+    if km_triple[2][1] == '*' and  query_triple[2][1] != None:
+        return None
+    if km_triple[2][1] == '?' and  query_triple[2][1] != None:
+        setattr(terms, '_'+km_triple[2][2], str(query_triple[2][1]))
+
+
+    return (km_triple[3], terms)
+
+def queryGraph2query(query_graph):
+    """
+        translate query_graph to query_type_id and query_message.terms
+        and query reasoner
+    """
+    query_triples = queryGraph2triples(query_graph)
+    for km_triple in knowledgeMap():
+        match = match_triple(query_triples, km_triple)
+        if match != None:
+            query_type_id, terms = match
+            return queryReasoner(query_type_id, terms)
+    msg =  "graph query not implemented"
+    return( { "status": 501, "title": msg, "detail": msg, "type": "about:blank" }, 501 )
+
