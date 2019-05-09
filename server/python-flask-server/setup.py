@@ -3,8 +3,8 @@
 import sys
 from setuptools import setup, find_packages
 
-NAME = "openapi_server"
-VERSION = "1.0.0"
+NAME = "indigo_reasoner_API"
+VERSION = "0.9.1.0"
 
 # To install the library, run the following
 #
@@ -31,7 +31,7 @@ setup(
     package_data={'': ['openapi/openapi.yaml']},
     include_package_data=True,
     entry_points={
-        'console_scripts': ['openapi_server=openapi_server.__main__:main']},
+        'console_scripts': ['indigo_reasoner_API=openapi_server.__main__:main']},
     long_description="""\
     OpenAPI for NCATS Biomedical Translator Reasoners
     """
