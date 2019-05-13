@@ -19,7 +19,7 @@ class TestQueryController(BaseTestCase):
         """
         request_body = None
         response = self.client.open(
-            '/query',
+            '/reasoner/api/v1/query',
             method='POST',
             data=json.dumps(request_body),
             content_type='application/json')

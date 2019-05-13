@@ -1,10 +1,11 @@
 openapi: 3.0.1
 info:
-  description: OpenAPI for NCATS Biomedical Translator Reasoners
-  version: 0.9.1
-  title: OpenAPI for NCATS Biomedical Translator Reasoners
+  description: OpenAPI for indigo NCATS Biomedical Translator Reasoner
+  version: 0.9.1.1
+  title: OpenAPI for indigo NCATS Biomedical Translator Reasoner
   contact:
-    email: edeutsch@systemsbiology.org
+    name: Broad NCATS translator
+    email: translator@broadinstitute.org
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
@@ -12,12 +13,11 @@ info:
 externalDocs:
   description: Documentation for the NCATS Biomedical Translator Reasoners web services
   url: 'https://github.com/NCATS-Tangerine/NCATS-ReasonerStdAPI'
+servers:
+  - url: 'https://indigo.ncats.io/reasoner/api/v1/'
 tags:
   - name: query
     description: Query reasoner using a predefined question type
-    externalDocs:
-      description: Documentation for the reasoner query function
-      url: 'http://reasonerhost.ncats.io/overview.html#query'
 paths:
   /query:
     post:
