@@ -17,7 +17,7 @@ class TestQueryController(BaseTestCase):
 
         Query reasoner via one of several inputs
         """
-        request_body = None
+        request_body = {"query_message":{"query_graph":{"edges":[{"edge_id":"e00","source_id":"n00","target_id":"n01","type":"targets"}],"nodes":[{"node_id":"n00","curie":"CHEMBL:CHEMBL521","type":"chemical_substance"},{"node_id":"n01","type":"protein"}]}}}
         response = self.client.open(
             '/reasoner/api/v1/query',
             method='POST',
