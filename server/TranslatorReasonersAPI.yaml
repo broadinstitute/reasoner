@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   description: OpenAPI for indigo NCATS Biomedical Translator Reasoner
-  version: 0.9.1.1
+  version: 0.9.1.2
   x-reasoner_standard_version: 0.9.1
   title: OpenAPI for indigo NCATS Biomedical Translator Reasoner
   contact:

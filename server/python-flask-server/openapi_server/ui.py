@@ -226,3 +226,20 @@ def queryGraph2query(query_graph):
     msg =  "graph query not implemented"
     return( { "status": 501, "title": msg, "detail": msg, "type": "about:blank" }, 501 )
 
+def predicates():
+    """
+        Transform knowledge map to predicates
+    """
+    predicates = {}
+    for km_triple in knowledgeMap():
+        subject = km_triple[0][0]
+        predicate = km_triple[1]
+        object = km_triple[2][0]
+        if subject not in predicates:
+            predicates[subject] = {}
+        if object not in predicates[subject]:
+            predicates[subject][object] = []
+        if predicate not in predicates[subject][object]:
+            predicates[subject][object].append(predicate)
+
+    return predicates
