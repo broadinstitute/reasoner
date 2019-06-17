@@ -4,7 +4,7 @@ import sys
 from setuptools import setup, find_packages
 
 NAME = "indigo_reasoner_API"
-VERSION = "0.9.1.0"
+VERSION = "0.9.1.2"
 
 # To install the library, run the following
 #
