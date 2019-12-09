@@ -2,11 +2,19 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "compoundToIndication", "terms": {"chemical_substance": "CHEMBL:CHEMBL521"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
 
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "conditionToSymptoms", "terms": {"disease": "UMLS:C0004096"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
+
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "symptomToConditions", "terms": {"symptom": "UMLS:C0476273"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
+
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "conditionSymptomSimilarity", "terms": {"disease": "UMLS:C0004096"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
+
+
+
+
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "geneToCompound", "terms": {"gene": "HGNC:3535"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
 
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "pathwayToGenes", "terms": {"pathway": "GO:0004888"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
 
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "conditionToSymptoms", "terms": {"disease": "UMLS:C0004096"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
 
 
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"query_type_id": "symptomToConditions", "terms": {"symptom": "UMLS:C0476273"}}' 'https://indigo.ncats.io/reasoner/api/v0/query'
+
