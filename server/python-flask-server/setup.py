@@ -3,8 +3,8 @@
 import sys
 from setuptools import setup, find_packages
 
-NAME = "swagger_server"
-VERSION = "1.0.0"
+NAME = "indigo_reasoner_API"
+VERSION = "0.9.1.2"
 
 # To install the library, run the following
 #
@@ -13,23 +13,27 @@ VERSION = "1.0.0"
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 
-REQUIRES = ["connexion"]
+REQUIRES = [
+    "connexion==2.0.0",
+    "swagger-ui-bundle==0.0.2",
+    "python_dateutil==2.6.0"
+]
 
 setup(
     name=NAME,
     version=VERSION,
-    description="OpenAPI for NCATS Biomedical Translator Reasoners",
-    author_email="edeutsch@systemsbiology.org",
+    description="OpenAPI for indigo NCATS Biomedical Translator Reasoner",
+    author_email="translator@broadinstitute.org",
     url="",
-    keywords=["Swagger", "OpenAPI for NCATS Biomedical Translator Reasoners"],
+    keywords=["OpenAPI", "OpenAPI for indigo NCATS Biomedical Translator Reasoner"],
     install_requires=REQUIRES,
     packages=find_packages(),
-    package_data={'': ['swagger/swagger.yaml']},
+    package_data={'': ['openapi/openapi.yaml']},
     include_package_data=True,
     entry_points={
-        'console_scripts': ['swagger_server=swagger_server.__main__:main']},
+        'console_scripts': ['indigo_reasoner_API=openapi_server.__main__:main']},
     long_description="""\
-    OpenAPI for NCATS Biomedical Translator Reasoners
+    OpenAPI for indigo NCATS Biomedical Translator Reasoner
     """
 )
 

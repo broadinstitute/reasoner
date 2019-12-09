@@ -23,11 +23,15 @@ class KnowledgeGraph:
 
         for record in results:
             for node in record['nodes']:
-                properties = copy.deepcopy(node.properties)
+                properties = {key:value for (key,value) in node.items()}
+##                properties = {'labels': node.labels}
+##                properties = copy.deepcopy(node.properties)
                 properties['labels'] = node.labels
                 graph.add_node(node.id, **properties)
             for edge in record['edges']:
-                properties = copy.deepcopy(edge.properties)
+                properties = {key:value for (key,value) in edge.items()}
+##                properties = {'id':edge.id,'type':edge.type}
+##                properties = copy.deepcopy(edge.properties)
                 properties.update(
                     id=edge.id,
                     type=edge.type
