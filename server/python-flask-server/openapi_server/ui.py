@@ -157,7 +157,7 @@ def knowledgeMap():
     km = [
         (("chemical_substance","?","chemical_substance"),"associated_with",("disease","?","disease"), "Q2"),
         (("chemical_substance","?","chemical_substance"),"targets",("protein","*"), "Q3"),
-        (("phenotypic_feature","*"),"associated_with",("disease","?","disease"), "conditionToSymptoms"),
+        (("disease","?", "disease"),"associated_with",("phenotypic_feature","?","symptom"), "conditionToSymptoms"),
         (("phenotypic_feature","?","symptom"),"associated_with",("disease","*"), "symptomToConditions"),
         (("chemical_substance","*"),"targets",("gene","?","gene"), "geneToCompound"),
         (("chemical_substance","?","chemical_substance"),"has_indication",("disease","*"), "compoundToIndication"),
